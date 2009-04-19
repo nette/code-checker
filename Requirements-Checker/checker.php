@@ -52,13 +52,13 @@ paint(array(
 	array(
 		'Reflection extension',
 		REQUIRED,
-		$reflection,
+		(bool) $reflection,
 		'Reflection extension is required.',
 	),
 	array(
 		'Reflection phpDoc',
 		OPTIONAL,
-		$reflection ? strpos($reflection->getDocComment(), 'Paints') : FALSE,
+		$reflection ? strpos($reflection->getDocComment(), 'Paints') !== FALSE : FALSE,
 		'Reflection phpDoc is optional. If it is absent, persistent parameters must be declared by static function.',
 	),
 	array(
@@ -102,6 +102,13 @@ paint(array(
 		REQUIRED,
 		isset($_SERVER["SERVER_ADDR"]) || isset($_SERVER["LOCAL_ADDR"]),
 		'$_SERVER["SERVER_ADDR"] or $_SERVER["LOCAL_ADDR"] must be available for detecting development/production mode.',
+	),
+	'ha' => array(
+		'.htaccess file protection',
+		OPTIONAL,
+		NULL,
+		'File protection by .htaccess is optional. If it is absent, you must be careful to put files into document_root folder.',
+		'<script>var el = document.getElementById("resha").getElementsByTagName("td").item(0); el.className = el.innerHTML = typeof checkerScript == "undefined" ? "passed" : "warning";</script>',
 	),
 	array(
 		'Multibyte String extension',
@@ -160,7 +167,7 @@ paint(array(
 	array(
 		'ImageMagick library',
 		OPTIONAL,
-		@exec('identify -format "%w,%h,%m" ' . addcslashes(dirname(__FILE__) . '/checker.gif', ' ')) === '176,104,GIF', // intentionally @
+		@exec('identify -format "%w,%h,%m" ' . addcslashes(dirname(__FILE__) . '/assets/checker.gif', ' ')) === '176,104,GIF', // intentionally @
 		'ImageMagick server library is optional. If it is absent, you will not be able to use Nette\ImageMagick.',
 	),
 	array(
@@ -169,6 +176,12 @@ paint(array(
 		extension_loaded('fileinfo') || function_exists('mime_content_type'),
 		'Fileinfo extension or function mime_content_type are optional. If they are absent, you will not be able to determine mime type of uploaded files.',
 	),
+	/**/array(
+		'Disabled HTTP extension',
+		OPTIONAL,
+		!extension_loaded('http'),
+		'HTTP extension has naming conflict with Nette Framework. If it is present, you will have to use Prefixed version.',
+	),/**/
 ));
 
 
@@ -181,7 +194,7 @@ paint(array(
  */
 function paint($requirements)
 {
-	$redirect = time();
+	$redirect = round(time(), -1);
 	if (!isset($_GET) || (isset($_GET['r']) && $_GET['r'] == $redirect)) {
 		$redirect = NULL;
 	}
@@ -194,12 +207,12 @@ function paint($requirements)
 	foreach ($requirements as $requirement)
 	{
 		list(, $required, $result) = $requirement;
-		if (!$result) {
+		if (isset($result) && !$result) {
 			$errors[$required]++;
 		}
 	}
 
-	require dirname(__FILE__) . '/checker.phtml';
+	require dirname(__FILE__) . '/assets/checker.phtml';
 }
 
 
