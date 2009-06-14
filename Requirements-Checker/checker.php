@@ -24,11 +24,11 @@ foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_ge
 /**
  * Check Nette Framework requirements.
  */
-define('CHECKER_VERSION', '1.0');
+define('CHECKER_VERSION', '1.1');
 define('REQUIRED', TRUE);
 define('OPTIONAL', FALSE);
 
-$reflection = class_exists('ReflectionFunction') ? new ReflectionFunction('paint') : NULL;
+$reflection = class_exists('ReflectionFunction') && !iniFlag('zend.ze1_compatibility_mode') ? new ReflectionFunction('paint') : NULL;
 
 paint(array(
 	array(
@@ -36,12 +36,6 @@ paint(array(
 		REQUIRED,
 		version_compare(PHP_VERSION, '5.2.0', '>='),
 		'PHP version 5.2.0 or higher is required by Nette Framework.',
-	),
-	array(
-		'set_exception_handler',
-		OPTIONAL,
-		version_compare(PHP_VERSION, '5.2.1', '<>'),
-		'With PHP version 5.2.1 you will not be able to use Nette\Debug.',
 	),
 	array(
 		'Function ini_set',
@@ -59,7 +53,7 @@ paint(array(
 		'Reflection phpDoc',
 		OPTIONAL,
 		$reflection ? strpos($reflection->getDocComment(), 'Paints') !== FALSE : FALSE,
-		'Reflection phpDoc is optional. If it is absent, persistent parameters must be declared by static function.',
+		'Reflection phpDoc is optional. If it is absent, persistent parameters must be declared using static function.',
 	),
 	array(
 		'SPL extension',
@@ -76,8 +70,8 @@ paint(array(
 	array(
 		'ICONV extension',
 		REQUIRED,
-		extension_loaded('iconv') && (ICONV_IMPL !== 'unknown'),
-		'ICONV extension is required.',
+		extension_loaded('iconv') && (ICONV_IMPL !== 'unknown') && @iconv('UTF-16', 'UTF-8//IGNORE', iconv('UTF-8', 'UTF-16//IGNORE', 'test')) === 'test',
+		'ICONV extension is required and must work properly.',
 	),
 	array(
 		'$_SERVER["HTTP_HOST"] or "SERVER_NAME"',
@@ -162,7 +156,7 @@ paint(array(
 		'Bundled GD extension',
 		OPTIONAL,
 		extension_loaded('gd') && GD_BUNDLED,
-		'Bundled GD extension is optional. If it is absent, you will not be able to some function as Image::filter() or Image::rotate().',
+		'Bundled GD extension is optional. If it is absent, you will not be able to use some function as Nette\Image::filter() or Nette\Image::rotate().',
 	),
 	array(
 		'ImageMagick library',
