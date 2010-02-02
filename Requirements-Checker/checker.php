@@ -23,7 +23,7 @@ foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_ge
 /**
  * Check Nette Framework requirements.
  */
-define('CHECKER_VERSION', '1.3');
+define('CHECKER_VERSION', '1.4');
 
 $reflection = class_exists('ReflectionFunction') && !iniFlag('zend.ze1_compatibility_mode') ? new ReflectionFunction('paint') : NULL;
 
@@ -155,6 +155,13 @@ paint(array(
 	),
 
 	array(
+		'title' => 'SQLite extension',
+		'required' => FALSE,
+		'passed' => extension_loaded('sqlite'),
+		'description' => 'SQLite extension is absent. You will not be able to use tags and priorities with <code>Nette\Caching\FileStorage</code>.',
+	),
+
+	array(
 		'title' => 'Memcache extension',
 		'required' => FALSE,
 		'passed' => extension_loaded('memcache'),
@@ -277,5 +284,5 @@ function paint($requirements)
 function iniFlag($var)
 {
 	$status = strtolower(ini_get($var));
-	return $status === 'on' || $status === 'true' || $status === 'yes' || $status % 256;
+	return $status === 'on' || $status === 'true' || $status === 'yes' || (int) $status;
 }
