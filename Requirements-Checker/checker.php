@@ -63,6 +63,13 @@ paint(array(
 	),
 
 	array(
+		'title' => 'Function error_reporting',
+		'required' => TRUE,
+		'passed' => function_exists('error_reporting'),
+		'description' => 'Function <code>error_reporting()</code> is disabled. Nette Framework requires this to be enabled.',
+	),
+
+	array(
 		'title' => 'Magic quotes',
 		'required' => FALSE,
 		'passed' => !iniFlag('magic_quotes_gpc') && !iniFlag('magic_quotes_runtime'),
