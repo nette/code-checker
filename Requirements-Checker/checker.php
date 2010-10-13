@@ -104,6 +104,13 @@ paint(array(
 	),
 
 	array(
+		'title' => 'Session auto-start',
+		'required' => TRUE,
+		'passed' => session_id() === '' && !defined('SID'),
+		'description' => 'Session auto-start is enabled. Nette Framework reuqires this to be disabled, otherwise Nette\Web\Session will not work properly.',
+	),
+
+	array(
 		'title' => 'Reflection extension',
 		'required' => TRUE,
 		'passed' => (bool) $reflection,
