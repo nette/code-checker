@@ -14,7 +14,7 @@
 /**
  * Check PHP configuration.
  */
-foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_get') as $function) {
+foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_get', 'phpinfo') as $function) {
 	if (!function_exists($function)) {
 		die("Error: function '$function' is required by Nette Framework and this Requirements Checker.");
 	}
@@ -29,6 +29,16 @@ define('CHECKER_VERSION', '1.4');
 
 $reflection = class_exists('ReflectionFunction') && !iniFlag('zend.ze1_compatibility_mode') ? new ReflectionFunction('paint') : NULL;
 
+ob_start();
+phpinfo(INFO_GENERAL);
+$info = ob_get_clean();
+if (preg_match('/MSVC[0-9]{1,4}/', $info, $vc)) {
+	$vc = $vc[0];
+} else {
+	$vc = 'Test skipped';
+}
+
+
 paint(array(
 	array(
 		'title' => 'Web server',
@@ -41,6 +51,14 @@ paint(array(
 		'passed' => version_compare(PHP_VERSION, '5.2.0', '>='),
 		'message' => PHP_VERSION,
 		'description' => 'Your PHP version is too old. Nette Framework requires at least PHP 5.2.0 or higher.',
+	),
+
+	array(
+		'title' => 'PHP compiler version (Windows)',
+		'required' => TRUE,
+		'passed' => $vc != 'MSVC6',
+		'message' => $vc,
+		'description' => 'Some required date and time related functions does not work properly in this version. Use PHP compiled with new version of Visul Studio.',
 	),
 
 	array(
