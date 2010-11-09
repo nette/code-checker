@@ -148,6 +148,17 @@ $checker->tasks[] = function($checker, $s) {
 	}
 };
 
+// invalid phpDoc checker
+$checker->tasks[] = function($checker, $s) {
+    if ($checker->is('php')) {
+    	foreach (token_get_all($s) as $token) {
+    		if ($token[0] === T_COMMENT && String::match($token[1], '#/\*\s.*@[a-z]#isA')) {
+    			$checker->warning("missing /** in phpDoc comment on line $token[2]");
+    		}
+    	}
+    }
+};
+
 // newline characters normalizer for the current OS
 if (isset($options['l'])) {
 	$checker->tasks[] = function($checker, $s) {
