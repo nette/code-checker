@@ -181,6 +181,19 @@ $checker->tasks[] = function($checker, $s) {
     }
 };
 
+// lint Latte templates
+$checker->tasks[] = function($checker, $s) {
+    if ($checker->is('phtml')) {
+    	try {
+			$template = new Nette\Templates\FileTemplate;
+			$template->registerFilter(new Nette\Templates\LatteFilter);
+			$template->compile($s);
+		} catch (Nette\Templates\TemplateException $e) {
+    		$checker->error($e->getMessage() . ($e->sourceLine ? " on line $e->sourceLine" : ''));
+		}
+    }
+};
+
 // white-space remover
 $checker->tasks[] = function($checker, $s) {
     $new = String::replace($s, "#[\t ]+(\r?\n)#", '$1'); // right trim
