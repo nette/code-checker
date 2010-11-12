@@ -43,7 +43,7 @@ class CodeChecker extends Nette\Object
 	public $accept = array(
 		'*.php', '*.phpc', '*.phpt', '*.inc',
 		'*.txt', '*.texy',
-		'*.css', '*.js', '*.htm', '*.html', '*.phtml', '*.xml',
+		'*.css', '*.js', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
 		'*.ini', '*.config',
 		'*.sh',	'*.bat',
 		'.htaccess', '.gitignore',
@@ -183,7 +183,7 @@ $checker->tasks[] = function($checker, $s) {
 
 // lint Latte templates
 $checker->tasks[] = function($checker, $s) {
-    if ($checker->is('phtml')) {
+    if ($checker->is('latte')) {
     	try {
 			$template = new Nette\Templates\FileTemplate;
 			$template->registerFilter(new Nette\Templates\LatteFilter);
