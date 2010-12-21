@@ -108,19 +108,11 @@ $tests[] = array(
 	'description' => 'Session auto-start is enabled. Nette Framework requires this to be disabled, otherwise Nette\Web\Session will not work properly.',
 );
 
-$reflection = class_exists('ReflectionFunction') && !iniFlag('zend.ze1_compatibility_mode') ? new ReflectionFunction('paint') : NULL;
 $tests[] = array(
 	'title' => 'Reflection extension',
 	'required' => TRUE,
-	'passed' => (bool) $reflection,
+	'passed' => class_exists('ReflectionFunction'),
 	'description' => 'Reflection extension is required.',
-);
-
-$tests[] = array(
-	'title' => 'Reflection phpDoc',
-	'required' => FALSE,
-	'passed' => $reflection ? strpos($reflection->getDocComment(), 'Paints') !== FALSE : FALSE,
-	'description' => 'Reflection phpDoc are not available (probably due to an eAccelerator bug). Persistent parameters must be declared using static function.',
 );
 
 $tests[] = array(
@@ -270,11 +262,6 @@ paint($tests);
  */
 function paint($requirements)
 {
-	$redirect = round(time(), -1);
-	if (!isset($_GET) || (isset($_GET['r']) && $_GET['r'] == $redirect)) {
-		$redirect = NULL;
-	}
-
 	$errors = $warnings = FALSE;
 
 	foreach ($requirements as $id => $requirement)
