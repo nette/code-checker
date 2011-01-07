@@ -6,7 +6,7 @@
  * This script will check if your system meets the requirements for running Nette Framework.
  *
  * This file is part of the Nette Framework.
- * Copyright (c) 2004, 2010 David Grudl (http://davidgrudl.com)
+ * Copyright (c) 2004, 2011 David Grudl (http://davidgrudl.com)
  */
 
 
@@ -65,15 +65,6 @@ $tests[] = array(
 	'required' => TRUE,
 	'passed' => function_exists('error_reporting'),
 	'description' => 'Function <code>error_reporting()</code> is disabled. Nette Framework requires this to be enabled.',
-);
-
-$tests[] = array(
-	'title' => 'Magic quotes',
-	'required' => FALSE,
-	'passed' => !iniFlag('magic_quotes_gpc') && !iniFlag('magic_quotes_runtime'),
-	'message' => 'Disabled',
-	'errorMessage' => 'Enabled',
-	'description' => 'Magic quotes <code>magic_quotes_gpc</code> and <code>magic_quotes_runtime</code> are enabled and should be turned off. Nette Framework disables <code>magic_quotes_runtime</code> automatically.',
 );
 
 $tests[] = array(
@@ -141,17 +132,25 @@ $tests[] = array(
 );
 
 $tests[] = array(
-	'title' => 'Multibyte String extension',
-	'required' => FALSE,
-	'passed' => extension_loaded('mbstring'),
-	'description' => 'Multibyte String extension is absent. Some internationalization components may not work properly.',
-);
-
-$tests[] = array(
 	'title' => 'PHP tokenizer',
 	'required' => TRUE,
 	'passed' => extension_loaded('tokenizer'),
 	'description' => 'PHP tokenizer is required.',
+);
+
+$tests[] = array(
+	'title' => 'PDO extension',
+	'required' => FALSE,
+	'passed' => $pdo = extension_loaded('pdo') && PDO::getAvailableDrivers(),
+	'message' => $pdo ? 'Available drivers: ' . implode(' ', PDO::getAvailableDrivers()) : NULL,
+	'description' => 'PDO extension or PDO drivers are absent. You will not be able to use <code>Nette\Database</code>.',
+);
+
+$tests[] = array(
+	'title' => 'Multibyte String extension',
+	'required' => FALSE,
+	'passed' => extension_loaded('mbstring'),
+	'description' => 'Multibyte String extension is absent. Some internationalization components may not work properly.',
 );
 
 $tests[] = array(
@@ -164,10 +163,12 @@ $tests[] = array(
 );
 
 $tests[] = array(
-	'title' => 'SQLite extension',
+	'title' => 'Magic quotes',
 	'required' => FALSE,
-	'passed' => extension_loaded('sqlite'),
-	'description' => 'SQLite extension is absent. You will not be able to use tags and priorities with <code>Nette\Caching\FileStorage</code>.',
+	'passed' => !iniFlag('magic_quotes_gpc') && !iniFlag('magic_quotes_runtime'),
+	'message' => 'Disabled',
+	'errorMessage' => 'Enabled',
+	'description' => 'Magic quotes <code>magic_quotes_gpc</code> and <code>magic_quotes_runtime</code> are enabled and should be turned off. Nette Framework disables <code>magic_quotes_runtime</code> automatically.',
 );
 
 $tests[] = array(
