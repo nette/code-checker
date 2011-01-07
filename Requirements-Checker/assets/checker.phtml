@@ -136,6 +136,10 @@ header('Expires: Mon, 23 Jan 1978 10:00:00 GMT');
 		padding: 0 10px 10px 50px;
 		color: #555;
 	}
+	
+	.passed.description {
+		display: none;
+	}
 	</style>
 
 	<script src="assets/denied/checker.js" type="text/javascript"></script>
@@ -180,8 +184,8 @@ header('Expires: Mon, 23 Jan 1978 10:00:00 GMT');
 		<?php endif ?>
 	</tr>
 
-	<?php if (isset($requirement->passed) && !$requirement->passed): ?>
-	<tr class="<?php echo $class ?> description">
+	<?php if (isset($requirement->description)): ?>
+	<tr id="desc<?php echo $id ?>" class="<?php echo $class ?> description">
 		<td colspan="2"><?php echo $requirement->description ?></td>
 	</tr>
 	<?php endif ?>
