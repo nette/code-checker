@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Nette Framework Requirements Checker.
+ * Requirements Checker: This script will check if your system meets
+ * the requirements for running Nette Framework.
  *
- * This script will check if your system meets the requirements for running Nette Framework.
+ * This file is part of the Nette Framework (http://nette.org)
  *
- * This file is part of the Nette Framework.
- * Copyright (c) 2004, 2011 David Grudl (http://davidgrudl.com)
+ * For the full copyright and license information, please view
+ * the file license.txt that was distributed with this source code.
  */
 
 
