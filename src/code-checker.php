@@ -3,13 +3,13 @@
 /**
  * Source Codes Checker.
  *
- * Copyright (c) 2010 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (http://nette.org)
  *
- * This source file is subject to the "Nette license", and/or
- * GPL license. For more information please see http://nette.org
+ * For the full copyright and license information, please view
+ * the file license.txt that was distributed with this source code.
  */
 
-require __DIR__ . '/loader.php';
+require __DIR__ . '/nette.min.php';
 
 use Nette\String;
 
