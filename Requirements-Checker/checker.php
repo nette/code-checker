@@ -24,6 +24,17 @@ foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_ge
 
 
 /**
+ * Check assets folder, template file must be readable
+ */
+define('TEMPLATE_FILE', __DIR__ . '/assets/checker.phtml');
+
+if (!is_readable(TEMPLATE_FILE)) {
+	die("Error: template file is not readable. Check assets folder (part of distribution), it should be present, readable and contain readable template file."); 
+}
+
+
+
+/**
  * Check Nette Framework requirements.
  */
 define('CHECKER_VERSION', '1.4');
@@ -278,7 +289,7 @@ function paint($requirements)
 		}
 	}
 
-	require __DIR__ . '/assets/checker.phtml';
+	require TEMPLATE_FILE;
 }
 
 
