@@ -1,1 +1,1 @@
-checkerScript = true;
+fileProtectionChecker = true;

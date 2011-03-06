@@ -27,9 +27,8 @@ foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_ge
  * Check assets folder, template file must be readable
  */
 define('TEMPLATE_FILE', __DIR__ . '/assets/checker.phtml');
-
 if (!is_readable(TEMPLATE_FILE)) {
-	die("Error: template file is not readable. Check assets folder (part of distribution), it should be present, readable and contain readable template file."); 
+	die("Error: template file is not readable. Check assets folder (part of distribution), it should be present, readable and contain readable template file.");
 }
 
 
@@ -58,11 +57,11 @@ $tests[] = array(
 	'message' => ini_get('memory_limit'),
 );
 
-$tests['ha'] = array(
+$tests['hf'] = array(
 	'title' => '.htaccess file protection',
 	'required' => FALSE,
-	'description' => 'File protection by <code>.htaccess</code> is optional. If it is absent, you must be careful to put files into document_root folder.',
-	'script' => "var el = document.getElementById('resha');\nel.className = typeof checkerScript == 'undefined' ? 'passed' : 'warning';\nel.parentNode.removeChild(el.nextSibling.nodeType === 1 ? el.nextSibling : el.nextSibling.nextSibling);",
+	'description' => 'File protection by <code>.htaccess</code> is not present. You must be careful to put files into document_root folder.',
+	'script' => '<script src="assets/denied/checker.js"></script> <script>displayResult("hf", typeof fileProtectionChecker == "undefined")</script>',
 );
 
 $tests[] = array(
