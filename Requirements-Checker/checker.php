@@ -64,6 +64,13 @@ $tests['hf'] = array(
 	'script' => '<script src="assets/denied/checker.js"></script> <script>displayResult("hf", typeof fileProtectionChecker == "undefined")</script>',
 );
 
+$tests['hr'] = array(
+	'title' => '.htaccess mod_rewrite',
+	'required' => FALSE,
+	'description' => 'Mod_rewrite is probably not present. You will not be able to use Cool URL.',
+	'script' => '<script src="assets/rewrite/checker"></script> <script>displayResult("hr", typeof modRewriteChecker == "boolean")</script>',
+);
+
 $tests[] = array(
 	'title' => 'Function ini_set',
 	'required' => FALSE,
