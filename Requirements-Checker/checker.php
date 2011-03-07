@@ -36,7 +36,7 @@ if (!is_readable(TEMPLATE_FILE)) {
 /**
  * Check Nette Framework requirements.
  */
-define('CHECKER_VERSION', '1.4');
+define('CHECKER_VERSION', '1.5');
 
 
 $tests[] = array(
@@ -79,7 +79,7 @@ $tests[] = array(
 );
 
 $tests[] = array(
-	'title' => 'Function error_reporting',
+	'title' => 'Function error_reporting()',
 	'required' => TRUE,
 	'passed' => function_exists('error_reporting'),
 	'description' => 'Function <code>error_reporting()</code> is disabled. Nette Framework requires this to be enabled.',
@@ -218,13 +218,6 @@ $tests[] = array(
 );
 
 $tests[] = array(
-	'title' => 'ImageMagick library',
-	'required' => FALSE,
-	'passed' => @exec('identify -format "%w,%h,%m" ' . addcslashes(__DIR__ . '/assets/logo.png', ' ')) === '108,46,PNG', // @ - may be disabled
-	'description' => 'ImageMagick server library is absent. You will not be able to use <code>Nette\ImageMagick</code>.',
-);
-
-$tests[] = array(
 	'title' => 'Fileinfo extension or mime_content_type()',
 	'required' => FALSE,
 	'passed' => extension_loaded('fileinfo') || function_exists('mime_content_type'),
@@ -260,12 +253,12 @@ $tests[] = array(
 );
 
 $tests[] = array(
-	'title' => 'SCRIPT_FILENAME, SCRIPT_NAME, PHP_SELF',
+	'title' => 'DOCUMENT_ROOT & SCRIPT_FILENAME or SCRIPT_NAME',
 	'required' => TRUE,
-	'passed' => isset($_SERVER["SCRIPT_FILENAME"], $_SERVER["SCRIPT_NAME"], $_SERVER["PHP_SELF"]),
+	'passed' => isset($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME']) || isset($_SERVER['SCRIPT_NAME']),
 	'message' => 'Present',
 	'errorMessage' => 'Absent',
-	'description' => '<code>$_SERVER["SCRIPT_FILENAME"]</code> and <code>$_SERVER["SCRIPT_NAME"]</code> and <code>$_SERVER["PHP_SELF"]</code> must be available for resolving script file path.',
+	'description' => '<code>$_SERVER["DOCUMENT_ROOT"]</code> and <code>$_SERVER["SCRIPT_FILENAME"]</code> or <code>$_SERVER["SCRIPT_NAME"]</code> must be available for resolving script file path.',
 );
 
 $tests[] = array(
