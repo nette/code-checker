@@ -72,7 +72,7 @@ $tests['hr'] = array(
 );
 
 $tests[] = array(
-	'title' => 'Function ini_set',
+	'title' => 'Function ini_set()',
 	'required' => FALSE,
 	'passed' => function_exists('ini_set'),
 	'description' => 'Function <code>ini_set()</code> is disabled. Some parts of Nette Framework may not work properly.',
@@ -83,6 +83,13 @@ $tests[] = array(
 	'required' => TRUE,
 	'passed' => function_exists('error_reporting'),
 	'description' => 'Function <code>error_reporting()</code> is disabled. Nette Framework requires this to be enabled.',
+);
+
+$tests[] = array(
+	'title' => 'Function flock()',
+	'required' => TRUE,
+	'passed' => flock(fopen(__FILE__, 'r'), LOCK_SH),
+	'description' => 'Function <code>flock()</code> is not supported on this filesystem. Nette Framework requires this to process atomic file operations.',
 );
 
 $tests[] = array(
