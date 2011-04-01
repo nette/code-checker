@@ -9,7 +9,7 @@
  * the file license.txt that was distributed with this source code.
  */
 
-require __DIR__ . '/nette.min.php';
+require __DIR__ . '/../../Nette-minified/nette.min.php';
 
 use Nette\String;
 
