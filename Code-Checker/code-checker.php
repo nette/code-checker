@@ -11,7 +11,7 @@
 
 require __DIR__ . '/../../Nette-minified/nette.min.php';
 
-use Nette\String;
+use Nette\StringUtils;
 
 
 echo '
@@ -69,7 +69,7 @@ class CodeChecker extends Nette\Object
 		echo "Scanning folder $folder...\n";
 
 		$counter = 0;
-		foreach (Nette\Finder::findFiles($this->accept)->from($folder)->exclude($this->ignore) as $file)
+		foreach (Nette\Utils\Finder::findFiles($this->accept)->from($folder)->exclude($this->ignore) as $file)
 		{
 			echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
 
@@ -128,7 +128,7 @@ $checker->readOnly = !isset($options['f']);
 
 // control characters checker
 $checker->tasks[] = function($checker, $s) {
-	if (String::match($s, '#[\x00-\x08\x0B\x0C\x0E-\x1F]#')) {
+	if (StringUtils::match($s, '#[\x00-\x08\x0B\x0C\x0E-\x1F]#')) {
 		$checker->error('contains control characters');
 	}
 };
@@ -143,7 +143,7 @@ $checker->tasks[] = function($checker, $s) {
 
 // UTF-8 checker
 $checker->tasks[] = function($checker, $s) {
-	if (!String::checkEncoding($s)) {
+	if (!StringUtils::checkEncoding($s)) {
 		$checker->error('in not valid UTF-8 file');
 	}
 };
@@ -152,7 +152,7 @@ $checker->tasks[] = function($checker, $s) {
 $checker->tasks[] = function($checker, $s) {
     if ($checker->is('php')) {
     	foreach (token_get_all($s) as $token) {
-    		if ($token[0] === T_COMMENT && String::match($token[1], '#/\*\s.*@[a-z]#isA')) {
+    		if ($token[0] === T_COMMENT && StringUtils::match($token[1], '#/\*\s.*@[a-z]#isA')) {
     			$checker->warning("missing /** in phpDoc comment on line $token[2]");
     		}
     	}
@@ -185,10 +185,10 @@ $checker->tasks[] = function($checker, $s) {
 $checker->tasks[] = function($checker, $s) {
     if ($checker->is('latte')) {
     	try {
-			$template = new Nette\Templates\FileTemplate;
-			$template->registerFilter(new Nette\Templates\LatteFilter);
+			$template = new Nette\Templating\FileTemplate;
+			$template->registerFilter(new Nette\Latte\Engine);
 			$template->compile($s);
-		} catch (Nette\Templates\TemplateException $e) {
+		} catch (Nette\Templating\FilterException $e) {
     		$checker->error($e->getMessage() . ($e->sourceLine ? " on line $e->sourceLine" : ''));
 		}
     }
@@ -196,8 +196,8 @@ $checker->tasks[] = function($checker, $s) {
 
 // white-space remover
 $checker->tasks[] = function($checker, $s) {
-    $new = String::replace($s, "#[\t ]+(\r?\n)#", '$1'); // right trim
-    $new = String::replace($new, "#(\r?\n)+$#", '$1'); // trailing trim
+    $new = StringUtils::replace($s, "#[\t ]+(\r?\n)#", '$1'); // right trim
+    $new = StringUtils::replace($new, "#(\r?\n)+$#", '$1'); // trailing trim
     if ($new !== $s) {
     	$bytes = strlen($s) - strlen($new);
    		$checker->fix("$bytes bytes of whitespaces");

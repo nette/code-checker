@@ -46,7 +46,7 @@ foreach ($ini as $secName => $secData) {
 					if (!isset($cursor[$part]) || is_array($cursor[$part])) {
 						$cursor = & $cursor[$part];
 					} else {
-						throw new \InvalidStateException("Invalid key '$key' in section [$secName] in '$file'.");
+						throw new Nette\InvalidStateException("Invalid key '$key' in section [$secName] in '$file'.");
 					}
 				}
 				if ($val === '1' || $val === '') { // boolean?
@@ -62,5 +62,5 @@ foreach ($ini as $secName => $secData) {
 
 
 $destFile = preg_replace('#\.ini$#i', '', $srcFile) . '.neon';
-file_put_contents($destFile, Nette\Neon::encode($data, Nette\Neon::BLOCK));
+file_put_contents($destFile, Nette\Utils\Neon::encode($data, Nette\Utils\Neon::BLOCK));
 echo "Saved to $destFile\n";
