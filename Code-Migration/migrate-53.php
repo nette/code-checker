@@ -1,0 +1,305 @@
+<?php
+
+/**
+ * Migration tool from 5.2 to 5.3.
+ *
+ * This file is part of the Nette Framework (http://nette.org)
+ *
+ * For the full copyright and license information, please view
+ * the file license.txt that was distributed with this source code.
+ * @phpversion 5.3
+ */
+
+require __DIR__ . '/../../Nette-minified/nette.min.php';
+
+use Nette\StringUtils;
+
+
+echo '
+Migrate53 version 0.9
+---------------------
+';
+
+$options = getopt('d:f');
+
+if (!$options) { ?>
+Usage: php migrate-53.php [options]
+
+Options:
+	-d <path>  folder to scan (optional)
+	-f         fixes files
+
+<?php
+}
+
+
+
+class ClassUpdater extends Nette\Object
+{
+	public $readOnly = FALSE;
+
+	public $replaces = array(
+		'argumentoutofrangeexception' => 'Nette\ArgumentOutOfRangeException',
+		'invalidstateexception' => 'Nette\InvalidStateException',
+		'notimplementedexception' => 'Nette\NotImplementedException',
+		'notsupportedexception' => 'Nette\NotSupportedException',
+		'deprecatedexception' => 'Nette\DeprecatedException',
+		'memberaccessexception' => 'Nette\MemberAccessException',
+		'ioexception' => 'Nette\IOException',
+		'filenotfoundexception' => 'Nette\FileNotFoundException',
+		'directorynotfoundexception' => 'Nette\DirectoryNotFoundException',
+		'fatalerrorexception' => 'Nette\FatalErrorException',
+		'datetime53' => 'Nette\DateTime',
+		'ndatetime53' => 'Nette\DateTime',
+		'icomponentcontainer' => 'Nette\ComponentModel\IContainer',
+		'componentcontainer' => 'Nette\ComponentModel\Container',
+		'ncomponentcontainer' => 'Nette\ComponentModel\Container',
+		'debug' => 'Nette\Diagnostics\Debugger',
+		'ndebug' => 'Nette\Diagnostics\Debugger',
+		'debugpanel' => 'Nette\Diagnostics\Panel',
+		'ndebugpanel' => 'Nette\Diagnostics\Panel',
+		'idebugpanel' => 'Nette\Diagnostics\IPanel',
+		'debughelpers' => 'Nette\Diagnostics\Helpers',
+		'ndebughelpers' => 'Nette\Diagnostics\Helpers',
+		'arraytools' => 'Nette\ArrayUtils',
+		'narraytools' => 'Nette\ArrayUtils',
+		'string' => 'Nette\StringUtils',
+		'nstring' => 'Nette\StringUtils',
+		'callbackfilteriterator' => 'Nette\Iterators\Filter',
+		'ncallbackfilteriterator' => 'Nette\Iterators\Filter',
+		'genericrecursiveiterator' => 'Nette\Iterators\Recursor',
+		'ngenericrecursiveiterator' => 'Nette\Iterators\Recursor',
+		'instancefilteriterator' => 'Nette\Iterators\InstanceFilter',
+		'ninstancefilteriterator' => 'Nette\Iterators\InstanceFilter',
+		'mapiterator' => 'Nette\Iterators\Mapper',
+		'nmapiterator' => 'Nette\Iterators\Mapper',
+		'recursivecallbackfilteriterator' => 'Nette\Iterators\RecursiveFilter',
+		'nrecursivecallbackfilteriterator' => 'Nette\Iterators\RecursiveFilter',
+		'smartcachingiterator' => 'Nette\Iterators\CachingIterator',
+		'nsmartcachingiterator' => 'Nette\Iterators\CachingIterator',
+		'downloadresponse' => 'Nette\Application\Responses\FileResponse',
+		'ndownloadresponse' => 'Nette\Application\Responses\FileResponse',
+		'forwardingresponse' => 'Nette\Application\Responses\ForwardResponse',
+		'nforwardingresponse' => 'Nette\Application\Responses\ForwardResponse',
+		'redirectingresponse' => 'Nette\Application\Responses\RedirectResponse',
+		'nredirectingresponse' => 'Nette\Application\Responses\RedirectResponse',
+		'renderresponse' => 'Nette\Application\Responses\TextResponse',
+		'nrenderresponse' => 'Nette\Application\Responses\TextResponse',
+		'multirouter' => 'Nette\Application\Routers\RouteList',
+		'nmultirouter' => 'Nette\Application\Routers\RouteList',
+		'routingdebugger' => 'Nette\Application\Diagnostics\RoutingPanel',
+		'nroutingdebugger' => 'Nette\Application\Diagnostics\RoutingPanel',
+		'presenterrequest' => 'Nette\Application\Request',
+		'npresenterrequest' => 'Nette\Application\Request',
+		'ipresenterresponse' => 'Nette\Application\IResponse',
+		'appform' => 'Nette\Application\UI\Form',
+		'nappform' => 'Nette\Application\UI\Form',
+		'fileupload' => 'Nette\Forms\Controls\UploadControl',
+		'nfileupload' => 'Nette\Forms\Controls\UploadControl',
+		'formcontrol' => 'Nette\Forms\Controls\BaseControl',
+		'nformcontrol' => 'Nette\Forms\Controls\BaseControl',
+		'formgroup' => 'Nette\Forms\ControlGroup',
+		'nformgroup' => 'Nette\Forms\ControlGroup',
+		'formcontainer' => 'Nette\Forms\Container',
+		'nformcontainer' => 'Nette\Forms\Container',
+		'iformcontrol' => 'Nette\Forms\IControl',
+		'icachestorage' => 'Nette\Caching\IStorage',
+		'dummystorage' => 'Nette\Caching\Storages\DevNullStorage',
+		'ndummystorage' => 'Nette\Caching\Storages\DevNullStorage',
+		'icachejournal' => 'Nette\Caching\Storages\IJournal',
+		'configadapterini' => 'Nette\Config\IniAdapter',
+		'nconfigadapterini' => 'Nette\Config\IniAdapter',
+		'configadapterneon' => 'Nette\Config\NeonAdapter',
+		'nconfigadapterneon' => 'Nette\Config\NeonAdapter',
+		'iconfigadapter' => 'Nette\Config\IAdapter',
+		'databasepanel' => 'Nette\Database\Diagnostics\ConnectionPanel',
+		'ndatabasepanel' => 'Nette\Database\Diagnostics\ConnectionPanel',
+		'groupedtableselection' => 'Nette\Database\Table\GroupedSelection',
+		'ngroupedtableselection' => 'Nette\Database\Table\GroupedSelection',
+		'tablerow' => 'Nette\Database\Table\ActiveRow',
+		'ntablerow' => 'Nette\Database\Table\ActiveRow',
+		'tableselection' => 'Nette\Database\Table\Selection',
+		'ntableselection' => 'Nette\Database\Table\Selection',
+		'mail' => 'Nette\Mail\Message',
+		'nmail' => 'Nette\Mail\Message',
+		'mailmimepart' => 'Nette\Mail\MimePart',
+		'nmailmimepart' => 'Nette\Mail\MimePart',
+		'classreflection' => 'Nette\Reflection\ClassType',
+		'nclassreflection' => 'Nette\Reflection\ClassType',
+		'extensionreflection' => 'Nette\Reflection\Extension',
+		'nextensionreflection' => 'Nette\Reflection\Extension',
+		'functionreflection' => 'Nette\Reflection\GlobalFunction',
+		'nfunctionreflection' => 'Nette\Reflection\GlobalFunction',
+		'methodreflection' => 'Nette\Reflection\Method',
+		'nmethodreflection' => 'Nette\Reflection\Method',
+		'parameterreflection' => 'Nette\Reflection\Parameter',
+		'nparameterreflection' => 'Nette\Reflection\Parameter',
+		'propertyreflection' => 'Nette\Reflection\Property',
+		'npropertyreflection' => 'Nette\Reflection\Property',
+		'lattefilter' => 'Nette\Latte\Engine',
+		'nlattefilter' => 'Nette\Latte\Engine',
+		'lattemacros' => 'Nette\Latte\DefaultMacros',
+		'nlattemacros' => 'Nette\Latte\DefaultMacros',
+		'latteexception' => 'Nette\Latte\ParseException',
+		'nlatteexception' => 'Nette\Latte\ParseException',
+		'cachinghelper' => 'Nette\Caching\OutputHelper',
+		'ncachinghelper' => 'Nette\Caching\OutputHelper',
+		'templateexception' => 'Nette\Templating\FilterException',
+		'ntemplateexception' => 'Nette\Templating\FilterException',
+		'templatecachestorage' => 'Nette\Templating\PhpFileStorage',
+		'ntemplatecachestorage' => 'Nette\Templating\PhpFileStorage',
+		'templatehelpers' => 'Nette\Templating\DefaultHelpers',
+		'ntemplatehelpers' => 'Nette\Templating\DefaultHelpers',
+		'httpcontext' => 'Nette\Http\Context',
+		'nhttpcontext' => 'Nette\Http\Context',
+		'ihttprequest' => 'Nette\Http\IRequest',
+		'httprequest' => 'Nette\Http\Request',
+		'nhttprequest' => 'Nette\Http\Request',
+		'ihttpresponse' => 'Nette\Http\IResponse',
+		'httpresponse' => 'Nette\Http\Response',
+		'nhttpresponse' => 'Nette\Http\Response',
+		'httprequestfactory' => 'Nette\Http\RequestFactory',
+		'nhttprequestfactory' => 'Nette\Http\RequestFactory',
+		'httpuploadedfile' => 'Nette\Http\FileUpload',
+		'nhttpuploadedfile' => 'Nette\Http\FileUpload',
+		'uri' => 'Nette\Http\Url',
+		'nuri' => 'Nette\Http\Url',
+		'uriscript' => 'Nette\Http\UrlScript',
+		'nuriscript' => 'Nette\Http\UrlScript',
+	);
+
+
+
+	public function run($folder)
+	{
+		set_time_limit(0);
+
+		if ($this->readOnly) {
+			echo "Running in read-only mode\n";
+		}
+
+		echo "Scanning folder $folder...\n";
+
+		$counter = 0;
+		foreach (Nette\Utils\Finder::findFiles('*.php')->from($folder)
+			->exclude(array('.*', '*.tmp', 'tmp', 'temp', 'log')) as $file)
+		{
+			echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
+			$name = ltrim(str_replace($folder, '', $file), '/\\');
+
+			try {
+				$orig = file_get_contents($file);
+				$new = $this->processFile($orig);
+				if ($new !== $orig) {
+					echo '[' . ($this->readOnly ? 'FOUND' : 'FIX') . "] $name\n";
+					if (!$this->readOnly) {
+						file_put_contents($file, $new);
+					}
+				}
+			} catch (Exception $e) {
+				echo "[ERROR] $name: {$e->getMessage()}\n";
+			}
+		}
+
+		echo "\nDone.";
+	}
+
+
+
+	public function processFile($input)
+	{
+		$parser = new PhpParser($input);
+		while (($token = $parser->fetch()) !== FALSE) {
+
+			if ($parser->isCurrent(T_NAMESPACE, T_USE)) {
+				throw new Exception('PHP 5.3 file');
+
+			} elseif ($parser->isCurrent(T_INSTANCEOF, T_EXTENDS, T_IMPLEMENTS, T_NEW)) {
+				do {
+					$parser->fetchAll(T_WHITESPACE, T_COMMENT);
+					$pos = $parser->position + 1;
+					if ($class = $parser->fetchAll(T_STRING, T_NS_SEPARATOR)) {
+						$parser->replace($this->renameClass($class), $pos);
+					}
+				} while ($class && $parser->fetch(','));
+
+			} elseif ($parser->isCurrent(T_STRING, T_NS_SEPARATOR)) { // Class:: or typehint
+				$pos = $parser->position;
+				$identifier = $token . $parser->fetchAll(T_STRING, T_NS_SEPARATOR);
+				if ($parser->isNext(T_DOUBLE_COLON, T_VARIABLE)) {
+					$parser->replace($this->renameClass($identifier), $pos);
+				}
+
+			} elseif ($parser->isCurrent(T_DOC_COMMENT, T_COMMENT)) {
+				// @var Class or \Class or Nm\Class or Class:: (preserves CLASS)
+				$that = $this;
+				$parser->replace(preg_replace_callback('#((?:@var(?:\s+array of)?|returns?|param|throws|@link|property[\w-]*)\s+)(\\\\?[A-Z][\w\\\\|]+)#', function($m) use ($that) {
+					$parts = array();
+					foreach (explode('|', $m[2]) as $part) {
+						$parts[] = preg_match('#[a-z]#', $part) ? $that->renameClass($part) : $part;
+					}
+					return $m[1] . implode('|', $parts);
+				}, $token));
+
+			} elseif ($parser->isCurrent(T_CONSTANT_ENCAPSED_STRING)) {
+				if (preg_match('#(^.)([A-Z]\w+)(:.*|.$)#', $token, $m)) { // 'NObject'
+					$class = str_replace('\\\\', '\\', $m[2], $double);
+					if (isset($that->replaces[strtolower($class)])) {
+						$class = $that->replaces[strtolower($class)];
+ 						$parser->replace($m[1] . str_replace('\\', $double ? '\\\\' : '\\', $class) . $m[3]);
+					}
+				}
+			}
+		}
+
+		$parser->position = 0;
+		return $parser->fetchAll();
+	}
+
+
+
+	/**
+	 * Renames class.
+	 * @param  string class
+	 * @return string new class
+	 */
+	function renameClass($class)
+	{
+		return isset($this->replaces[strtolower($class)]) ? $this->replaces[strtolower($class)] : $class;
+	}
+
+}
+
+
+
+/**
+ * Simple tokenizer for PHP.
+ */
+class PhpParser extends Nette\Utils\Tokenizer
+{
+
+	function __construct($code)
+	{
+		$this->ignored = array(T_COMMENT, T_DOC_COMMENT, T_WHITESPACE);
+		foreach (token_get_all($code) as $token) {
+			$this->tokens[] = is_array($token) ? self::createToken($token[1], $token[0]) : $token;
+		}
+	}
+
+
+
+	function replace($s, $start = NULL)
+	{
+		for ($i = ($start === NULL ? $this->position : $start) - 1; $i < $this->position - 1; $i++) {
+			$this->tokens[$i] = '';
+		}
+		$this->tokens[$this->position - 1] = $s;
+	}
+
+}
+
+
+
+$updater = new ClassUpdater;
+$updater->readOnly = !isset($options['f']);
+$updater->run(isset($options['d']) ? $options['d'] : getcwd());
