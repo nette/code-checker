@@ -16,7 +16,7 @@ use Nette\StringUtils;
 
 
 echo '
-ClassUpdater version 0.9
+ClassUpdater version 1.0
 ------------------------
 ';
 
@@ -49,9 +49,35 @@ class ClassUpdater extends Nette\Object
 
 	/** @var array */
 	private $replaces = array(
+		// namespaces
 		'nette\web' => 'Nette\Http',
 		'nette\templates' => 'Nette\Templating',
 
+		// php 5.2
+		'arraytools' => 'ArrayUtils',
+		'narraytools' => 'NArrayUtils',
+		'string' => 'StringUtils',
+		'nstring' => 'NStringUtils',
+		'multirouter' => 'RouteList',
+		'nmultirouter' => 'NRouteList',
+		'dummystorage' => 'DevNullStorage',
+		'ndummystorage' => 'NDevNullStorage',
+		'uri' => 'Url',
+		'nuri' => 'NUrl',
+		'urlscript' => 'UrlScript',
+		'nurlscript' => 'NUrlScript',
+		'downloadresponse' => 'FileResponse',
+		'ndownloadresponse' => 'NFileResponse',
+		'forwardingresponse' => 'ForwardResponse',
+		'nforwardingresponse' => 'NForwardResponse',
+		'redirectingresponse' => 'RedirectResponse',
+		'nredirectingresponse' => 'NRedirectResponse',
+		'renderresponse' => 'TextResponse',
+		'nrenderresponse' => 'NTextResponse',
+		'fileupload' => 'UploadControl',
+		'nfileupload' => 'NUploadControl',
+
+		// php 5.3
 		'invalidstateexception' => 'Nette\InvalidStateException',
 		'notimplementedexception' => 'Nette\NotImplementedException',
 		'notsupportedexception' => 'Nette\NotSupportedException',
@@ -246,7 +272,6 @@ class ClassUpdater extends Nette\Object
 						$parser->replace($newClass = $this->replaces[strtolower($class)], $pos);
 					}
 
-					$pos = $parser->position + 1;
 					if ($parser->fetch(T_AS)) {
 						$as = $newAs = $parser->fetch(T_STRING);
 					} else {

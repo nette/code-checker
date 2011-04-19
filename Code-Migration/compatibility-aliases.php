@@ -25,6 +25,7 @@ class_alias('Nette\DI\IContext', 'Nette\IContext');
 class_alias('Nette\DI\Context', 'Nette\Context');
 class_alias('Nette\DI\Configurator', 'Nette\Configurator');
 class_alias('Nette\Diagnostics\Debugger', 'Nette\Debug');
+class_alias('Nette\Diagnostics\Helpers', 'Nette\DebugHelpers');
 class_alias('Nette\Diagnostics\IPanel', 'Nette\IDebugPanel');
 class_alias('Nette\Localization\ITranslator', 'Nette\ITranslator');
 class_alias('Nette\Utils\Finder', 'Nette\Finder');

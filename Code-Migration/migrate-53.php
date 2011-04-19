@@ -16,7 +16,7 @@ use Nette\StringUtils;
 
 
 echo '
-Migrate53 version 0.9
+Migrate53 version 1.0
 ---------------------
 ';
 
@@ -166,6 +166,30 @@ class ClassUpdater extends Nette\Object
 		'nuri' => 'Nette\Http\Url',
 		'uriscript' => 'Nette\Http\UrlScript',
 		'nuriscript' => 'Nette\Http\UrlScript',
+
+		// new names
+		'arrayutils' => 'Nette\ArrayUtils',
+		'narrayutils' => 'Nette\ArrayUtils',
+		'stringutils' => 'Nette\StringUtils',
+		'nstringutils' => 'Nette\StringUtils',
+		'routelist' => 'Nette\Application\Routers\RouteList',
+		'nroutelist' => 'Nette\Application\Routers\RouteList',
+		'devnullstorage' => 'Nette\Caching\Storages\DevNullStorage',
+		'ndevnullstorage' => 'Nette\Caching\Storages\DevNullStorage',
+		'url' => 'Nette\Http\Url',
+		'nurl' => 'Nette\Http\Url',
+		'urlscript' => 'Nette\Http\UrlScript',
+		'nurlscript' => 'Nette\Http\UrlScript',
+		'fileresponse' => 'Nette\Application\Responses\FileResponse',
+		'nfileresponse' => 'Nette\Application\Responses\FileResponse',
+		'forwardresponse' => 'Nette\Application\Responses\ForwardResponse',
+		'nforwardresponse' => 'Nette\Application\Responses\ForwardResponse',
+		'redirectresponse' => 'Nette\Application\Responses\RedirectResponse',
+		'nredirectresponse' => 'Nette\Application\Responses\RedirectResponse',
+		'textresponse' => 'Nette\Application\Responses\TextResponse',
+		'ntextresponse' => 'Nette\Application\Responses\TextResponse',
+		'uploadcontrol' => 'Nette\Forms\Controls\UploadControl',
+		'nuploadcontrol' => 'Nette\Forms\Controls\UploadControl',
 	);
 
 
