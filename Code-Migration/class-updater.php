@@ -307,10 +307,10 @@ class ClassUpdater extends Nette\Object
 			} elseif ($parser->isCurrent(T_DOC_COMMENT, T_COMMENT)) {
 				// @var Class or \Class or Nm\Class or Class:: (preserves CLASS)
 				$that = $this;
-				$parser->replace(preg_replace_callback('#((?:@var(?:\s+array of)?|returns?|param|throws|@link|property[\w-]*)\s+)(\\\\?[A-Z][\w\\\\|]+)#', function($m) use ($that) {
+				$parser->replace(preg_replace_callback('#((?:@var(?:\s+array of)?|returns?|param|throws|@link|property[\w-]*)\s+)([\w\\\\|]+)#', function($m) use ($that) {
 					$parts = array();
 					foreach (explode('|', $m[2]) as $part) {
-						$parts[] = preg_match('#[a-z]#', $part) ? $that->renameClass($part) : $part;
+						$parts[] = preg_match('#^\\\\?[A-Z].*[a-z]#', $part) ? $that->renameClass($part) : $part;
 					}
 					return $m[1] . implode('|', $parts);
 				}, $token));

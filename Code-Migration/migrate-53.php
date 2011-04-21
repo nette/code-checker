@@ -220,7 +220,7 @@ class ClassUpdater extends Nette\Object
 					}
 				}
 			} catch (Exception $e) {
-				echo "[ERROR] $name: {$e->getMessage()}\n";
+				echo "[SKIP] $name: {$e->getMessage()}\n";
 			}
 		}
 
@@ -256,16 +256,16 @@ class ClassUpdater extends Nette\Object
 			} elseif ($parser->isCurrent(T_DOC_COMMENT, T_COMMENT)) {
 				// @var Class or \Class or Nm\Class or Class:: (preserves CLASS)
 				$that = $this;
-				$parser->replace(preg_replace_callback('#((?:@var(?:\s+array of)?|returns?|param|throws|@link|property[\w-]*)\s+)(\\\\?[A-Z][\w\\\\|]+)#', function($m) use ($that) {
+				$parser->replace(preg_replace_callback('#((?:@var(?:\s+array of)?|returns?|param|throws|@link|property[\w-]*)\s+)([\w\\\\|]+)#', function($m) use ($that) {
 					$parts = array();
 					foreach (explode('|', $m[2]) as $part) {
-						$parts[] = preg_match('#[a-z]#', $part) ? $that->renameClass($part) : $part;
+						$parts[] = preg_match('#^\\\\?[A-Z].*[a-z]#', $part) ? $that->renameClass($part) : $part;
 					}
 					return $m[1] . implode('|', $parts);
 				}, $token));
 
 			} elseif ($parser->isCurrent(T_CONSTANT_ENCAPSED_STRING)) {
-				if (preg_match('#(^.)([A-Z]\w+)(:.*|.$)#', $token, $m)) { // 'NObject'
+				if (preg_match('#(^.)([A-Z]\w*[a-z]\w*)(:.*|.$)#', $token, $m)) { // 'NObject'
 					$class = str_replace('\\\\', '\\', $m[2], $double);
 					if (isset($that->replaces[strtolower($class)])) {
 						$class = $that->replaces[strtolower($class)];
