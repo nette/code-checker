@@ -9,9 +9,9 @@
  * the file license.txt that was distributed with this source code.
  */
 
-require __DIR__ . '/../../Nette-minified/nette.min.php';
+require __DIR__ . '/../nette.min.php';
 
-use Nette\StringUtils;
+use Nette\Utils\Strings;
 
 
 echo '
@@ -128,7 +128,7 @@ $checker->readOnly = !isset($options['f']);
 
 // control characters checker
 $checker->tasks[] = function($checker, $s) {
-	if (StringUtils::match($s, '#[\x00-\x08\x0B\x0C\x0E-\x1F]#')) {
+	if (Strings::match($s, '#[\x00-\x08\x0B\x0C\x0E-\x1F]#')) {
 		$checker->error('contains control characters');
 	}
 };
@@ -143,7 +143,7 @@ $checker->tasks[] = function($checker, $s) {
 
 // UTF-8 checker
 $checker->tasks[] = function($checker, $s) {
-	if (!StringUtils::checkEncoding($s)) {
+	if (!Strings::checkEncoding($s)) {
 		$checker->error('in not valid UTF-8 file');
 	}
 };
@@ -152,7 +152,7 @@ $checker->tasks[] = function($checker, $s) {
 $checker->tasks[] = function($checker, $s) {
     if ($checker->is('php')) {
     	foreach (token_get_all($s) as $token) {
-    		if ($token[0] === T_COMMENT && StringUtils::match($token[1], '#/\*\s.*@[a-z]#isA')) {
+    		if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*\s.*@[a-z]#isA')) {
     			$checker->warning("missing /** in phpDoc comment on line $token[2]");
     		}
     	}
@@ -196,8 +196,8 @@ $checker->tasks[] = function($checker, $s) {
 
 // white-space remover
 $checker->tasks[] = function($checker, $s) {
-    $new = StringUtils::replace($s, "#[\t ]+(\r?\n)#", '$1'); // right trim
-    $new = StringUtils::replace($new, "#(\r?\n)+$#", '$1'); // trailing trim
+    $new = Strings::replace($s, "#[\t ]+(\r?\n)#", '$1'); // right trim
+    $new = Strings::replace($new, "#(\r?\n)+$#", '$1'); // trailing trim
     if ($new !== $s) {
     	$bytes = strlen($s) - strlen($new);
    		$checker->fix("$bytes bytes of whitespaces");

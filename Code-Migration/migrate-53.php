@@ -12,8 +12,6 @@
 
 require __DIR__ . '/../../Nette-minified/nette.min.php';
 
-use Nette\StringUtils;
-
 
 echo '
 Migrate53 version 1.0
@@ -56,15 +54,13 @@ class ClassUpdater extends Nette\Object
 		'ncomponentcontainer' => 'Nette\ComponentModel\Container',
 		'debug' => 'Nette\Diagnostics\Debugger',
 		'ndebug' => 'Nette\Diagnostics\Debugger',
-		'debugpanel' => 'Nette\Diagnostics\Panel',
-		'ndebugpanel' => 'Nette\Diagnostics\Panel',
-		'idebugpanel' => 'Nette\Diagnostics\IPanel',
+		'idebugpanel' => 'Nette\Diagnostics\IBarPanel',
 		'debughelpers' => 'Nette\Diagnostics\Helpers',
 		'ndebughelpers' => 'Nette\Diagnostics\Helpers',
-		'arraytools' => 'Nette\ArrayUtils',
-		'narraytools' => 'Nette\ArrayUtils',
-		'string' => 'Nette\StringUtils',
-		'nstring' => 'Nette\StringUtils',
+		'arraytools' => 'Nette\Utils\Arrays',
+		'narraytools' => 'Nette\Utils\Arrays',
+		'string' => 'Nette\Utils\Strings',
+		'nstring' => 'Nette\Utils\Strings',
 		'callbackfilteriterator' => 'Nette\Iterators\Filter',
 		'ncallbackfilteriterator' => 'Nette\Iterators\Filter',
 		'genericrecursiveiterator' => 'Nette\Iterators\Recursor',
@@ -168,14 +164,17 @@ class ClassUpdater extends Nette\Object
 		'nuriscript' => 'Nette\Http\UrlScript',
 
 		// new names
-		'arrayutils' => 'Nette\ArrayUtils',
-		'narrayutils' => 'Nette\ArrayUtils',
-		'stringutils' => 'Nette\StringUtils',
-		'nstringutils' => 'Nette\StringUtils',
+		'arrays' => 'Nette\Utils\Arrays',
+		'narrays' => 'Nette\Utils\Arrays',
+		'strings' => 'Nette\Utils\Strings',
+		'nstrings' => 'Nette\Utils\Strings',
 		'routelist' => 'Nette\Application\Routers\RouteList',
 		'nroutelist' => 'Nette\Application\Routers\RouteList',
 		'devnullstorage' => 'Nette\Caching\Storages\DevNullStorage',
 		'ndevnullstorage' => 'Nette\Caching\Storages\DevNullStorage',
+		'debugger' => 'Nette\Diagnostics\Debugger',
+		'ndebugger' => 'Nette\Diagnostics\Debugger',
+		'ibarpanel' => 'Nette\Diagnostics\IBarPanel',
 		'url' => 'Nette\Http\Url',
 		'nurl' => 'Nette\Http\Url',
 		'urlscript' => 'Nette\Http\UrlScript',

@@ -12,8 +12,6 @@
 
 require __DIR__ . '/../../Nette-minified/nette.min.php';
 
-use Nette\StringUtils;
-
 
 echo '
 ClassUpdater version 1.0
@@ -54,14 +52,17 @@ class ClassUpdater extends Nette\Object
 		'nette\templates' => 'Nette\Templating',
 
 		// php 5.2
-		'arraytools' => 'ArrayUtils',
-		'narraytools' => 'NArrayUtils',
-		'string' => 'StringUtils',
-		'nstring' => 'NStringUtils',
+		'arraytools' => 'Arrays',
+		'narraytools' => 'NArrays',
+		'string' => 'Strings',
+		'nstring' => 'NStrings',
 		'multirouter' => 'RouteList',
 		'nmultirouter' => 'NRouteList',
 		'dummystorage' => 'DevNullStorage',
 		'ndummystorage' => 'NDevNullStorage',
+		'debug' => 'Debugger',
+		'ndebug' => 'NDebugger',
+		'idebugpanel' => 'IBarPanel',
 		'uri' => 'Url',
 		'nuri' => 'NUrl',
 		'urlscript' => 'UrlScript',
@@ -77,7 +78,7 @@ class ClassUpdater extends Nette\Object
 		'fileupload' => 'UploadControl',
 		'nfileupload' => 'NUploadControl',
 
-		// php 5.3
+		// alpha / PHP 5.3
 		'invalidstateexception' => 'Nette\InvalidStateException',
 		'notimplementedexception' => 'Nette\NotImplementedException',
 		'notsupportedexception' => 'Nette\NotSupportedException',
@@ -87,6 +88,7 @@ class ClassUpdater extends Nette\Object
 		'filenotfoundexception' => 'Nette\FileNotFoundException',
 		'directorynotfoundexception' => 'Nette\DirectoryNotFoundException',
 		'ioexception' => 'Nette\IOException',
+		'nette\regexpexception' => 'Nette\Utils\RegexpException',
 		'nette\icomponent' => 'Nette\ComponentModel\IComponent',
 		'nette\component' => 'Nette\ComponentModel\Component',
 		'nette\icomponentcontainer' => 'Nette\ComponentModel\IContainer',
@@ -96,19 +98,18 @@ class ClassUpdater extends Nette\Object
 		'nette\context' => 'Nette\DI\Context',
 		'nette\configurator' => 'Nette\DI\Configurator',
 		'nette\debug' => 'Nette\Diagnostics\Debugger',
-		'nette\debugpanel' => 'Nette\Diagnostics\Panel',
-		'nette\idebugpanel' => 'Nette\Diagnostics\IPanel',
+		'nette\idebugpanel' => 'Nette\Diagnostics\IBarPanel',
 		'nette\debughelpers' => 'Nette\Diagnostics\Helpers',
 		'nette\itranslator' => 'Nette\Localization\ITranslator',
 		'nette\safestream' => 'Nette\Utils\SafeStream',
 		'nette\finder' => 'Nette\Utils\Finder',
-		'nette\arraytools' => 'Nette\ArrayUtils',
+		'nette\arraytools' => 'Nette\Utils\Arrays',
 		'nette\json' => 'Nette\Utils\Json',
 		'nette\jsonexception' => 'Nette\Utils\JsonException',
 		'nette\neon' => 'Nette\Utils\Neon',
 		'nette\neonexception' => 'Nette\Utils\NeonException',
 		'nette\paginator' => 'Nette\Utils\Paginator',
-		'nette\string' => 'Nette\StringUtils',
+		'nette\string' => 'Nette\Utils\Strings',
 		'nette\tokenizer' => 'Nette\Utils\Tokenizer',
 		'nette\tokenizerexception' => 'Nette\Utils\TokenizerException',
 		'nette\callbackfilteriterator' => 'Nette\Iterators\Filter',
@@ -315,7 +316,7 @@ class ClassUpdater extends Nette\Object
 				}, $token));
 
 			} elseif ($parser->isCurrent(T_CONSTANT_ENCAPSED_STRING)) {
-				if (preg_match('#(^.)(Nette(?:\\\\{1,2}[A-Z]\w+)*)(:.*|.$)#', $token, $m)) { // 'Nette\Object'
+				if (preg_match('#(^.\\\\?)(Nette(?:\\\\{1,2}[A-Z]\w+)*)(:.*|.$)#', $token, $m)) { // 'Nette\Object'
 					$class = str_replace('\\\\', '\\', $m[2], $double);
 					if (isset($that->replaces[strtolower($class)])) {
 						$class = $that->replaces[strtolower($class)];
