@@ -224,6 +224,36 @@ class ClassUpdater extends Nette\Object
 		'Nette\Tools::detectMimeTypeFromString' => 'Nette\Utils\MimeTypeDetector::fromString',
 	);
 
+	/** @var array */
+	private $deprecated = array(
+		// php 5.2
+		'Tools' => FALSE,
+		'NeonParser' => FALSE,
+		'TemplateFilters' => FALSE,
+		'ImageMagick' => FALSE,
+		'Debug::$logFile' => FALSE,
+		'Debug::$showBar' => FALSE,
+
+		// alpha / PHP 5.3
+		'Nette\Tools' => FALSE,
+		'Nette\NeonParser' => FALSE,
+		'Nette\Templates\TemplateFilters' => FALSE,
+		'Nette\ImageMagick' => FALSE,
+		'Nette\Debug::$logFile' => FALSE,
+		'Nette\Debug::$showBar' => FALSE,
+
+		// members
+		'->redirectUri(' => 'redirectUrl()',
+		'->getUri(' => 'getUrl()',
+		'->uri' => 'url',
+		'->getHostUri(' => 'getHostUrl()',
+		'->hostUri' => 'hostUrl',
+		'->getBaseUri(' => 'getBaseUrl()',
+		'->baseUri' => 'baseUrl',
+		'->getRelativeUri(' => 'getRelativeUrl()',
+		'->relativeUri' => 'relativeUrl',
+	);
+
 
 
 	public function run($folder)
@@ -242,6 +272,7 @@ class ClassUpdater extends Nette\Object
 			}
 		}
 		$this->replaces = array_change_key_case($this->replaces);
+		$this->deprecated = array_change_key_case($this->deprecated);
 
 
 		$counter = 0;
@@ -360,6 +391,15 @@ class ClassUpdater extends Nette\Object
  						$parser->replace($m[1] . str_replace('\\', $double ? '\\\\' : '\\', $class) . $m[3]);
 					}
 				}
+
+			} elseif ($parser->isCurrent(T_OBJECT_OPERATOR)) {
+				$pos = $parser->position;
+				$member = $parser->fetch(T_STRING);
+				$s = strtolower('->' . $member . $parser->fetch('('));
+				if (isset($this->deprecated[$s])) {
+					$this->report('WARNING', "Found a possible deprecated member $member on line {$parser->tokens[$pos]['line']}"
+						. ($this->deprecated[$s] ? "; use {$this->deprecated[$s]} instead" : ''));
+				}
 			}
 		}
 
@@ -379,15 +419,25 @@ class ClassUpdater extends Nette\Object
 		if ($class === 'parent' || $class === 'self' || !$class) {
 			return $class . ($member ? "::$member" : '');
 		}
+
 		$class = $this->resolveClass($class);
-		if (isset($this->replaces[strtolower("$class::$member")])) {
+
+		if (isset($this->deprecated[strtolower("$class::$member")])) {
+			$this->report('ERROR', "Found deprecated '$class::$member'");
+
+		} elseif (isset($this->deprecated[strtolower($class)])) {
+			$this->report('ERROR', "Found deprecated class '$class'");
+
+		} elseif (isset($this->replaces[strtolower("$class::$member")])) {
 			list($class, $member) = explode('::', $this->replaces[strtolower("$class::$member")]);
+
 		} elseif (isset($this->replaces[strtolower($class)])) {
 			$newClass = $this->replaces[strtolower($class)];
 			if ($this->namespace !== FALSE || strpos($class, '\\') !== FALSE || strpos($newClass, '\\') === FALSE) {
 				$class = $newClass;
 			}
 		}
+
 		return $this->applyUse($class) . ($member ? "::$member" : '');
 	}
 
@@ -451,7 +501,7 @@ class PhpParser extends Nette\Utils\Tokenizer
 	{
 		$this->ignored = array(T_COMMENT, T_DOC_COMMENT, T_WHITESPACE);
 		foreach (token_get_all($code) as $token) {
-			$this->tokens[] = is_array($token) ? self::createToken($token[1], $token[0]) : $token;
+			$this->tokens[] = is_array($token) ? self::createToken($token[1], $token[0], $token[2]) : $token;
 		}
 	}
 
