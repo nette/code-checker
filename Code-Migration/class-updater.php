@@ -70,6 +70,15 @@ class ClassUpdater extends Nette\Object
 		'PresenterLoader' => 'PresenterFactory',
 		'FileUpload' => 'UploadControl',
 		'ConventionalRenderer' => 'DefaultFormRenderer',
+		'Tools::MINUTE' => 'DateTime53::MINUTE',
+		'Tools::HOUR' => 'DateTime53::HOUR',
+		'Tools::DAY' => 'DateTime53::DAY',
+		'Tools::WEEK' => 'DateTime53::WEEK',
+		'Tools::MONTH' => 'DateTime53::MONTH',
+		'Tools::YEAR' => 'DateTime53::YEAR',
+		'Tools::createDateTime' => 'DateTime53::from',
+		'Tools::detectMimeType' => 'MimeTypeDetector::fromFile',
+		'Tools::detectMimeTypeFromString' => 'MimeTypeDetector::fromString',
 
 		// alpha / PHP 5.3
 		'InvalidStateException' => 'Nette\InvalidStateException',
@@ -204,6 +213,15 @@ class ClassUpdater extends Nette\Object
 		'Nette\Web\UriScript' => 'Nette\Http\UrlScript',
 		'Nette\Web\IUser' => 'Nette\Http\IUser',
 		'Nette\Web\User' => 'Nette\Http\User',
+		'Nette\Tools::MINUTE' => 'Nette\DateTime::MINUTE',
+		'Nette\Tools::HOUR' => 'Nette\DateTime::HOUR',
+		'Nette\Tools::DAY' => 'Nette\DateTime::DAY',
+		'Nette\Tools::WEEK' => 'Nette\DateTime::WEEK',
+		'Nette\Tools::MONTH' => 'Nette\DateTime::MONTH',
+		'Nette\Tools::YEAR' => 'Nette\DateTime::YEAR',
+		'Nette\Tools::createDateTime' => 'Nette\DateTime::from',
+		'Nette\Tools::detectMimeType' => 'Nette\Utils\MimeTypeDetector::fromFile',
+		'Nette\Tools::detectMimeTypeFromString' => 'Nette\Utils\MimeTypeDetector::fromString',
 	);
 
 
@@ -304,10 +322,14 @@ class ClassUpdater extends Nette\Object
 					}
 				} while ($class && $parser->fetch(','));
 
-			} elseif ($parser->isCurrent(T_STRING, T_NS_SEPARATOR)) { // Class:: or typehint
+			} elseif ($parser->isCurrent(T_STRING, T_NS_SEPARATOR)) {
 				$pos = $parser->position;
 				$identifier = $token . $parser->fetchAll(T_STRING, T_NS_SEPARATOR);
-				if ($parser->isNext(T_DOUBLE_COLON, T_VARIABLE)) {
+				if ($parser->fetch(T_DOUBLE_COLON)) { // Class::
+					$member = $parser->fetch(T_STRING, T_VARIABLE);
+					$parser->replace($this->renameClass($identifier, $member), $pos);
+
+				} elseif ($parser->isNext(T_VARIABLE)) { // typehint
 					$parser->replace($this->renameClass($identifier), $pos);
 				}
 
@@ -344,16 +366,18 @@ class ClassUpdater extends Nette\Object
 	 * @param  string class
 	 * @return string new class
 	 */
-	function renameClass($class)
+	function renameClass($class, $member = NULL)
 	{
 		if ($class === 'parent' || $class === 'self' || !$class) {
-			return $class;
+			return $class . ($member ? "::$member" : '');
 		}
 		$class = $this->resolveClass($class);
-		if (isset($this->replaces[strtolower($class)])) {
+		if (isset($this->replaces[strtolower("$class::$member")])) {
+			list($class, $member) = explode('::', $this->replaces[strtolower("$class::$member")]);			
+		} elseif (isset($this->replaces[strtolower($class)])) {
 			$class = $this->replaces[strtolower($class)];
 		}
-		return $this->applyUse($class);
+		return $this->applyUse($class) . ($member ? "::$member" : '');
 	}
 
 
