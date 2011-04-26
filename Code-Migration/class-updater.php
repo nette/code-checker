@@ -45,6 +45,9 @@ class ClassUpdater extends Nette\Object
 	/** @var string */
 	private $namespace;
 
+	/** @var */
+	private $fileName;
+
 	/** @var array */
 	private $replaces = array(
 		// namespaces
@@ -228,23 +231,26 @@ class ClassUpdater extends Nette\Object
 		{
 			echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
 
-			$name = ltrim(str_replace($folder, '', $file), '/\\');
+			$this->fileName = ltrim(str_replace($folder, '', $file), '/\\');
 
-			try {
-				$orig = file_get_contents($file);
-				$new = $this->processFile($orig);
-				if ($new !== $orig) {
-					echo '[' . ($this->readOnly ? 'FOUND' : 'FIX') . "] $name\n";
-					if (!$this->readOnly) {
-						file_put_contents($file, $new);
-					}
+			$orig = file_get_contents($file);
+			$new = $this->processFile($orig);
+			if ($new !== $orig) {
+				$this->report($this->readOnly ? 'FOUND' : 'FIX');
+				if (!$this->readOnly) {
+					file_put_contents($file, $new);
 				}
-			} catch (Exception $e) {
-				echo "[ERROR] $name: {$e->getMessage()}\n";
 			}
 		}
 
 		echo "\nDone.";
+	}
+
+
+
+	public function report($level, $message = '')
+	{
+		echo "[$level] $this->fileName   $message\n";
 	}
 
 
