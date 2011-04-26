@@ -42,7 +42,7 @@ class ClassUpdater extends Nette\Object
 	/** @var array */
 	private $newUses;
 
-	/** @var string */
+	/** @var string or FALSE in 5.2 mode */
 	private $namespace;
 
 	/** @var */
@@ -276,9 +276,17 @@ class ClassUpdater extends Nette\Object
 
 	public function processFile($input)
 	{
-		$this->namespace = '';
+		$this->namespace = FALSE;
 		$this->uses = $this->newUses = array();
 		$parser = new PhpParser($input);
+
+		// detect 5.2 or 5.3
+		foreach ($parser->tokens as $token) {
+			if (is_string($token) && $token['type'] === T_NS_SEPARATOR) {
+				$this->namespace = '';
+				break;
+			}
+		}
 
 		while (($token = $parser->fetch()) !== FALSE) {
 
@@ -373,9 +381,12 @@ class ClassUpdater extends Nette\Object
 		}
 		$class = $this->resolveClass($class);
 		if (isset($this->replaces[strtolower("$class::$member")])) {
-			list($class, $member) = explode('::', $this->replaces[strtolower("$class::$member")]);			
+			list($class, $member) = explode('::', $this->replaces[strtolower("$class::$member")]);
 		} elseif (isset($this->replaces[strtolower($class)])) {
-			$class = $this->replaces[strtolower($class)];
+			$newClass = $this->replaces[strtolower($class)];
+			if ($this->namespace !== FALSE || strpos($class, '\\') !== FALSE || strpos($newClass, '\\') === FALSE) {
+				$class = $newClass;
+			}
 		}
 		return $this->applyUse($class) . ($member ? "::$member" : '');
 	}
