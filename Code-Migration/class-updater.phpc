@@ -323,6 +323,7 @@ class ClassUpdater extends Nette\Object
 
 			if ($parser->isCurrent(T_NAMESPACE)) {
 				$this->namespace = (string) $parser->fetchAll(T_STRING, T_NS_SEPARATOR);
+				$this->uses = $this->newUses = array();
 
 			} elseif ($parser->isCurrent(T_USE)) {
 				if ($parser->isNext('(')) { // closure?
