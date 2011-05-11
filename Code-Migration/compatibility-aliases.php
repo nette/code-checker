@@ -24,7 +24,6 @@ class_alias('Nette\ComponentModel\Container', 'Nette\ComponentContainer');
 class_alias('Nette\DI\AmbiguousServiceException', 'Nette\AmbiguousServiceException');
 class_alias('Nette\DI\IContainer', 'Nette\IContext');
 class_alias('Nette\DI\Container', 'Nette\Context');
-class_alias('Nette\DI\Configurator', 'Nette\Configurator');
 class_alias('Nette\Diagnostics\Debugger', 'Nette\Debug');
 class_alias('Nette\Diagnostics\Helpers', 'Nette\DebugHelpers');
 class_alias('Nette\Diagnostics\IBarPanel', 'Nette\IDebugPanel');
