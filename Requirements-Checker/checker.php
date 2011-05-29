@@ -121,7 +121,7 @@ $tests[] = array(
 	'title' => 'Session auto-start',
 	'required' => TRUE,
 	'passed' => session_id() === '' && !defined('SID'),
-	'description' => 'Session auto-start is enabled. Nette Framework requires this to be disabled, otherwise Nette\Web\Session will not work properly.',
+	'description' => 'Session auto-start is enabled. Nette Framework requires this to be disabled, otherwise Nette\Http\Session will not work properly.',
 );
 
 $tests[] = array(
@@ -152,7 +152,7 @@ $tests[] = array(
 	'required' => TRUE,
 	'passed' => extension_loaded('iconv') && (ICONV_IMPL !== 'unknown') && @iconv('UTF-16', 'UTF-8//IGNORE', iconv('UTF-8', 'UTF-16//IGNORE', 'test')) === 'test',
 	'message' => 'Enabled and works properly',
-	'errorMessage' => 'Disabled or works not properly',
+	'errorMessage' => 'Disabled or does not work properly',
 	'description' => 'ICONV extension is required and must work properly.',
 );
 
@@ -200,7 +200,7 @@ $tests[] = array(
 	'title' => 'Memcache extension',
 	'required' => FALSE,
 	'passed' => extension_loaded('memcache'),
-	'description' => 'Memcache extension is absent. You will not be able to use <code>Nette\Caching\MemcachedStorage</code>.',
+	'description' => 'Memcache extension is absent. You will not be able to use <code>Nette\Caching\Storages\MemcachedStorage</code>.',
 );
 
 $tests[] = array(
@@ -214,7 +214,7 @@ $tests[] = array(
 	'title' => 'Bundled GD extension',
 	'required' => FALSE,
 	'passed' => extension_loaded('gd') && GD_BUNDLED,
-	'description' => 'Bundled GD extension is absent. You will not be able to use some function as <code>Nette\Image::filter()</code> or <code>Nette\Image::rotate()</code>.',
+	'description' => 'Bundled GD extension is absent. You will not be able to use some functions such as <code>Nette\Image::filter()</code> or <code>Nette\Image::rotate()</code>.',
 );
 
 $tests[] = array(
