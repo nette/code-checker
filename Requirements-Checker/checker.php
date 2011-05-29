@@ -141,10 +141,10 @@ $tests[] = array(
 $tests[] = array(
 	'title' => 'PCRE extension',
 	'required' => TRUE,
-	'passed' => extension_loaded('pcre') && @preg_match('/pcre/u', 'pcre'),
+	'passed' => extension_loaded('pcre') && @preg_match('/pcre/u', 'pcre') && @preg_match('/\pL/', 'č'),
 	'message' => 'Enabled and works properly',
-	'errorMessage' => 'Disabled or without UTF-8 support',
-	'description' => 'PCRE extension is required and must support UTF-8.',
+	'errorMessage' => 'Disabled or without UTF-8 / Unicode properties support',
+	'description' => 'PCRE extension is required and must support both UTF-8 and Unicode properties.',
 );
 
 $tests[] = array(
