@@ -207,7 +207,7 @@ class ClassUpdater extends Nette\Object
 		'Nette\Web\HttpUploadedFile' => 'Nette\Http\FileUpload',
 		'Nette\Web\ISessionStorage' => 'Nette\Http\ISessionStorage',
 		'Nette\Web\Session' => 'Nette\Http\Session',
-		'Nette\Web\SessionNamespace' => 'Nette\Http\SessionNamespace',
+		'Nette\Web\SessionNamespace' => 'Nette\Http\SessionSection',
 		'Nette\Web\Uri' => 'Nette\Http\Url',
 		'Nette\Web\UriScript' => 'Nette\Http\UrlScript',
 		'Nette\Web\IUser' => 'Nette\Http\IUser',

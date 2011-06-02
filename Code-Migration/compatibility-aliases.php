@@ -103,7 +103,7 @@ class_alias('Nette\Http\RequestFactory', 'Nette\Web\HttpRequestFactory');
 class_alias('Nette\Http\FileUpload', 'Nette\Web\HttpUploadedFile');
 class_alias('Nette\Http\ISessionStorage', 'Nette\Web\ISessionStorage');
 class_alias('Nette\Http\Session', 'Nette\Web\Session');
-class_alias('Nette\Http\SessionNamespace', 'Nette\Web\SessionNamespace');
+class_alias('Nette\Http\SessionSection', 'Nette\Web\SessionNamespace');
 class_alias('Nette\Http\Url', 'Nette\Web\Uri');
 class_alias('Nette\Http\UrlScript', 'Nette\Web\UriScript');
 class_alias('Nette\Http\IUser', 'Nette\Web\IUser');
