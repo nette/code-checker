@@ -21,7 +21,13 @@ foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_ge
 	}
 }
 
-
+/**
+ * Backwards compatibility with PHP <5.3
+ * http://php.net/manual/en/language.constants.predefined.php
+ */
+if (!defined(__DIR__)) {
+	define('__DIR__', dirname(__FILE__));
+}
 
 /**
  * Check assets folder, template file must be readable
