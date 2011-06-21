@@ -188,15 +188,6 @@ $tests[] = array(
 );
 
 $tests[] = array(
-	'title' => 'Magic quotes',
-	'required' => FALSE,
-	'passed' => !iniFlag('magic_quotes_gpc') && !iniFlag('magic_quotes_runtime'),
-	'message' => 'Disabled',
-	'errorMessage' => 'Enabled',
-	'description' => 'Magic quotes <code>magic_quotes_gpc</code> and <code>magic_quotes_runtime</code> are enabled and should be turned off. Nette Framework disables <code>magic_quotes_runtime</code> automatically.',
-);
-
-$tests[] = array(
 	'title' => 'Memcache extension',
 	'required' => FALSE,
 	'passed' => extension_loaded('memcache'),
