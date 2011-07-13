@@ -119,9 +119,9 @@ $tests[] = array(
 
 $tests[] = array(
 	'title' => 'Session auto-start',
-	'required' => TRUE,
+	'required' => FALSE,
 	'passed' => session_id() === '' && !defined('SID'),
-	'description' => 'Session auto-start is enabled. Nette Framework requires this to be disabled, otherwise Nette\Http\Session will not work properly.',
+	'description' => 'Session auto-start is enabled. Nette Framework recommends not to use this directive for security reasons.',
 );
 
 $tests[] = array(
