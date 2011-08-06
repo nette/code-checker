@@ -22,7 +22,7 @@ CodeChecker version 0.9
 $options = getopt('d:fl');
 
 if (!$options) { ?>
-Usage: php code-checker.php [options]
+Usage: php code-checker.phpc [options]
 
 Options:
 	-d <path>  folder to scan (optional)

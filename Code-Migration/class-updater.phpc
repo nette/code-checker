@@ -21,7 +21,7 @@ ClassUpdater version 1.0
 $options = getopt('d:f');
 
 if (!$options) { ?>
-Usage: php class-updater.php [options]
+Usage: php class-updater.phpc [options]
 
 Options:
 	-d <path>  folder to scan (optional)

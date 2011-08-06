@@ -21,7 +21,7 @@ Migrate53 version 1.0
 $options = getopt('d:f');
 
 if (!$options) { ?>
-Usage: php migrate-53.php [options]
+Usage: php migrate-53.phpc [options]
 
 Options:
 	-d <path>  folder to scan (optional)
