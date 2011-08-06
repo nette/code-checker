@@ -251,6 +251,12 @@ class ClassUpdater extends Nette\Object
 		'->baseUri' => 'baseUrl',
 		'->getRelativeUri(' => 'getRelativeUrl()',
 		'->relativeUri' => 'relativeUrl',
+		'->skipFirst(' => 'setPrompt()',
+		'->addFile(' => 'addUpload()',
+		'->onInvalidSubmit' => 'onError',
+		'->setClientScript(' => 'unobstructive JavaScript',
+		'->setAuthenticationHandler(' => 'setAuthenticator()',
+		'->setAuthorizationHandler(' => 'setAuthorizator()',
 	);
 
 
