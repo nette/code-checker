@@ -13,14 +13,13 @@
 require __DIR__ . '/../../Nette-minified/nette.min.php';
 
 
-echo '
-ClassUpdater version 1.0
-------------------------
-';
-
 $options = getopt('d:f');
 
 if (!$options) { ?>
+
+ClassUpdater updates Nette Framework class names used in your source code.
+Works with all packages (for PHP 5.2 and 5.3).
+
 Usage: php class-updater.phpc [options]
 
 Options:
@@ -54,7 +53,7 @@ class ClassUpdater extends Nette\Object
 		'Nette\Web' => 'Nette\Http',
 		'Nette\Templates' => 'Nette\Templating',
 
-		// php 5.2
+		// PHP 5.2 nonprefix
 		'ArrayTools' => 'Arrays',
 		'String' => 'Strings',
 		'MultiRouter' => 'RouteList',
@@ -80,7 +79,7 @@ class ClassUpdater extends Nette\Object
 		'Tools::detectMimeType' => 'MimeTypeDetector::fromFile',
 		'Tools::detectMimeTypeFromString' => 'MimeTypeDetector::fromString',
 
-		// alpha / PHP 5.3
+		// PHP 5.3
 		'InvalidStateException' => 'Nette\InvalidStateException',
 		'NotImplementedException' => 'Nette\NotImplementedException',
 		'NotSupportedException' => 'Nette\NotSupportedException',
@@ -187,7 +186,6 @@ class ClassUpdater extends Nette\Object
 		'Nette\Reflection\ParameterReflection' => 'Nette\Reflection\Parameter',
 		'Nette\Reflection\PropertyReflection' => 'Nette\Reflection\Property',
 		'Nette\Templates\LatteFilter' => 'Nette\Latte\Engine',
-		'Nette\Templates\LatteMacros' => 'Nette\Latte\DefaultMacros',
 		'Nette\Templates\LatteException' => 'Nette\Latte\ParseException',
 		'Nette\Templates\CachingHelper' => 'Nette\Caching\OutputHelper',
 		'Nette\Templates\TemplateException' => 'Nette\Templating\FilterException',
@@ -225,18 +223,20 @@ class ClassUpdater extends Nette\Object
 
 	/** @var array */
 	private $deprecated = array(
-		// php 5.2
+		// PHP 5.2 nonprefix
 		'Tools' => FALSE,
 		'NeonParser' => FALSE,
 		'TemplateFilters' => FALSE,
+		'LatteMacros' => FALSE,
 		'ImageMagick' => FALSE,
 		'Debug::$logFile' => FALSE,
 		'Debug::$showBar' => FALSE,
 
-		// alpha / PHP 5.3
+		// PHP 5.3
 		'Nette\Tools' => FALSE,
 		'Nette\NeonParser' => FALSE,
 		'Nette\Templates\TemplateFilters' => FALSE,
+		'Nette\Templates\LatteMacros' => FALSE,
 		'Nette\ImageMagick' => FALSE,
 		'Nette\Debug::$logFile' => FALSE,
 		'Nette\Debug::$showBar' => FALSE,
