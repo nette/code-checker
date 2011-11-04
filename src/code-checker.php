@@ -92,6 +92,7 @@ class CodeChecker extends Nette\Object
 		}
 
 		echo "\nDone.";
+		return !$this->error;
 	}
 
 
@@ -209,4 +210,6 @@ $checker->tasks[] = function($checker, $s) {
    	}
 };
 
-$checker->run(isset($options['d']) ? $options['d'] : getcwd());
+$ok = $checker->run(isset($options['d']) ? $options['d'] : getcwd());
+
+exit($ok ? 0 : 1);
