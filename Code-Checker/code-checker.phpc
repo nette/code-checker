@@ -57,6 +57,12 @@ class CodeChecker extends Nette\Object
 
 	private $error;
 
+	private $failure = FALSE;
+
+	public function isFailure()
+	{
+		return $this->failure;
+	}
 
 	public function run($folder)
 	{
@@ -111,6 +117,7 @@ class CodeChecker extends Nette\Object
 	{
 		echo "[ERROR] $this->file   $message\n";
 		$this->error = TRUE;
+		$this->failure = TRUE;
 	}
 
 
@@ -210,3 +217,5 @@ $checker->tasks[] = function($checker, $s) {
 };
 
 $checker->run(isset($options['d']) ? $options['d'] : getcwd());
+
+$checker->isFailure()? exit(1) : exit(0);
