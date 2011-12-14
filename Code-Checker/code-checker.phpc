@@ -44,7 +44,7 @@ class CodeChecker extends Nette\Object
 		'*.php', '*.phpc', '*.phpt', '*.inc',
 		'*.txt', '*.texy',
 		'*.css', '*.js', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
-		'*.ini', '*.config',
+		'*.ini', '*.neon',
 		'*.sh',	'*.bat',
 		'.htaccess', '.gitignore',
 	);
@@ -186,11 +186,22 @@ $checker->tasks[] = function($checker, $s) {
 $checker->tasks[] = function($checker, $s) {
     if ($checker->is('latte')) {
     	try {
-			$template = new Nette\Templating\FileTemplate;
+			$template = new Nette\Templating\Template;
 			$template->registerFilter(new Nette\Latte\Engine);
 			$template->compile($s);
 		} catch (Nette\Templating\FilterException $e) {
     		$checker->error($e->getMessage() . ($e->sourceLine ? " on line $e->sourceLine" : ''));
+		}
+    }
+};
+
+// lint Neon
+$checker->tasks[] = function($checker, $s) {
+    if ($checker->is('neon')) {
+    	try {
+    		Nette\Utils\Neon::decode($s);
+		} catch (Nette\Utils\NeonException $e) {
+    		$checker->error($e->getMessage());
 		}
     }
 };
