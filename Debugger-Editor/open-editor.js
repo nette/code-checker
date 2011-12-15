@@ -16,6 +16,10 @@
 // gVim
 // var editor = '"C:\\Program Files\\Vim\\vim73\\gvim.exe" "%file%" +%line%';
 
+var mappings = {
+	// '/remotepath': '/localpath'
+};
+
 if (typeof editor === 'undefined') {
 	WScript.Echo('Create variable "editor" in ' + WScript.ScriptFullName);
 	WScript.Quit();
@@ -25,6 +29,12 @@ var url = WScript.Arguments(0);
 var match = /^editor:\/\/open\/\?file=(.+)&line=(\d+)/.exec(url);
 if (match) {
 	var file = decodeURIComponent(match[1]).replace(/\+/g, ' ');
+	for (var id in mappings) {
+		if (file.indexOf(id) === 0) {
+			file = mappings[id] + file.substr(id.length);
+			break;
+		}
+	}
 	var command = editor.replace(/%line%/g, match[2]).replace(/%file%/g, file);
 	var shell = new ActiveXObject("WScript.Shell");
 	shell.Exec(command.replace(/\\/g, '\\\\'));
