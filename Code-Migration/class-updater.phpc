@@ -253,10 +253,16 @@ class ClassUpdater extends Nette\Object
 		'->relativeUri' => 'relativeUrl',
 		'->skipFirst(' => 'setPrompt()',
 		'->addFile(' => 'addUpload()',
+		'->onSubmit' => 'onSuccess',
 		'->onInvalidSubmit' => 'onError',
 		'->setClientScript(' => 'unobstructive JavaScript',
 		'->setAuthenticationHandler(' => 'setAuthenticator()',
 		'->setAuthorizationHandler(' => 'setAuthorizator()',
+		'->setParams(' => 'setParameters()',
+		'->getParams(' => 'getParameters()',
+		'->setParam(' => 'setParameter()',
+		'->getParam(' => 'getParameter()',
+		'::$invalidLinkMode' => FALSE,
 	);
 
 
@@ -428,7 +434,7 @@ class ClassUpdater extends Nette\Object
 
 		$class = $this->resolveClass($class);
 
-		if (isset($this->deprecated[strtolower("$class::$member")])) {
+		if (isset($this->deprecated[strtolower("$class::$member")]) || isset($this->deprecated[strtolower("::$member")])) {
 			$this->report('ERROR', "Found deprecated '$class::$member'");
 
 		} elseif (isset($this->deprecated[strtolower($class)])) {
