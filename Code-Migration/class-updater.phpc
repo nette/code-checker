@@ -48,6 +48,9 @@ class ClassUpdater extends Nette\Object
 	private $fileName;
 
 	/** @var array */
+	private $found;
+
+	/** @var array */
 	private $replaces = array(
 		// namespaces
 		'Nette\Web' => 'Nette\Http',
@@ -297,7 +300,7 @@ class ClassUpdater extends Nette\Object
 			$orig = file_get_contents($file);
 			$new = $this->processFile($orig);
 			if ($new !== $orig) {
-				$this->report($this->readOnly ? 'FOUND' : 'FIX');
+				$this->report($this->readOnly ? 'FOUND' : 'FIX', implode(', ', array_keys($this->found)));
 				if (!$this->readOnly) {
 					file_put_contents($file, $new);
 				}
@@ -319,7 +322,7 @@ class ClassUpdater extends Nette\Object
 	public function processFile($input)
 	{
 		$this->namespace = FALSE;
-		$this->uses = $this->newUses = array();
+		$this->uses = $this->newUses = $this->found = array();
 		$parser = new PhpParser($input);
 
 		// detect 5.2 or 5.3
@@ -446,6 +449,7 @@ class ClassUpdater extends Nette\Object
 		} elseif (isset($this->replaces[strtolower($class)])) {
 			$newClass = $this->replaces[strtolower($class)];
 			if ($this->namespace !== FALSE || strpos($class, '\\') !== FALSE || strpos($newClass, '\\') === FALSE) {
+				$this->found["$class -> $newClass"] = TRUE;
 				$class = $newClass;
 			}
 		}
