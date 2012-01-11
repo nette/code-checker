@@ -211,8 +211,7 @@ class ClassUpdater extends Nette\Object
 		'Nette\Web\SessionNamespace' => 'Nette\Http\SessionSection',
 		'Nette\Web\Uri' => 'Nette\Http\Url',
 		'Nette\Web\UriScript' => 'Nette\Http\UrlScript',
-		'Nette\Web\IUser' => 'Nette\Http\IUser',
-		'Nette\Web\User' => 'Nette\Http\User',
+		'Nette\Web\User' => 'Nette\Security\User',
 		'Nette\Tools::MINUTE' => 'Nette\DateTime::MINUTE',
 		'Nette\Tools::HOUR' => 'Nette\DateTime::HOUR',
 		'Nette\Tools::DAY' => 'Nette\DateTime::DAY',
@@ -241,6 +240,7 @@ class ClassUpdater extends Nette\Object
 		'Nette\Templates\TemplateFilters' => FALSE,
 		'Nette\Templates\LatteMacros' => FALSE,
 		'Nette\ImageMagick' => FALSE,
+		'Nette\Web\IUser' => FALSE,
 		'Nette\Debug::$logFile' => FALSE,
 		'Nette\Debug::$showBar' => FALSE,
 

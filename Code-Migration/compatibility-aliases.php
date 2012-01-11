@@ -106,5 +106,4 @@ class_alias('Nette\Http\Session', 'Nette\Web\Session');
 class_alias('Nette\Http\SessionSection', 'Nette\Web\SessionNamespace');
 class_alias('Nette\Http\Url', 'Nette\Web\Uri');
 class_alias('Nette\Http\UrlScript', 'Nette\Web\UriScript');
-class_alias('Nette\Http\IUser', 'Nette\Web\IUser');
-class_alias('Nette\Http\User', 'Nette\Web\User');
+class_alias('Nette\Security\User', 'Nette\Web\User');
