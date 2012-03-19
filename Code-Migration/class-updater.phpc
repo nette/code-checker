@@ -81,6 +81,7 @@ class ClassUpdater extends Nette\Object
 		'Tools::createDateTime' => 'DateTime53::from',
 		'Tools::detectMimeType' => 'MimeTypeDetector::fromFile',
 		'Tools::detectMimeTypeFromString' => 'MimeTypeDetector::fromString',
+		'Debug::logException' => 'Debugger::log',
 
 		// PHP 5.3
 		'InvalidStateException' => 'Nette\InvalidStateException',
@@ -221,6 +222,7 @@ class ClassUpdater extends Nette\Object
 		'Nette\Tools::createDateTime' => 'Nette\DateTime::from',
 		'Nette\Tools::detectMimeType' => 'Nette\Utils\MimeTypeDetector::fromFile',
 		'Nette\Tools::detectMimeTypeFromString' => 'Nette\Utils\MimeTypeDetector::fromString',
+		'Nette\Debug::logException' => 'Nette\Diagnostics\Debugger::log',
 	);
 
 	/** @var array */
