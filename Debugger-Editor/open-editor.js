@@ -16,6 +16,9 @@
 // gVim
 // var editor = '"C:\\Program Files\\Vim\\vim73\\gvim.exe" "%file%" +%line%';
 
+// Sublime Text 2
+// var editor = '"C:\\Program Files\\Sublime Text 2\\sublime_text.exe" "%file%:%line%"';
+
 var mappings = {
 	// '/remotepath': '/localpath'
 };
