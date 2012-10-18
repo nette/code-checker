@@ -283,7 +283,7 @@ class ClassUpdater extends Nette\Object
 		echo "Scanning folder $folder...\n";
 
 		foreach ($this->replaces as $old => $new) {
-			if (preg_match('#^(?!I[A-Z])[A-Z][^\\\\]+$#', $old)) {
+			if (preg_match('#^(?!I[A-Z])[A-Z][^\\\\]+\z#', $old)) {
 				$this->replaces["N$old"] = $new;
 			}
 		}
@@ -401,7 +401,7 @@ class ClassUpdater extends Nette\Object
 				}, $token));
 
 			} elseif ($parser->isCurrent(T_CONSTANT_ENCAPSED_STRING)) {
-				if (preg_match('#(^.\\\\?)(Nette(?:\\\\{1,2}[A-Z]\w+)*)(:.*|.$)#', $token, $m)) { // 'Nette\Object'
+				if (preg_match('#(^.\\\\?)(Nette(?:\\\\{1,2}[A-Z]\w+)*)(:.*|.\z)#', $token, $m)) { // 'Nette\Object'
 					$class = str_replace('\\\\', '\\', $m[2], $double);
 					if (isset($that->replaces[strtolower($class)])) {
 						$class = $that->replaces[strtolower($class)];

@@ -558,7 +558,7 @@ class ClassUpdater extends Nette\Object
 				}, $token));
 
 			} elseif ($parser->isCurrent(T_CONSTANT_ENCAPSED_STRING)) {
-				if (preg_match('#(^.)([A-Z]\w*[a-z]\w*)(:.*|.$)#', $token, $m)) { // 'NObject'
+				if (preg_match('#(^.)([A-Z]\w*[a-z]\w*)(:.*|.\z)#', $token, $m)) { // 'NObject'
 					$class = str_replace('\\\\', '\\', $m[2], $double);
 					if (isset($that->replaces[strtolower($class)])) {
 						$class = $that->replaces[strtolower($class)];

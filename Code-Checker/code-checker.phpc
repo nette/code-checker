@@ -209,11 +209,11 @@ $checker->tasks[] = function($checker, $s) {
 
 // white-space remover
 $checker->tasks[] = function($checker, $s) {
-    $new = Strings::replace($s, "#[\t ]+(\r?\n)#", '$1'); // right trim
+    $new = Strings::replace($s, '#[\t ]+(\r?\n)#', '$1'); // right trim
     if ($checker->is('php')) { // trailing trim
     	$new = rtrim($new) . PHP_EOL;
     } else {
-    	$new = Strings::replace($new, "#(\r?\n)+$#", '$1');
+    	$new = Strings::replace($new, '#(\r?\n)+\z#', '$1');
     }
     if ($new !== $s) {
     	$bytes = strlen($s) - strlen($new);
