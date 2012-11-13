@@ -21,7 +21,7 @@ Migrate53 helps you with the migration from PHP 5.2 to PHP 5.3 package
 of Nette Framework. It prepends namespaces to Nette Framework class names
 used in your source code.
 
-Usage: php migrate-53.phpc [options]
+Usage: php migrate-53.php [options]
 
 Options:
 	-d <path>  folder to scan (optional)
