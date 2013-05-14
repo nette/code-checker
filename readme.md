@@ -3,9 +3,6 @@ Nette Framework's Tools
 
 - `Code-Checker`: a simple tool to source code against a set of coding standards.
 
-- `Code-Migration`: a tools to help you convert your code to the namespaced version
-    of Nette Framework 2.
-
 - `Debugger-Editor`: allows to open files displayed in Nette\Diagnostics in your editor.
 
 - `Requirements-Checker`: script that can check	if your system meets the requirements
