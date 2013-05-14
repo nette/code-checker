@@ -178,7 +178,7 @@ $checker->tasks[] = function($checker, $s) {
 // newline characters normalizer for the current OS
 if (isset($options['l'])) {
 	$checker->tasks[] = function($checker, $s) {
-		$new = str_replace("\n", PHP_EOL, str_replace(array("\r\n", "\r"), array("\n", ''), $s));
+		$new = str_replace("\n", PHP_EOL, str_replace(array("\r\n", "\r"), "\n", $s));
 		if ($new !== $s) {
     		$checker->fix('contains non-system line-endings');
     		return $new;
