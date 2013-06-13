@@ -225,7 +225,8 @@ $checker->tasks[] = function($checker, $s) {
 $checker->tasks[] = function($checker, $s) {
 	$new = Strings::replace($s, '#[\t ]+(\r?\n)#', '$1'); // right trim
 	if ($checker->is('php')) { // trailing trim
-		$new = rtrim($new) . PHP_EOL;
+		$eol = preg_match('#\r?\n#', $new, $m) ? $m[0] : PHP_EOL;
+		$new = rtrim($new) . $eol;
 	} else {
 		$new = Strings::replace($new, '#(\r?\n)+\z#', '$1');
 	}
