@@ -45,7 +45,7 @@ class CodeChecker extends Nette\Object
 		'*.txt', '*.texy', '*.md',
 		'*.css', '*.js', '*.json', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
 		'*.ini', '*.neon',
-		'*.sh',	'*.bat',
+		'*.sh', '*.bat',
 		'*.sql',
 		'.htaccess', '.gitignore',
 	);
@@ -137,10 +137,10 @@ $checker->tasks[] = function($checker, $s) {
 
 // BOM remover
 $checker->tasks[] = function($checker, $s) {
-    if (substr($s, 0, 3) === "\xEF\xBB\xBF") {
-    	$checker->fix('contains BOM');
-    	return substr($s, 3);
-    }
+	if (substr($s, 0, 3) === "\xEF\xBB\xBF") {
+		$checker->fix('contains BOM');
+		return substr($s, 3);
+	}
 };
 
 // UTF-8 checker
@@ -152,27 +152,27 @@ $checker->tasks[] = function($checker, $s) {
 
 // invalid phpDoc checker
 $checker->tasks[] = function($checker, $s) {
-    if ($checker->is('php')) {
-    	foreach (token_get_all($s) as $token) {
-    		if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*\s.*@[a-z]#isA')) {
-    			$checker->warning("missing /** in phpDoc comment on line $token[2]");
-    		}
-    	}
-    }
+	if ($checker->is('php')) {
+		foreach (token_get_all($s) as $token) {
+			if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*\s.*@[a-z]#isA')) {
+				$checker->warning("missing /** in phpDoc comment on line $token[2]");
+			}
+		}
+	}
 };
 
 // invalid doublequoted string checker
 $checker->tasks[] = function($checker, $s) {
-    if ($checker->is('php')) {
-    	foreach (token_get_all($s) as $token) {
-    		if ($token[0] === T_ENCAPSED_AND_WHITESPACE || ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')) {
-    			$m = Strings::match($token[1], '#^([^\\\\]|\\\\[\\\\nrtvefx0-7\W])*#'); // more strict: '#^([^\\\\]|\\\\[\\\\nrtvef$"x0-7])*#'
-    			if ($token[1] !== $m[0]) {
-	    			$checker->warning("invalid escape sequence " . substr($token[1], strlen($m[0]), 2) . " in double quoted string on line $token[2]");
-	    		}
-    		}
-    	}
-    }
+	if ($checker->is('php')) {
+		foreach (token_get_all($s) as $token) {
+			if ($token[0] === T_ENCAPSED_AND_WHITESPACE || ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')) {
+				$m = Strings::match($token[1], '#^([^\\\\]|\\\\[\\\\nrtvefx0-7\W])*#'); // more strict: '#^([^\\\\]|\\\\[\\\\nrtvef$"x0-7])*#'
+				if ($token[1] !== $m[0]) {
+					$checker->warning("invalid escape sequence " . substr($token[1], strlen($m[0]), 2) . " in double quoted string on line $token[2]");
+				}
+			}
+		}
+	}
 };
 
 // newline characters normalizer for the current OS
@@ -180,57 +180,57 @@ if (isset($options['l'])) {
 	$checker->tasks[] = function($checker, $s) {
 		$new = str_replace("\n", PHP_EOL, str_replace(array("\r\n", "\r"), "\n", $s));
 		if ($new !== $s) {
-    		$checker->fix('contains non-system line-endings');
-    		return $new;
+			$checker->fix('contains non-system line-endings');
+			return $new;
 		}
 	};
 }
 
 // trailing ? > remover
 $checker->tasks[] = function($checker, $s) {
-    if ($checker->is('php')) {
+	if ($checker->is('php')) {
 		$tmp = rtrim($s);
 		if (substr($tmp, -2) === '?>') {
-    		$checker->fix('contains closing PHP tag ?>');
+			$checker->fix('contains closing PHP tag ?>');
 			return substr($tmp, 0, -2);
 		}
-    }
+	}
 };
 
 // lint Latte templates
 $checker->tasks[] = function($checker, $s) {
-    if ($checker->is('latte')) {
-    	try {
+	if ($checker->is('latte')) {
+		try {
 			$template = new Nette\Templating\Template;
 			$template->registerFilter(new Nette\Latte\Engine);
 			$template->compile($s);
 		} catch (Nette\Templating\FilterException $e) {
-    		$checker->error($e->getMessage() . ($e->sourceLine ? " on line $e->sourceLine" : ''));
+			$checker->error($e->getMessage() . ($e->sourceLine ? " on line $e->sourceLine" : ''));
 		}
-    }
+	}
 };
 
 // lint Neon
 $checker->tasks[] = function($checker, $s) {
-    if ($checker->is('neon')) {
-    	try {
-    		Nette\Utils\Neon::decode($s);
+	if ($checker->is('neon')) {
+		try {
+			Nette\Utils\Neon::decode($s);
 		} catch (Nette\Utils\NeonException $e) {
-    		$checker->error($e->getMessage());
+			$checker->error($e->getMessage());
 		}
-    }
+	}
 };
 
 // white-space remover
 $checker->tasks[] = function($checker, $s) {
-    $new = Strings::replace($s, '#[\t ]+(\r?\n)#', '$1'); // right trim
-    if ($checker->is('php')) { // trailing trim
-    	$new = rtrim($new) . PHP_EOL;
-    } else {
-    	$new = Strings::replace($new, '#(\r?\n)+\z#', '$1');
-    }
-    if ($new !== $s) {
-    	$bytes = strlen($s) - strlen($new);
+	$new = Strings::replace($s, '#[\t ]+(\r?\n)#', '$1'); // right trim
+	if ($checker->is('php')) { // trailing trim
+		$new = rtrim($new) . PHP_EOL;
+	} else {
+		$new = Strings::replace($new, '#(\r?\n)+\z#', '$1');
+	}
+	if ($new !== $s) {
+		$bytes = strlen($s) - strlen($new);
    		$checker->fix("$bytes bytes of whitespaces");
    		return $new;
    	}
