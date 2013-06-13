@@ -22,7 +22,7 @@ CodeChecker version 0.9
 $options = getopt('d:fl');
 
 if (!$options) { ?>
-Usage: php code-checker.phpc [options]
+Usage: php code-checker.php [options]
 
 Options:
 	-d <path>  folder to scan (optional)
@@ -41,7 +41,7 @@ class CodeChecker extends Nette\Object
 	public $readOnly = FALSE;
 
 	public $accept = array(
-		'*.php', '*.phpc', '*.phpt', '*.inc',
+		'*.php', '*.phpt', '*.inc',
 		'*.txt', '*.texy', '*.md',
 		'*.css', '*.js', '*.json', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
 		'*.ini', '*.neon',
@@ -152,7 +152,7 @@ $checker->tasks[] = function($checker, $s) {
 
 // invalid phpDoc checker
 $checker->tasks[] = function($checker, $s) {
-	if ($checker->is('php')) {
+	if ($checker->is('php,phpt')) {
 		foreach (token_get_all($s) as $token) {
 			if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*\s.*@[a-z]#isA')) {
 				$checker->warning("missing /** in phpDoc comment on line $token[2]");
@@ -163,7 +163,7 @@ $checker->tasks[] = function($checker, $s) {
 
 // invalid doublequoted string checker
 $checker->tasks[] = function($checker, $s) {
-	if ($checker->is('php')) {
+	if ($checker->is('php,phpt')) {
 		foreach (token_get_all($s) as $token) {
 			if ($token[0] === T_ENCAPSED_AND_WHITESPACE || ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')) {
 				$m = Strings::match($token[1], '#^([^\\\\]|\\\\[\\\\nrtvefx0-7\W])*#'); // more strict: '#^([^\\\\]|\\\\[\\\\nrtvef$"x0-7])*#'
@@ -188,7 +188,7 @@ if (isset($options['l'])) {
 
 // trailing ? > remover
 $checker->tasks[] = function($checker, $s) {
-	if ($checker->is('php')) {
+	if ($checker->is('php,phpt')) {
 		$tmp = rtrim($s);
 		if (substr($tmp, -2) === '?>') {
 			$checker->fix('contains closing PHP tag ?>');
