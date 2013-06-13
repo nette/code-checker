@@ -224,17 +224,16 @@ $checker->tasks[] = function($checker, $s) {
 // white-space remover
 $checker->tasks[] = function($checker, $s) {
 	$new = Strings::replace($s, '#[\t ]+(\r?\n)#', '$1'); // right trim
-	if ($checker->is('php')) { // trailing trim
-		$eol = preg_match('#\r?\n#', $new, $m) ? $m[0] : PHP_EOL;
-		$new = rtrim($new) . $eol;
-	} else {
-		$new = Strings::replace($new, '#(\r?\n)+\z#', '$1');
+	$eol = preg_match('#\r?\n#', $new, $m) ? $m[0] : PHP_EOL;
+	$new = rtrim($new); // trailing trim
+	if ($new !== '') {
+		$new .= $eol;
 	}
 	if ($new !== $s) {
 		$bytes = strlen($s) - strlen($new);
-   		$checker->fix("$bytes bytes of whitespaces");
-   		return $new;
-   	}
+		$checker->fix("$bytes bytes of whitespaces");
+		return $new;
+	}
 };
 
 $ok = $checker->run(isset($options['d']) ? $options['d'] : getcwd());
