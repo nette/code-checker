@@ -116,9 +116,9 @@ class CodeChecker extends Nette\Object
 	}
 
 
-	public function is($extension)
+	public function is($extensions)
 	{
-		return $extension === pathinfo($this->file, PATHINFO_EXTENSION);
+		return in_array(pathinfo($this->file, PATHINFO_EXTENSION), explode(',', $extensions));
 	}
 
 }
