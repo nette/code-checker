@@ -43,7 +43,7 @@ class CodeChecker extends Nette\Object
 	public $accept = array(
 		'*.php', '*.phpt', '*.inc',
 		'*.txt', '*.texy', '*.md',
-		'*.css', '*.js', '*.json', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
+		'*.css', '*.less', '*.js', '*.json', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
 		'*.ini', '*.neon',
 		'*.sh', '*.bat',
 		'*.sql',
@@ -51,7 +51,7 @@ class CodeChecker extends Nette\Object
 	);
 
 	public $ignore = array(
-		'.*', '*.tmp', 'tmp', 'temp', 'log',
+		'.*', '*.tmp', 'tmp', 'temp', 'log', 'vendor',
 	);
 
 	private $file;
