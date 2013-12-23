@@ -28,7 +28,7 @@ foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_ge
  */
 define('TEMPLATE_FILE', __DIR__ . '/assets/checker.phtml');
 if (!is_readable(TEMPLATE_FILE)) {
-	die("Error: template file is not readable. Check assets folder (part of distribution), it should be present, readable and contain readable template file.");
+	die('Error: template file is not readable. Check assets folder (part of distribution), it should be present, readable and contain readable template file.');
 }
 
 
@@ -36,9 +36,6 @@ if (!is_readable(TEMPLATE_FILE)) {
 /**
  * Check Nette Framework requirements.
  */
-define('CHECKER_VERSION', '1.5');
-
-
 $tests[] = array(
 	'title' => 'Web server',
 	'message' => $_SERVER['SERVER_SOFTWARE'],
@@ -47,9 +44,9 @@ $tests[] = array(
 $tests[] = array(
 	'title' => 'PHP version',
 	'required' => TRUE,
-	'passed' => version_compare(PHP_VERSION, '5.3.0', '>='),
+	'passed' => version_compare(PHP_VERSION, '5.3.1', '>='),
 	'message' => PHP_VERSION,
-	'description' => 'Your PHP version is too old. Nette Framework requires at least PHP 5.3.0 or higher.',
+	'description' => 'Your PHP version is too old. Nette Framework requires at least PHP 5.3.1 or higher.',
 );
 
 $tests[] = array(
@@ -102,15 +99,6 @@ $tests[] = array(
 );
 
 $tests[] = array(
-	'title' => 'Zend.ze1_compatibility_mode',
-	'required' => TRUE,
-	'passed' => !iniFlag('zend.ze1_compatibility_mode'),
-	'message' => 'Disabled',
-	'errorMessage' => 'Enabled',
-	'description' => 'Configuration directive <code>zend.ze1_compatibility_mode</code> is enabled. Nette Framework requires this to be disabled.',
-);
-
-$tests[] = array(
 	'title' => 'Variables_order',
 	'required' => TRUE,
 	'passed' => strpos(ini_get('variables_order'), 'G') !== FALSE && strpos(ini_get('variables_order'), 'P') !== FALSE && strpos(ini_get('variables_order'), 'C') !== FALSE,
@@ -125,26 +113,10 @@ $tests[] = array(
 );
 
 $tests[] = array(
-	'title' => 'Reflection extension',
+	'title' => 'PCRE with UTF-8 support',
 	'required' => TRUE,
-	'passed' => class_exists('ReflectionFunction'),
-	'description' => 'Reflection extension is required.',
-);
-
-$tests[] = array(
-	'title' => 'SPL extension',
-	'required' => TRUE,
-	'passed' => extension_loaded('SPL'),
-	'description' => 'SPL extension is required.',
-);
-
-$tests[] = array(
-	'title' => 'PCRE extension',
-	'required' => TRUE,
-	'passed' => extension_loaded('pcre') && @preg_match('/pcre/u', 'pcre'),
-	'message' => 'Enabled and works properly',
-	'errorMessage' => 'Disabled or without UTF-8 support',
-	'description' => 'PCRE extension is required and must support UTF-8.',
+	'passed' => @preg_match('/pcre/u', 'pcre'),
+	'description' => 'PCRE extension must support UTF-8.',
 );
 
 $tests[] = array(
@@ -215,20 +187,10 @@ $tests[] = array(
 	'description' => 'Fileinfo extension or function <code>mime_content_type()</code> are absent. You will not be able to determine mime type of uploaded files.',
 );
 
-/*5.2*
-$tests[] = array(
-	'title' => 'HTTP extension',
-	'required' => FALSE,
-	'passed' => !extension_loaded('http'),
-	'message' => 'Disabled',
-	'errorMessage' => 'Enabled',
-	'description' => 'HTTP extension has naming conflict with Nette Framework. You have to disable this extension or use „prefixed“ version.',
-);*/
-
 $tests[] = array(
 	'title' => 'HTTP_HOST or SERVER_NAME',
 	'required' => TRUE,
-	'passed' => isset($_SERVER["HTTP_HOST"]) || isset($_SERVER["SERVER_NAME"]),
+	'passed' => isset($_SERVER['HTTP_HOST']) || isset($_SERVER['SERVER_NAME']),
 	'message' => 'Present',
 	'errorMessage' => 'Absent',
 	'description' => 'Either <code>$_SERVER["HTTP_HOST"]</code> or <code>$_SERVER["SERVER_NAME"]</code> must be available for resolving host name.',
@@ -237,28 +199,28 @@ $tests[] = array(
 $tests[] = array(
 	'title' => 'REQUEST_URI or ORIG_PATH_INFO',
 	'required' => TRUE,
-	'passed' => isset($_SERVER["REQUEST_URI"]) || isset($_SERVER["ORIG_PATH_INFO"]),
+	'passed' => isset($_SERVER['REQUEST_URI']) || isset($_SERVER['ORIG_PATH_INFO']),
 	'message' => 'Present',
 	'errorMessage' => 'Absent',
 	'description' => 'Either <code>$_SERVER["REQUEST_URI"]</code> or <code>$_SERVER["ORIG_PATH_INFO"]</code> must be available for resolving request URL.',
 );
 
 $tests[] = array(
-	'title' => 'DOCUMENT_ROOT & SCRIPT_FILENAME or SCRIPT_NAME',
+	'title' => 'SCRIPT_NAME or DOCUMENT_ROOT & SCRIPT_FILENAME',
 	'required' => TRUE,
-	'passed' => isset($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME']) || isset($_SERVER['SCRIPT_NAME']),
+	'passed' => isset($_SERVER['SCRIPT_NAME']) || isset($_SERVER['DOCUMENT_ROOT'], $_SERVER['SCRIPT_FILENAME']),
 	'message' => 'Present',
 	'errorMessage' => 'Absent',
-	'description' => '<code>$_SERVER["DOCUMENT_ROOT"]</code> and <code>$_SERVER["SCRIPT_FILENAME"]</code> or <code>$_SERVER["SCRIPT_NAME"]</code> must be available for resolving script file path.',
+	'description' => '<code>$_SERVER["SCRIPT_NAME"]</code> or <code>$_SERVER["DOCUMENT_ROOT"]</code> with <code>$_SERVER["SCRIPT_FILENAME"]</code> must be available for resolving script file path.',
 );
 
 $tests[] = array(
-	'title' => 'SERVER_ADDR or LOCAL_ADDR',
+	'title' => 'REMOTE_ADDR or php_uname("n")',
 	'required' => TRUE,
-	'passed' => isset($_SERVER["SERVER_ADDR"]) || isset($_SERVER["LOCAL_ADDR"]),
+	'passed' => isset($_SERVER['REMOTE_ADDR']) || function_exists('php_uname'),
 	'message' => 'Present',
 	'errorMessage' => 'Absent',
-	'description' => '<code>$_SERVER["SERVER_ADDR"]</code> or <code>$_SERVER["LOCAL_ADDR"]</code> must be available for detecting development / production mode.',
+	'description' => '<code>$_SERVER["REMOTE_ADDR"]</code> or <code>php_uname("n")</code> must be available for detecting development / production mode.',
 );
 
 paint($tests);

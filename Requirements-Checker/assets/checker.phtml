@@ -14,7 +14,7 @@ header('Expires: Mon, 23 Jan 1978 10:00:00 GMT');
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="utf-8">
 	<meta name="robots" content="noindex">
 	<meta name="generator" content="Nette Framework">
 
@@ -35,13 +35,13 @@ header('Expires: Mon, 23 Jan 1978 10:00:00 GMT');
 
 	#wrapper {
 		max-width: 780px;
-		margin: -5.3em auto 0;
+		margin: -5.3em auto 3em;
 	}
 
 	h1 {
 		font: 2.3em/1.5 sans-serif;
 		margin: .5em 0 1.5em;
-		background: url(assets/logo.png) right center no-repeat;
+		background: url('assets/logo.png') right center no-repeat;
 		color: #7A7772;
 		text-shadow: 1px 1px 0 white;
 	}
@@ -211,8 +211,6 @@ header('Expires: Mon, 23 Jan 1978 10:00:00 GMT');
 	</table>
 
 	<?php if ($errors): ?><p>Please check the error messages and <a href="?">try again</a>.</p><?php endif ?>
-
-	<p><small>Requirements Checker version <?php echo CHECKER_VERSION ?></small></p>
 </div>
 </body>
 </html>
