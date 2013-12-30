@@ -4,9 +4,6 @@
  * Source Codes Checker.
  *
  * This file is part of the Nette Framework (http://nette.org)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 require __DIR__ . '/../../Nette-minified/nette.phar';
