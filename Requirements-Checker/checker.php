@@ -116,6 +116,14 @@ $tests[] = array(
 	'description' => 'PCRE extension must support UTF-8.',
 );
 
+$reflection = new ReflectionFunction('paint');
+$tests[] = array(
+	'title' => 'Reflection phpDoc',
+	'required' => TRUE,
+	'passed' => strpos($reflection->getDocComment(), 'Paints') !== FALSE,
+	'description' => 'Reflection phpDoc are not available (probably due to an eAccelerator bug). You cannot use @annotations.',
+);
+
 $tests[] = array(
 	'title' => 'ICONV extension',
 	'required' => TRUE,
@@ -231,6 +239,11 @@ paint($tests);
  */
 function paint($requirements)
 {
+	$redirect = round(time(), -1);
+	if (!isset($_GET) || (isset($_GET['r']) && $_GET['r'] == $redirect)) {
+		$redirect = NULL;
+	}
+
 	$errors = $warnings = FALSE;
 
 	foreach ($requirements as $id => $requirement)

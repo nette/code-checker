@@ -5,6 +5,7 @@
  * @param array    $requirements
  * @param bool     $errors
  * @param bool     $warnings
+ * @param string   $redirect
  */
 
 header('Content-Type: text/html; charset=utf-8');
@@ -17,6 +18,7 @@ header('Expires: Mon, 23 Jan 1978 10:00:00 GMT');
 	<meta charset="utf-8">
 	<meta name="robots" content="noindex">
 	<meta name="generator" content="Nette Framework">
+	<?php if ($redirect): ?><meta http-equiv="Refresh" content="0; URL=?r=<?php echo $redirect ?>"><?php endif ?>
 
 	<title>Nette Framework Requirements Checker</title>
 
