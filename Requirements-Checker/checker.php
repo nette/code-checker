@@ -21,6 +21,15 @@ foreach (array('function_exists', 'version_compare', 'extension_loaded', 'ini_ge
 
 
 /**
+ * Declare __DIR__ constant for PHP older than 5.3.0 so the script will run on older servers.
+ */
+if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+	define('__DIR__', dirname(__FILE__));
+}
+
+
+
+/**
  * Check assets folder, template file must be readable
  */
 define('TEMPLATE_FILE', __DIR__ . '/assets/checker.phtml');
