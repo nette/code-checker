@@ -176,7 +176,7 @@ $checker->tasks[] = function($checker, $s) {
 if (isset($options['l'])) {
 	$checker->tasks[] = function($checker, $s) {
 		$new = str_replace("\n", PHP_EOL, str_replace(array("\r\n", "\r"), "\n", $s));
-		if ($new !== $s) {
+		if (!$checker->is('sh') && $new !== $s) {
 			$checker->fix('contains non-system line-endings');
 			return $new;
 		}
