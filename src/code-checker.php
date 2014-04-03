@@ -201,10 +201,13 @@ $checker->tasks[] = function($checker, $s) {
 $checker->tasks[] = function($checker, $s) {
 	if ($checker->is('latte')) {
 		try {
-			$template = new Nette\Templating\Template;
-			$template->registerFilter(new Nette\Latte\Engine);
-			$template->compile($s);
-		} catch (Nette\Templating\FilterException $e) {
+			$latte = new Latte\Engine;
+			$latte->setLoader(new Latte\Loaders\StringLoader);
+			$latte->getCompiler()->addMacro('cache', new Nette\Bridges\CacheLatte\CacheMacro($latte->getCompiler()));
+			Nette\Bridges\ApplicationLatte\UIMacros::install($latte->getCompiler());
+			Nette\Bridges\FormsLatte\FormMacros::install($latte->getCompiler());
+			$latte->compile($s);
+		} catch (Latte\CompileException $e) {
 			$checker->error($e->getMessage() . ($e->sourceLine ? " on line $e->sourceLine" : ''));
 		}
 	}
