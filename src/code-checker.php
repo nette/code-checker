@@ -6,7 +6,10 @@
  * This file is part of the Nette Framework (http://nette.org)
  */
 
-require __DIR__ . '/../nette.min.php';
+if (@!include __DIR__ . '/../vendor/autoload.php') {
+	echo('Install packages using `composer update`');
+	exit(1);
+}
 
 use Nette\Utils\Strings;
 
