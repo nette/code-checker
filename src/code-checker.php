@@ -217,8 +217,8 @@ $checker->tasks[] = function($checker, $s) {
 $checker->tasks[] = function($checker, $s) {
 	if ($checker->is('neon')) {
 		try {
-			Nette\Utils\Neon::decode($s);
-		} catch (Nette\Utils\NeonException $e) {
+			Nette\Neon\Neon::decode($s);
+		} catch (Nette\Neon\Exception $e) {
 			$checker->error($e->getMessage());
 		}
 	}
