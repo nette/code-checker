@@ -241,7 +241,7 @@ $checker->tasks[] = function($checker, $s) {
 
 // indentation and tabs checker
 $checker->tasks[] = function($checker, $s) {
-	if ($checker->is('php,phpt,css,less,js,json,neon')) {
+	if ($checker->is('php,phpt,css,less,js,json,neon') && strpos($s, "\t") !== FALSE) {
 		if (preg_match('#(.*)^\t*\ (?!\*)#mAsU', $s, $m)) {
 			$checker->warning('Mixed tabs and spaces indentation on line ' . (substr_count($m[1], "\n") + 1) . '.');
 		}
