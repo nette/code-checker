@@ -15,7 +15,7 @@ use Nette\Utils\Strings;
 
 
 echo '
-CodeChecker version 0.9
+CodeChecker version 2.2
 -----------------------
 ';
 
