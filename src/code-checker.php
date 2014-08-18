@@ -6,7 +6,7 @@
  * This file is part of the Nette Framework (http://nette.org)
  */
 
-if (@!include __DIR__ . '/../vendor/autoload.php') {
+if (@!include __DIR__ . '/../../../../vendor/autoload.php') {
 	echo('Install packages using `composer update`');
 	exit(1);
 }
