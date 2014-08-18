@@ -1,6 +1,6 @@
 {
 	"name": "nette/code-checker",
-	"description": "A simple tool to source code against a set of coding standards.",
+	"description": "A simple tool to check source code against a set of coding standards.",
 	"type": "project",
 	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"authors": [
