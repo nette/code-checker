@@ -129,14 +129,14 @@ $checker = new CodeChecker;
 $checker->readOnly = !isset($options['f']);
 
 // control characters checker
-$checker->tasks[] = function($checker, $s) {
+$checker->tasks[] = function(CodeChecker $checker, $s) {
 	if (Strings::match($s, '#[\x00-\x08\x0B\x0C\x0E-\x1F]#')) {
 		$checker->error('contains control characters');
 	}
 };
 
 // BOM remover
-$checker->tasks[] = function($checker, $s) {
+$checker->tasks[] = function(CodeChecker $checker, $s) {
 	if (substr($s, 0, 3) === "\xEF\xBB\xBF") {
 		$checker->fix('contains BOM');
 		return substr($s, 3);
@@ -144,14 +144,14 @@ $checker->tasks[] = function($checker, $s) {
 };
 
 // UTF-8 checker
-$checker->tasks[] = function($checker, $s) {
+$checker->tasks[] = function(CodeChecker $checker, $s) {
 	if (!Strings::checkEncoding($s)) {
 		$checker->error('in not valid UTF-8 file');
 	}
 };
 
 // invalid phpDoc checker
-$checker->tasks[] = function($checker, $s) {
+$checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt')) {
 		foreach (token_get_all($s) as $token) {
 			if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*\s.*@[a-z]#isA')) {
@@ -162,7 +162,7 @@ $checker->tasks[] = function($checker, $s) {
 };
 
 // invalid doublequoted string checker
-$checker->tasks[] = function($checker, $s) {
+$checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt')) {
 		foreach (token_get_all($s) as $token) {
 			if ($token[0] === T_ENCAPSED_AND_WHITESPACE || ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')) {
@@ -177,7 +177,7 @@ $checker->tasks[] = function($checker, $s) {
 
 // newline characters normalizer for the current OS
 if (isset($options['l'])) {
-	$checker->tasks[] = function($checker, $s) {
+	$checker->tasks[] = function(CodeChecker $checker, $s) {
 		$new = str_replace("\n", PHP_EOL, str_replace(array("\r\n", "\r"), "\n", $s));
 		if (!$checker->is('sh') && $new !== $s) {
 			$checker->fix('contains non-system line-endings');
@@ -187,7 +187,7 @@ if (isset($options['l'])) {
 }
 
 // trailing ? > remover
-$checker->tasks[] = function($checker, $s) {
+$checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt')) {
 		$tmp = rtrim($s);
 		if (substr($tmp, -2) === '?>') {
@@ -198,7 +198,7 @@ $checker->tasks[] = function($checker, $s) {
 };
 
 // lint Latte templates
-$checker->tasks[] = function($checker, $s) {
+$checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('latte')) {
 		try {
 			$latte = new Latte\Engine;
@@ -214,7 +214,7 @@ $checker->tasks[] = function($checker, $s) {
 };
 
 // lint Neon
-$checker->tasks[] = function($checker, $s) {
+$checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('neon')) {
 		try {
 			Nette\Neon\Neon::decode($s);
@@ -225,7 +225,7 @@ $checker->tasks[] = function($checker, $s) {
 };
 
 // white-space remover
-$checker->tasks[] = function($checker, $s) {
+$checker->tasks[] = function(CodeChecker $checker, $s) {
 	$new = Strings::replace($s, '#[\t ]+(\r?\n)#', '$1'); // right trim
 	$eol = preg_match('#\r?\n#', $new, $m) ? $m[0] : PHP_EOL;
 	$new = rtrim($new); // trailing trim
@@ -240,7 +240,7 @@ $checker->tasks[] = function($checker, $s) {
 };
 
 // indentation and tabs checker
-$checker->tasks[] = function($checker, $s) {
+$checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt,css,less,js,json,neon') && strpos($s, "\t") !== FALSE) {
 		if (preg_match('#(.*)^\t*\ (?!\*)#mAsU', $s, $m)) {
 			$checker->warning('Mixed tabs and spaces indentation on line ' . (substr_count($m[1], "\n") + 1) . '.');
