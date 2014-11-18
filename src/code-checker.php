@@ -70,6 +70,7 @@ class CodeChecker extends Nette\Object
 		echo "Scanning folder $folder\n";
 
 		$counter = 0;
+		$success = TRUE;
 		foreach (Nette\Utils\Finder::findFiles($this->accept)->from($folder)->exclude($this->ignore) as $file)
 		{
 			echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
@@ -81,6 +82,7 @@ class CodeChecker extends Nette\Object
 			foreach ($this->tasks as $task) {
 				$res = $task($this, $s);
 				if ($this->error) {
+					$success = FALSE;
 					continue 2;
 				} elseif (is_string($res)) {
 					$s = $res;
@@ -93,7 +95,7 @@ class CodeChecker extends Nette\Object
 		}
 
 		echo "\nDone.";
-		return !$this->error;
+		return $success;
 	}
 
 
