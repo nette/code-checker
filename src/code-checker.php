@@ -67,7 +67,7 @@ class CodeChecker extends Nette\Object
 			echo "Running in read-only mode\n";
 		}
 
-		echo "Scanning folder $folder...\n";
+		echo "Scanning folder $folder\n";
 
 		$counter = 0;
 		foreach (Nette\Utils\Finder::findFiles($this->accept)->from($folder)->exclude($this->ignore) as $file)
@@ -75,7 +75,7 @@ class CodeChecker extends Nette\Object
 			echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
 
 			$orig = $s = file_get_contents($file);
-			$this->file = ltrim(str_replace($folder, '', $file), '/\\');
+			$this->file = ltrim(substr($file, strlen($folder)), '/\\');
 			$this->error = FALSE;
 
 			foreach ($this->tasks as $task) {
