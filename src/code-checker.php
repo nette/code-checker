@@ -6,13 +6,20 @@
  * This file is part of the Nette Framework (http://nette.org)
  */
 
+use Nette\Utils\Strings,
+	Nette\CommandLine\Parser;
+
+
+set_exception_handler(function($e) {
+	echo "Error: {$e->getMessage()}\n";
+	die(2);
+});
+
+
 if (@!include __DIR__ . '/../vendor/autoload.php') {
 	echo('Install packages using `composer update`');
 	exit(1);
 }
-
-use Nette\Utils\Strings,
-	Nette\CommandLine\Parser;
 
 
 echo '
