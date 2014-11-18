@@ -9,17 +9,15 @@
 use Nette\Utils\Strings,
 	Nette\CommandLine\Parser;
 
+if (@!include __DIR__ . '/../vendor/autoload.php') {
+	echo('Install packages using `composer update`');
+	exit(1);
+}
 
 set_exception_handler(function($e) {
 	echo "Error: {$e->getMessage()}\n";
 	die(2);
 });
-
-
-if (@!include __DIR__ . '/../vendor/autoload.php') {
-	echo('Install packages using `composer update`');
-	exit(1);
-}
 
 
 echo '
@@ -33,6 +31,7 @@ Usage:
 
 Options:
     -d <path>  folder to scan (default: current directory)
+    -i <mask>  files to ignore
     -f         fixes files
     -l         convert newline characters
 
@@ -40,6 +39,7 @@ Options:
 XX
 , array(
 	'-d' => array(Parser::REALPATH => TRUE, Parser::VALUE => getcwd()),
+	'-i' => array(Parser::REPEATABLE => TRUE),
 ));
 
 $options = $cmd->parse();
@@ -86,7 +86,7 @@ class CodeChecker extends Nette\Object
 
 		$counter = 0;
 		$success = TRUE;
-		foreach (Nette\Utils\Finder::findFiles($this->accept)->from($folder)->exclude($this->ignore) as $file)
+		foreach (Nette\Utils\Finder::findFiles($this->accept)->exclude($this->ignore)->from($folder)->exclude($this->ignore) as $file)
 		{
 			echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
 
@@ -144,6 +144,9 @@ class CodeChecker extends Nette\Object
 
 
 $checker = new CodeChecker;
+foreach ($options['-i'] as $ignore) {
+	$checker->ignore[] = $ignore;
+}
 $checker->readOnly = !isset($options['-f']);
 
 // control characters checker
