@@ -102,6 +102,7 @@ class CodeChecker extends Nette\Object
 	public function fix($message)
 	{
 		echo '[' . ($this->readOnly ? 'FOUND' : 'FIX') . "] $this->file   $message\n";
+		$this->error = $this->readOnly;
 	}
 
 
@@ -259,10 +260,10 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 			$s = $res;
 		}
 		if (preg_match('#(.*)^\t*\ (?!\*)#mAsU', $s, $m)) {
-			$checker->warning('Mixed tabs and spaces indentation on line ' . (substr_count($m[1], "\n") + 1) . '.');
+			$checker->error('Mixed tabs and spaces indentation on line ' . (substr_count($m[1], "\n") + 1) . '.');
 		}
 		if (preg_match('#(.*)\S\ *\t#AsU', $s, $m)) {
-			$checker->warning('Tabulator found on line ' . (substr_count($m[1], "\n") + 1) . '.');
+			$checker->error('Tabulator found on line ' . (substr_count($m[1], "\n") + 1) . '.');
 		}
 	}
 };
