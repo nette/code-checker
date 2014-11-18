@@ -21,7 +21,7 @@ set_exception_handler(function($e) {
 
 
 echo '
-CodeChecker version 2.2
+CodeChecker version 2.3
 -----------------------
 ';
 
