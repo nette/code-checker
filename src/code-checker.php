@@ -166,13 +166,17 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 // invalid doublequoted string checker
 $checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt')) {
+		$prev = NULL;
 		foreach (token_get_all($s) as $token) {
-			if ($token[0] === T_ENCAPSED_AND_WHITESPACE || ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')) {
+			if (($token[0] === T_ENCAPSED_AND_WHITESPACE && ($prev[0] !== T_START_HEREDOC || !strpos($prev[1], "'")))
+				|| ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')
+			) {
 				$m = Strings::match($token[1], '#^([^\\\\]|\\\\[\\\\nrtvefx0-7\W])*#'); // more strict: '#^([^\\\\]|\\\\[\\\\nrtvef$"x0-7])*#'
 				if ($token[1] !== $m[0]) {
 					$checker->warning("invalid escape sequence " . substr($token[1], strlen($m[0]), 2) . " in double quoted string on line $token[2]");
 				}
 			}
+			$prev = $token;
 		}
 	}
 };
