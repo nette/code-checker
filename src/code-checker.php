@@ -210,12 +210,11 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 		try {
 			$latte = new Latte\Engine;
 			$latte->setLoader(new Latte\Loaders\StringLoader);
-			$latte->getCompiler()->addMacro('cache', new Nette\Bridges\CacheLatte\CacheMacro($latte->getCompiler()));
-			Nette\Bridges\ApplicationLatte\UIMacros::install($latte->getCompiler());
-			Nette\Bridges\FormsLatte\FormMacros::install($latte->getCompiler());
 			$latte->compile($s);
 		} catch (Latte\CompileException $e) {
-			$checker->error($e->getMessage() . ($e->sourceLine ? " on line $e->sourceLine" : ''));
+			if (!preg_match('#Unknown (macro|attribute)#A', $e->getMessage())) {
+				$checker->error($e->getMessage() . ($e->sourceLine ? " on line $e->sourceLine" : ''));
+			}
 		}
 	}
 };
