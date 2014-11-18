@@ -11,7 +11,8 @@ if (@!include __DIR__ . '/../vendor/autoload.php') {
 	exit(1);
 }
 
-use Nette\Utils\Strings;
+use Nette\Utils\Strings,
+	Nette\CommandLine\Parser;
 
 
 echo '
@@ -19,17 +20,24 @@ CodeChecker version 2.2
 -----------------------
 ';
 
-$options = getopt('d:fl');
-
-if (!$options) { ?>
-Usage: php code-checker.php [options]
+$cmd = new Parser(<<<XX
+Usage:
+    php code-checker.php [options]
 
 Options:
-	-d <path>  folder to scan (optional)
-	-f         fixes files
-	-l         convert newline characters
+    -d <path>  folder to scan (default: current directory)
+    -f         fixes files
+    -l         convert newline characters
 
-<?php
+
+XX
+, array(
+	'-d' => array(Parser::REALPATH => TRUE, Parser::VALUE => getcwd()),
+));
+
+$options = $cmd->parse();
+if ($cmd->isEmpty()) {
+	$cmd->help();
 }
 
 
@@ -129,7 +137,7 @@ class CodeChecker extends Nette\Object
 
 
 $checker = new CodeChecker;
-$checker->readOnly = !isset($options['f']);
+$checker->readOnly = !isset($options['-f']);
 
 // control characters checker
 $checker->tasks[] = function(CodeChecker $checker, $s) {
@@ -183,7 +191,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 };
 
 // newline characters normalizer for the current OS
-if (isset($options['l'])) {
+if (isset($options['-l'])) {
 	$checker->tasks[] = function(CodeChecker $checker, $s) {
 		$new = str_replace("\n", PHP_EOL, str_replace(array("\r\n", "\r"), "\n", $s));
 		if (!$checker->is('sh') && $new !== $s) {
@@ -267,6 +275,6 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 	}
 };
 
-$ok = $checker->run(isset($options['d']) ? $options['d'] : getcwd());
+$ok = $checker->run($options['-d']);
 
 exit($ok ? 0 : 1);
