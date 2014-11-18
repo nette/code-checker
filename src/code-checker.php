@@ -242,6 +242,16 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 // indentation and tabs checker
 $checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt,css,less,js,json,neon') && strpos($s, "\t") !== FALSE) {
+		if ($checker->is('php,phpt')) { // remove spaces from strings
+			$res = '';
+			foreach (token_get_all($s) as $token) {
+				if (is_array($token) && in_array($token[0], array(T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING))) {
+					$token[1] = preg_replace('#\s#', '', $token[1]);
+				}
+				$res .= is_array($token) ? $token[1] : $token;
+			}
+			$s = $res;
+		}
 		if (preg_match('#(.*)^\t*\ (?!\*)#mAsU', $s, $m)) {
 			$checker->warning('Mixed tabs and spaces indentation on line ' . (substr_count($m[1], "\n") + 1) . '.');
 		}
