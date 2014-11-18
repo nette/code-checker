@@ -1,0 +1,9 @@
+language: php
+php:
+    - 5.3.3
+
+script:
+    - php code-checker/src/code-checker.php
+
+before_script:
+    - composer create-project nette/code-checker code-checker ~2.2 --no-interaction --prefer-source
