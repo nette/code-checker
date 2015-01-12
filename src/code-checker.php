@@ -19,6 +19,13 @@ set_exception_handler(function($e) {
 	die(2);
 });
 
+set_error_handler(function($severity, $message, $file, $line) {
+	if (($severity & error_reporting()) === $severity) {
+		throw new ErrorException($message, 0, $severity, $file, $line);
+	}
+	return FALSE;
+});
+
 
 echo '
 CodeChecker version 2.3
