@@ -161,7 +161,7 @@ $checker->readOnly = !isset($options['-f']);
 // control characters checker
 $checker->tasks[] = function(CodeChecker $checker, $s) {
 	if (!Strings::match($s, '#^[^\x00-\x08\x0B\x0C\x0E-\x1F]*+$#')) {
-		$checker->error('contains control characters');
+		$checker->error('Contains control characters');
 	}
 };
 
@@ -176,7 +176,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 // UTF-8 checker
 $checker->tasks[] = function(CodeChecker $checker, $s) {
 	if (!Strings::checkEncoding($s)) {
-		$checker->error('in not valid UTF-8 file');
+		$checker->error('Is not valid UTF-8 file');
 	}
 };
 
@@ -185,7 +185,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt')) {
 		foreach (token_get_all($s) as $token) {
 			if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*\s.*@[a-z]#isA')) {
-				$checker->warning('missing /** in phpDoc comment', $token[2]);
+				$checker->warning('Missing /** in phpDoc comment', $token[2]);
 			}
 		}
 	}
@@ -201,7 +201,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 			) {
 				$m = Strings::match($token[1], '#^([^\\\\]|\\\\[\\\\nrtvefx0-7\W])*+#'); // more strict: '#^([^\\\\]|\\\\[\\\\nrtvef$"x0-7])*+#'
 				if ($token[1] !== $m[0]) {
-					$checker->warning('invalid escape sequence ' . substr($token[1], strlen($m[0]), 2) . ' in double quoted string', $token[2]);
+					$checker->warning('Invalid escape sequence ' . substr($token[1], strlen($m[0]), 2) . ' in double quoted string', $token[2]);
 				}
 			}
 			$prev = $token;
@@ -292,7 +292,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 		}
 		if (preg_match('#(?<=[\S ])\t#', $s, $m, PREG_OFFSET_CAPTURE)) {
 			$line = substr_count($orig, "\n", 0, $m[0][1]) + 1;
-			$checker->error('Tabulator found', $line);
+			$checker->error('Found unexpected tabulator', $line);
 		}
 	}
 };
