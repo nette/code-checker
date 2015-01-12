@@ -151,7 +151,7 @@ $checker->readOnly = !isset($options['-f']);
 
 // control characters checker
 $checker->tasks[] = function(CodeChecker $checker, $s) {
-	if (Strings::match($s, '#[\x00-\x08\x0B\x0C\x0E-\x1F]#')) {
+	if (!Strings::match($s, '#^[^\x00-\x08\x0B\x0C\x0E-\x1F]*+$#')) {
 		$checker->error('contains control characters');
 	}
 };
@@ -190,7 +190,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 			if (($token[0] === T_ENCAPSED_AND_WHITESPACE && ($prev[0] !== T_START_HEREDOC || !strpos($prev[1], "'")))
 				|| ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')
 			) {
-				$m = Strings::match($token[1], '#^([^\\\\]|\\\\[\\\\nrtvefx0-7\W])*#'); // more strict: '#^([^\\\\]|\\\\[\\\\nrtvef$"x0-7])*#'
+				$m = Strings::match($token[1], '#^([^\\\\]|\\\\[\\\\nrtvefx0-7\W])*+#'); // more strict: '#^([^\\\\]|\\\\[\\\\nrtvef$"x0-7])*+#'
 				if ($token[1] !== $m[0]) {
 					$checker->warning("invalid escape sequence " . substr($token[1], strlen($m[0]), 2) . " in double quoted string on line $token[2]");
 				}
@@ -266,21 +266,24 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 // indentation and tabs checker
 $checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt,css,less,js,json,neon') && strpos($s, "\t") !== FALSE) {
+		$orig = $s;
 		if ($checker->is('php,phpt')) { // remove spaces from strings
 			$res = '';
 			foreach (token_get_all($s) as $token) {
 				if (is_array($token) && in_array($token[0], array(T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING))) {
-					$token[1] = preg_replace('#\s#', '', $token[1]);
+					$token[1] = preg_replace('#\s#', '.', $token[1]);
 				}
 				$res .= is_array($token) ? $token[1] : $token;
 			}
 			$s = $res;
 		}
-		if (preg_match('#(.*)^\t*\ (?!\*)#mAsU', $s, $m)) {
-			$checker->error('Mixed tabs and spaces indentation on line ' . (substr_count($m[1], "\n") + 1) . '.');
+		if (preg_match('#^\t*+\ (?!\*)#m', $s, $m, PREG_OFFSET_CAPTURE)) {
+			$line = substr_count($orig, "\n", 0, $m[0][1]) + 1;
+			$checker->error("Mixed tabs and spaces indentation on line $line.");
 		}
-		if (preg_match('#(.*)\S\ *\t#AsU', $s, $m)) {
-			$checker->error('Tabulator found on line ' . (substr_count($m[1], "\n") + 1) . '.');
+		if (preg_match('#(?<=[\S ])\t#', $s, $m, PREG_OFFSET_CAPTURE)) {
+			$line = substr_count($orig, "\n", 0, $m[0][1]) + 1;
+			$checker->error("Tabulator found on line $line.");
 		}
 	}
 };
