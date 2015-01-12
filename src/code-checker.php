@@ -128,15 +128,17 @@ class CodeChecker extends Nette\Object
 	}
 
 
-	public function warning($message)
+	public function warning($message, $line = NULL)
 	{
-		echo "[WARNING] $this->file   $message\n";
+		$line = $line ? ":$line" : '';
+		echo "[WARNING] $this->file$line   $message\n";
 	}
 
 
-	public function error($message)
+	public function error($message, $line = NULL)
 	{
-		echo "[ERROR] $this->file   $message\n";
+		$line = $line ? ":$line" : '';
+		echo "[ERROR] $this->file$line   $message\n";
 		$this->error = TRUE;
 	}
 
@@ -183,7 +185,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt')) {
 		foreach (token_get_all($s) as $token) {
 			if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*\s.*@[a-z]#isA')) {
-				$checker->warning("missing /** in phpDoc comment on line $token[2]");
+				$checker->warning('missing /** in phpDoc comment', $token[2]);
 			}
 		}
 	}
@@ -199,7 +201,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 			) {
 				$m = Strings::match($token[1], '#^([^\\\\]|\\\\[\\\\nrtvefx0-7\W])*+#'); // more strict: '#^([^\\\\]|\\\\[\\\\nrtvef$"x0-7])*+#'
 				if ($token[1] !== $m[0]) {
-					$checker->warning("invalid escape sequence " . substr($token[1], strlen($m[0]), 2) . " in double quoted string on line $token[2]");
+					$checker->warning('invalid escape sequence ' . substr($token[1], strlen($m[0]), 2) . ' in double quoted string', $token[2]);
 				}
 			}
 			$prev = $token;
@@ -238,7 +240,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 			$latte->compile($s);
 		} catch (Latte\CompileException $e) {
 			if (!preg_match('#Unknown (macro|attribute)#A', $e->getMessage())) {
-				$checker->error($e->getMessage() . ($e->sourceLine ? " on line $e->sourceLine" : ''));
+				$checker->error($e->getMessage(), $e->sourceLine);
 			}
 		}
 	}
@@ -286,11 +288,11 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 		}
 		if (preg_match('#^\t*+\ (?!\*)#m', $s, $m, PREG_OFFSET_CAPTURE)) {
 			$line = substr_count($orig, "\n", 0, $m[0][1]) + 1;
-			$checker->error("Mixed tabs and spaces indentation on line $line.");
+			$checker->error('Mixed tabs and spaces indentation', $line);
 		}
 		if (preg_match('#(?<=[\S ])\t#', $s, $m, PREG_OFFSET_CAPTURE)) {
 			$line = substr_count($orig, "\n", 0, $m[0][1]) + 1;
-			$checker->error("Tabulator found on line $line.");
+			$checker->error('Tabulator found', $line);
 		}
 	}
 };
