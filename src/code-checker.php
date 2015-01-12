@@ -62,6 +62,8 @@ class CodeChecker extends Nette\Object
 
 	public $readOnly = FALSE;
 
+	public $useColors;
+
 	public $accept = array(
 		'*.php', '*.phpt', '*.inc',
 		'*.txt', '*.texy', '*.md',
@@ -85,11 +87,14 @@ class CodeChecker extends Nette\Object
 	{
 		set_time_limit(0);
 
+		$this->useColors = PHP_SAPI === 'cli' && ((function_exists('posix_isatty') && posix_isatty(STDOUT))
+			|| getenv('ConEmuANSI') === 'ON' || getenv('ANSICON') !== FALSE);
+
 		if ($this->readOnly) {
 			echo "Running in read-only mode\n";
 		}
 
-		echo "Scanning folder $folder\n";
+		echo "Scanning folder {$this->color('white', $folder)}\n";
 
 		$counter = 0;
 		$success = TRUE;
@@ -123,23 +128,50 @@ class CodeChecker extends Nette\Object
 
 	public function fix($message)
 	{
-		echo '[' . ($this->readOnly ? 'FOUND' : 'FIX') . "] $this->file   $message\n";
+		$this->write($this->readOnly ? 'FOUND' : 'FIX', $message, NULL, 'aqua');
 		$this->error = $this->readOnly;
 	}
 
 
 	public function warning($message, $line = NULL)
 	{
-		$line = $line ? ":$line" : '';
-		echo "[WARNING] $this->file$line   $message\n";
+		$this->write('WARNING', $message, $line, 'yellow');
 	}
 
 
 	public function error($message, $line = NULL)
 	{
-		$line = $line ? ":$line" : '';
-		echo "[ERROR] $this->file$line   $message\n";
+		$this->write('ERROR', $message, $line, 'red');
 		$this->error = TRUE;
+	}
+
+
+	private function write($type, $message, $line, $color)
+	{
+		$base = basename($this->file);
+		echo $this->color($color, str_pad("[$type]", 10)),
+			$base === $this->file ? '' : $this->color('silver', dirname($this->file) . DIRECTORY_SEPARATOR),
+			$this->color('white', $base . ($line ? ':' . $line : '')), '    ',
+			$this->color($color, $message), "\n";
+	}
+
+
+	public function color($color = NULL, $s = NULL)
+	{
+		static $colors = array(
+			'black' => '0;30', 'gray' => '1;30', 'silver' => '0;37', 'white' => '1;37',
+			'navy' => '0;34', 'blue' => '1;34', 'green' => '0;32', 'lime' => '1;32',
+			'teal' => '0;36', 'aqua' => '1;36', 'maroon' => '0;31', 'red' => '1;31',
+			'purple' => '0;35', 'fuchsia' => '1;35', 'olive' => '0;33', 'yellow' => '1;33',
+			NULL => '0',
+		);
+		if ($this->useColors) {
+			$c = explode('/', $color);
+			$s = "\033[" . ($c[0] ? $colors[$c[0]] : '')
+				. (empty($c[1]) ? '' : ';4' . substr($colors[$c[1]], -1))
+				. 'm' . $s . ($s === NULL ? '' : "\033[0m");
+		}
+		return $s;
 	}
 
 
