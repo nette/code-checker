@@ -67,7 +67,7 @@ class CodeChecker extends Nette\Object
 	public $accept = array(
 		'*.php', '*.phpt', '*.inc',
 		'*.txt', '*.texy', '*.md',
-		'*.css', '*.less', '*.js', '*.json', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
+		'*.css', '*.less', '*.sass', '*.scss', '*.js', '*.json', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
 		'*.ini', '*.neon',
 		'*.sh', '*.bat',
 		'*.sql',
