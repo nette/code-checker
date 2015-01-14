@@ -18,7 +18,8 @@ Usage:
 php code-checker.php [options]
 
 Options:
-	-d <path>  folder to scan (optional)
+	-d <path>  folder to scan (default: current directory)
+	-i <mask>  files or directories to ignore (can be used multiple times)
 	-f         fixes files
 	-l         convert newline characters
 ```
