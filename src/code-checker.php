@@ -121,7 +121,7 @@ class CodeChecker extends Nette\Object
 			}
 		}
 
-		echo "\nDone.";
+		echo str_pad('', 40), "\x0DDone.\n";
 		return $success;
 	}
 
