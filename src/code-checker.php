@@ -75,7 +75,7 @@ class CodeChecker extends Nette\Object
 	);
 
 	public $ignore = array(
-		'.*', '*.tmp', 'tmp', 'temp', 'log', 'vendor',
+		'.*', '*.tmp', 'tmp', 'temp', 'log', 'vendor', 'node_modules', 'bower_components',
 	);
 
 	private $file;
