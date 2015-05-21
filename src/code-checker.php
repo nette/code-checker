@@ -37,16 +37,16 @@ Usage:
     php code-checker.php [options]
 
 Options:
-    -d <path>  folder to scan (default: current directory)
-    -i <mask>  files to ignore
-    -f         fixes files
-    -l         convert newline characters
+    -d <path>             Folder to scan (default: current directory)
+    -i | --ignore <mask>  Files to ignore
+    -f | --fix            Fixes files
+    -l | --eol            Convert newline characters
 
 
 XX
 , array(
 	'-d' => array(Parser::REALPATH => TRUE, Parser::VALUE => getcwd()),
-	'-i' => array(Parser::REPEATABLE => TRUE),
+	'--ignore' => array(Parser::REPEATABLE => TRUE),
 ));
 
 $options = $cmd->parse();
@@ -185,10 +185,10 @@ class CodeChecker extends Nette\Object
 
 
 $checker = new CodeChecker;
-foreach ($options['-i'] as $ignore) {
+foreach ($options['--ignore'] as $ignore) {
 	$checker->ignore[] = $ignore;
 }
-$checker->readOnly = !isset($options['-f']);
+$checker->readOnly = !isset($options['--fix']);
 
 // control characters checker
 $checker->tasks[] = function(CodeChecker $checker, $s) {
@@ -242,7 +242,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 };
 
 // newline characters normalizer for the current OS
-if (isset($options['-l'])) {
+if (isset($options['--eol'])) {
 	$checker->tasks[] = function(CodeChecker $checker, $s) {
 		$new = str_replace("\n", PHP_EOL, str_replace(array("\r\n", "\r"), "\n", $s));
 		if (!$checker->is('sh') && $new !== $s) {
