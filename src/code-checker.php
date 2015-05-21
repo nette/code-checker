@@ -41,6 +41,7 @@ Options:
     -i | --ignore <mask>  Files to ignore
     -f | --fix            Fixes files
     -l | --eol            Convert newline characters
+    --short-arrays        Enforces PHP 5.4 short array syntax
 
 
 XX
@@ -126,9 +127,9 @@ class CodeChecker extends Nette\Object
 	}
 
 
-	public function fix($message)
+	public function fix($message, $line = NULL)
 	{
-		$this->write($this->readOnly ? 'FOUND' : 'FIX', $message, NULL, 'aqua');
+		$this->write($this->readOnly ? 'FOUND' : 'FIX', $message, $line, 'aqua');
 		$this->error = $this->readOnly;
 	}
 
@@ -222,6 +223,41 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 		}
 	}
 };
+
+// short PHP 5.4 arrays
+if (isset($options['--short-arrays'])) {
+	$checker->tasks[] = function(CodeChecker $checker, $s) {
+		if ($checker->is('php,phpt')) {
+			$out = '';
+			$brackets = array();
+			$tokens = token_get_all($s);
+
+			for ($i = 0; $i < count($tokens); $i++) {
+				$token = $tokens[$i];
+				if ($token === '(') {
+					$brackets[] = FALSE;
+
+				} elseif ($token === ')') {
+					$token = array_pop($brackets) ? ']' : ')';
+
+				} elseif (is_array($token) && $token[0] === T_ARRAY) {
+					$a = $i + 1;
+					if (isset($tokens[$a]) && $tokens[$a][0] === T_WHITESPACE) {
+						$a++;
+					}
+					if (isset($tokens[$a]) && $tokens[$a] === '(') {
+						$checker->fix('uses old array() syntax', $token[2]);
+						$i = $a;
+						$brackets[] = TRUE;
+						$token = '[';
+					}
+				}
+				$out .= is_array($token) ? $token[1] : $token;
+			}
+			return $out;
+		}
+	};
+}
 
 // invalid doublequoted string checker
 $checker->tasks[] = function(CodeChecker $checker, $s) {
