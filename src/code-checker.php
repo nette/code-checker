@@ -6,20 +6,20 @@
  * This file is part of the Nette Framework (http://nette.org)
  */
 
-use Nette\Utils\Strings,
-	Nette\CommandLine\Parser;
+use Nette\Utils\Strings;
+use Nette\CommandLine\Parser;
 
 if (@!include __DIR__ . '/../vendor/autoload.php') {
 	echo('Install packages using `composer update`');
 	exit(1);
 }
 
-set_exception_handler(function($e) {
+set_exception_handler(function ($e) {
 	echo "Error: {$e->getMessage()}\n";
 	die(2);
 });
 
-set_error_handler(function($severity, $message, $file, $line) {
+set_error_handler(function ($severity, $message, $file, $line) {
 	if (($severity & error_reporting()) === $severity) {
 		throw new ErrorException($message, 0, $severity, $file, $line);
 	}
@@ -192,14 +192,14 @@ foreach ($options['--ignore'] as $ignore) {
 $checker->readOnly = !isset($options['--fix']);
 
 // control characters checker
-$checker->tasks[] = function(CodeChecker $checker, $s) {
+$checker->tasks[] = function (CodeChecker $checker, $s) {
 	if (!Strings::match($s, '#^[^\x00-\x08\x0B\x0C\x0E-\x1F]*+$#')) {
 		$checker->error('Contains control characters');
 	}
 };
 
 // BOM remover
-$checker->tasks[] = function(CodeChecker $checker, $s) {
+$checker->tasks[] = function (CodeChecker $checker, $s) {
 	if (substr($s, 0, 3) === "\xEF\xBB\xBF") {
 		$checker->fix('contains BOM');
 		return substr($s, 3);
@@ -207,14 +207,14 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 };
 
 // UTF-8 checker
-$checker->tasks[] = function(CodeChecker $checker, $s) {
+$checker->tasks[] = function (CodeChecker $checker, $s) {
 	if (!Strings::checkEncoding($s)) {
 		$checker->error('Is not valid UTF-8 file');
 	}
 };
 
 // invalid phpDoc checker
-$checker->tasks[] = function(CodeChecker $checker, $s) {
+$checker->tasks[] = function (CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt')) {
 		foreach (token_get_all($s) as $token) {
 			if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*\s.*@[a-z]#isA')) {
@@ -226,7 +226,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 
 // short PHP 5.4 arrays
 if (isset($options['--short-arrays'])) {
-	$checker->tasks[] = function(CodeChecker $checker, $s) {
+	$checker->tasks[] = function (CodeChecker $checker, $s) {
 		if ($checker->is('php,phpt')) {
 			$out = '';
 			$brackets = array();
@@ -260,7 +260,7 @@ if (isset($options['--short-arrays'])) {
 }
 
 // invalid doublequoted string checker
-$checker->tasks[] = function(CodeChecker $checker, $s) {
+$checker->tasks[] = function (CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt')) {
 		$prev = NULL;
 		foreach (token_get_all($s) as $token) {
@@ -279,7 +279,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 
 // newline characters normalizer for the current OS
 if (isset($options['--eol'])) {
-	$checker->tasks[] = function(CodeChecker $checker, $s) {
+	$checker->tasks[] = function (CodeChecker $checker, $s) {
 		$new = str_replace("\n", PHP_EOL, str_replace(array("\r\n", "\r"), "\n", $s));
 		if (!$checker->is('sh') && $new !== $s) {
 			$checker->fix('contains non-system line-endings');
@@ -289,7 +289,7 @@ if (isset($options['--eol'])) {
 }
 
 // trailing ? > remover
-$checker->tasks[] = function(CodeChecker $checker, $s) {
+$checker->tasks[] = function (CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt')) {
 		$tmp = rtrim($s);
 		if (substr($tmp, -2) === '?>') {
@@ -300,7 +300,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 };
 
 // lint Latte templates
-$checker->tasks[] = function(CodeChecker $checker, $s) {
+$checker->tasks[] = function (CodeChecker $checker, $s) {
 	if ($checker->is('latte')) {
 		try {
 			$latte = new Latte\Engine;
@@ -315,7 +315,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 };
 
 // lint Neon
-$checker->tasks[] = function(CodeChecker $checker, $s) {
+$checker->tasks[] = function (CodeChecker $checker, $s) {
 	if ($checker->is('neon')) {
 		try {
 			Nette\Neon\Neon::decode($s);
@@ -326,7 +326,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 };
 
 // white-space remover
-$checker->tasks[] = function(CodeChecker $checker, $s) {
+$checker->tasks[] = function (CodeChecker $checker, $s) {
 	$new = Strings::replace($s, '#[\t ]+(\r?\n)#', '$1'); // right trim
 	$eol = preg_match('#\r?\n#', $new, $m) ? $m[0] : PHP_EOL;
 	$new = rtrim($new); // trailing trim
@@ -341,7 +341,7 @@ $checker->tasks[] = function(CodeChecker $checker, $s) {
 };
 
 // indentation and tabs checker
-$checker->tasks[] = function(CodeChecker $checker, $s) {
+$checker->tasks[] = function (CodeChecker $checker, $s) {
 	if ($checker->is('php,phpt,css,less,js,json,neon') && strpos($s, "\t") !== FALSE) {
 		$orig = $s;
 		if ($checker->is('php,phpt')) { // remove spaces from strings
