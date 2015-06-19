@@ -342,7 +342,7 @@ $checker->tasks[] = function (CodeChecker $checker, $s) {
 
 // indentation and tabs checker
 $checker->tasks[] = function (CodeChecker $checker, $s) {
-	if ($checker->is('php,phpt,css,less,js,json,neon') && strpos($s, "\t") !== FALSE) {
+	if ($checker->is('php,phpt,css,less,js,json,neon')) {
 		$orig = $s;
 		if ($checker->is('php,phpt')) { // remove spaces from strings
 			$res = '';
