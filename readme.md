@@ -21,7 +21,7 @@ Usage:
 php code-checker.php [options]
 
 Options:
-	-d <path>             folder to scan (default: current directory)
+	-d <path>             folder to scan (default: current directory) or file
 	-i | --ignore <mask>  files or directories to ignore (can be used multiple times)
 	-f | --fix            fixes files
 	-l | --eol            convert newline characters
