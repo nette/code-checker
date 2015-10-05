@@ -6,4 +6,10 @@ script:
     - php code-checker/src/code-checker.php
 
 before_script:
-    - composer create-project nette/code-checker code-checker ~2.2 --no-interaction --prefer-source
+    - travis_retry composer create-project nette/code-checker code-checker ~2.5 --no-interaction --prefer-dist
+  
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.composer/cache
