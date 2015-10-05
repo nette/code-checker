@@ -3,7 +3,7 @@
 /**
  * Source Codes Checker.
  *
- * This file is part of the Nette Framework (http://nette.org)
+ * This file is part of the Nette Framework (https://nette.org)
  */
 
 use Nette\Utils\Strings;
