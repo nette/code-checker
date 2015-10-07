@@ -84,6 +84,10 @@ class CodeChecker extends Nette\Object
 	private $error;
 
 
+	/**
+	* @param string $folder
+	* @return bool
+	*/
 	public function run($folder)
 	{
 		set_time_limit(0);
@@ -95,6 +99,18 @@ class CodeChecker extends Nette\Object
 			echo "Running in read-only mode\n";
 		}
 
+		if (is_dir($folder)) {
+			return $this->scanFolder($folder);
+		}
+		return $this->scanFile($folder);
+	}
+
+	/**
+	* @param string $folder
+	* @return bool
+	*/
+	private function scanFolder($folder)
+	{
 		echo "Scanning folder {$this->color('white', $folder)}\n";
 
 		$counter = 0;
@@ -102,30 +118,55 @@ class CodeChecker extends Nette\Object
 		foreach (Nette\Utils\Finder::findFiles($this->accept)->exclude($this->ignore)->from($folder)->exclude($this->ignore) as $file)
 		{
 			echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
-
-			$orig = $s = file_get_contents($file);
-			$this->file = ltrim(substr($file, strlen($folder)), '/\\');
-			$this->error = FALSE;
-
-			foreach ($this->tasks as $task) {
-				$res = $task($this, $s);
-				if ($this->error) {
-					$success = FALSE;
-					continue 2;
-				} elseif (is_string($res)) {
-					$s = $res;
-				}
-			}
-
-			if ($s !== $orig && !$this->readOnly) {
-				file_put_contents($file, $s);
-			}
+			$success &= $this->checkOneFile($file, $folder);
 		}
 
 		echo str_pad('', 40), "\x0DDone.\n";
 		return $success;
 	}
 
+	/**
+	* @param string $file
+	* @return bool
+	*/
+	private function scanFile($file)
+	{
+		echo "Scanning file {$this->color('white', $file)}\n";
+		echo '.';
+		$success = $this->checkOneFile($file);
+		echo str_pad('', 40), "\x0DDone.\n";
+		return $success;
+	}
+
+	/**
+	* @param string $file
+	* @param string $folder
+	* @return bool
+	*/
+	private function checkOneFile($file, $folder = null)
+	{
+		$success = TRUE;
+		if (is_null($folder)) {
+			$folder = dirname($file);
+		}
+		$orig = $s = file_get_contents($file);
+		$this->file = ltrim(substr($file, strlen($folder)), '/\\');
+		$this->error = FALSE;
+
+		foreach ($this->tasks as $task) {
+			$res = $task($this, $s);
+			if ($this->error) {
+				return FALSE;
+			} elseif (is_string($res)) {
+				$s = $res;
+			}
+		}
+
+		if ($s !== $orig && !$this->readOnly) {
+			file_put_contents($file, $s);
+		}
+		return $success;
+	}
 
 	public function fix($message, $line = NULL)
 	{
