@@ -111,7 +111,7 @@ class CodeChecker extends Nette\Object
 				$res = $task($this, $s);
 				if ($this->error) {
 					$success = FALSE;
-					continue 2;
+					break;
 				} elseif (is_string($res)) {
 					$s = $res;
 				}
