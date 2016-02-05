@@ -89,7 +89,7 @@ class CodeChecker extends Nette\Object
 		set_time_limit(0);
 
 		$this->useColors = PHP_SAPI === 'cli' && ((function_exists('posix_isatty') && posix_isatty(STDOUT))
-			|| getenv('ConEmuANSI') === 'ON' || getenv('ANSICON') !== FALSE);
+				|| getenv('ConEmuANSI') === 'ON' || getenv('ANSICON') !== FALSE || getenv('term') === 'xterm-256color');
 
 		if ($this->readOnly) {
 			echo "Running in read-only mode\n";
