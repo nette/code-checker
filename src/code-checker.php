@@ -37,7 +37,7 @@ Usage:
     php code-checker.php [options]
 
 Options:
-    -d <path>             Folder to scan (default: current directory)
+    -d <path>             Folder or file to scan (default: current directory)
     -i | --ignore <mask>  Files to ignore
     -f | --fix            Fixes files
     -l | --eol            Convert newline characters
@@ -84,7 +84,7 @@ class CodeChecker extends Nette\Object
 	private $error;
 
 
-	public function run($folder)
+	public function run($path)
 	{
 		set_time_limit(0);
 
@@ -95,16 +95,20 @@ class CodeChecker extends Nette\Object
 			echo "Running in read-only mode\n";
 		}
 
-		echo "Scanning folder {$this->color('white', $folder)}\n";
+		echo "Scanning {$this->color('white', $path)}\n";
 
 		$counter = 0;
 		$success = TRUE;
-		foreach (Nette\Utils\Finder::findFiles($this->accept)->exclude($this->ignore)->from($folder)->exclude($this->ignore) as $file)
+		$files = is_file($path)
+			? array($path)
+			: Nette\Utils\Finder::findFiles($this->accept)->exclude($this->ignore)->from($path)->exclude($this->ignore);
+
+		foreach ($files as $file)
 		{
 			echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
 
 			$orig = $s = file_get_contents($file);
-			$this->file = ltrim(substr($file, strlen($folder)), '/\\');
+			$this->file = ltrim(substr($file, strlen($path)), '/\\');
 			$this->error = FALSE;
 
 			foreach ($this->tasks as $task) {
