@@ -69,14 +69,14 @@ class CodeChecker extends Nette\Object
 		'*.php', '*.phpt', '*.inc',
 		'*.txt', '*.texy', '*.md',
 		'*.css', '*.less', '*.sass', '*.scss', '*.js', '*.json', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
-		'*.ini', '*.neon',
+		'*.ini', '*.neon', '*.yml',
 		'*.sh', '*.bat',
 		'*.sql',
 		'.htaccess', '.gitignore',
 	);
 
 	public $ignore = array(
-		'.*', '*.tmp', 'tmp', 'temp', 'log', 'vendor', 'node_modules', 'bower_components',
+		'.git', '.svn', '.idea', '*.tmp', 'tmp', 'temp', 'log', 'vendor', 'node_modules', 'bower_components',
 	);
 
 	private $file;
