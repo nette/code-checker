@@ -8,7 +8,7 @@ Code Checker
 
 A simple tool to check source code against a set of Nette coding standards.
 
-Code Checker requires PHP 5.3.1 or newer. The best way how to install is to use a [Composer](https://doc.nette.org/composer):
+Code Checker requires PHP 5.4 or newer. The best way how to install is to use a [Composer](https://doc.nette.org/composer):
 
 ```
 composer create-project nette/code-checker

@@ -45,10 +45,10 @@ Options:
 
 
 XX
-, array(
-	'-d' => array(Parser::REALPATH => TRUE, Parser::VALUE => getcwd()),
-	'--ignore' => array(Parser::REPEATABLE => TRUE),
-));
+, [
+	'-d' => [Parser::REALPATH => TRUE, Parser::VALUE => getcwd()],
+	'--ignore' => [Parser::REPEATABLE => TRUE],
+]);
 
 $options = $cmd->parse();
 if ($cmd->isEmpty()) {
@@ -59,13 +59,13 @@ if ($cmd->isEmpty()) {
 
 class CodeChecker extends Nette\Object
 {
-	public $tasks = array();
+	public $tasks = [];
 
 	public $readOnly = FALSE;
 
 	public $useColors;
 
-	public $accept = array(
+	public $accept = [
 		'*.php', '*.phpt', '*.inc',
 		'*.txt', '*.texy', '*.md',
 		'*.css', '*.less', '*.sass', '*.scss', '*.js', '*.json', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
@@ -73,11 +73,11 @@ class CodeChecker extends Nette\Object
 		'*.sh', '*.bat',
 		'*.sql',
 		'.htaccess', '.gitignore',
-	);
+	];
 
-	public $ignore = array(
+	public $ignore = [
 		'.git', '.svn', '.idea', '*.tmp', 'tmp', 'temp', 'log', 'vendor', 'node_modules', 'bower_components',
-	);
+	];
 
 	private $file;
 
@@ -100,7 +100,7 @@ class CodeChecker extends Nette\Object
 		$counter = 0;
 		$success = TRUE;
 		$files = is_file($path)
-			? array($path)
+			? [$path]
 			: Nette\Utils\Finder::findFiles($this->accept)->exclude($this->ignore)->from($path)->exclude($this->ignore);
 
 		foreach ($files as $file)
@@ -163,13 +163,13 @@ class CodeChecker extends Nette\Object
 
 	public function color($color = NULL, $s = NULL)
 	{
-		static $colors = array(
+		static $colors = [
 			'black' => '0;30', 'gray' => '1;30', 'silver' => '0;37', 'white' => '1;37',
 			'navy' => '0;34', 'blue' => '1;34', 'green' => '0;32', 'lime' => '1;32',
 			'teal' => '0;36', 'aqua' => '1;36', 'maroon' => '0;31', 'red' => '1;31',
 			'purple' => '0;35', 'fuchsia' => '1;35', 'olive' => '0;33', 'yellow' => '1;33',
 			NULL => '0',
-		);
+		];
 		if ($this->useColors) {
 			$c = explode('/', $color);
 			$s = "\033[" . ($c[0] ? $colors[$c[0]] : '')
@@ -233,7 +233,7 @@ if (isset($options['--short-arrays'])) {
 	$checker->tasks[] = function (CodeChecker $checker, $s) {
 		if ($checker->is('php,phpt')) {
 			$out = '';
-			$brackets = array();
+			$brackets = [];
 			$tokens = token_get_all($s);
 
 			for ($i = 0; $i < count($tokens); $i++) {
@@ -284,7 +284,7 @@ $checker->tasks[] = function (CodeChecker $checker, $s) {
 // newline characters normalizer for the current OS
 if (isset($options['--eol'])) {
 	$checker->tasks[] = function (CodeChecker $checker, $s) {
-		$new = str_replace("\n", PHP_EOL, str_replace(array("\r\n", "\r"), "\n", $s));
+		$new = str_replace("\n", PHP_EOL, str_replace(["\r\n", "\r"], "\n", $s));
 		if (!$checker->is('sh') && $new !== $s) {
 			$checker->fix('contains non-system line-endings');
 			return $new;
@@ -351,7 +351,7 @@ $checker->tasks[] = function (CodeChecker $checker, $s) {
 		if ($checker->is('php,phpt')) { // remove spaces from strings
 			$res = '';
 			foreach (token_get_all($s) as $token) {
-				if (is_array($token) && in_array($token[0], array(T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING))) {
+				if (is_array($token) && in_array($token[0], [T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING])) {
 					$token[1] = preg_replace('#\s#', '.', $token[1]);
 				}
 				$res .= is_array($token) ? $token[1] : $token;
