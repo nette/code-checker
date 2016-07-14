@@ -366,6 +366,9 @@ $checker->tasks[] = function ($s) {
 			$line = substr_count($orig, "\n", 0, $m[0][1]) + 1;
 			$this->error('Found unexpected tabulator', $line);
 		}
+	} elseif ($this->is('yml') && ($pos = strpos($s, "\t")) !== FALSE) {
+		$line = substr_count($s, "\n", 0, $pos) + 1;
+		$this->error('Found unexpected tabulator', $line);
 	}
 };
 
