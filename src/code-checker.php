@@ -363,7 +363,7 @@ $checker->tasks[] = function ($s) {
 			$line = $m[0][1] ? substr_count($orig, "\n", 0, $m[0][1]) + 1 : 1;
 			$this->error('Mixed tabs and spaces indentation', $line);
 		}
-		if (preg_match('#(?<=[\S ])\t#', $s, $m, PREG_OFFSET_CAPTURE)) {
+		if (preg_match('#(?<=[\S ])(?<!^//)\t#m', $s, $m, PREG_OFFSET_CAPTURE)) {
 			$line = substr_count($orig, "\n", 0, $m[0][1]) + 1;
 			$this->error('Found unexpected tabulator', $line);
 		}
