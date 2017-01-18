@@ -3,10 +3,10 @@ php:
     - 5.4
 
 script:
-    - php code-checker/src/code-checker.php
+    - php code-checker/src/code-checker.php --short-arrays
 
 before_script:
-    - travis_retry composer create-project nette/code-checker code-checker ~2.5 --no-interaction --prefer-dist
+    - travis_retry composer create-project nette/code-checker code-checker ~2.7 --no-interaction --prefer-dist
 
 sudo: false
 
