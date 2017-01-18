@@ -42,6 +42,7 @@ Options:
     -f | --fix            Fixes files
     -l | --eol            Convert newline characters
     --short-arrays        Enforces PHP 5.4 short array syntax
+    --strict-types        Checks whether PHP 7.0 directive strict_types is enabled
 
 
 XX
@@ -260,6 +261,28 @@ if (isset($options['--short-arrays'])) {
 				$out .= is_array($token) ? $token[1] : $token;
 			}
 			return $out;
+		}
+	};
+}
+
+// PHP 7.0 strict types declaration
+if (isset($options['--strict-types'])) {
+	$checker->tasks[] = function ($s) {
+		if ($this->is('php,phpt')) {
+			$declarations = '';
+			$tokens = token_get_all($s);
+			for ($i = 0; $i < count($tokens); $i++) {
+				if ($tokens[$i][0] === T_DECLARE) {
+					while (isset($tokens[++$i]) && $tokens[$i] !== ';') {
+						$declarations .= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+					}
+				} elseif (!in_array($tokens[$i][0], [T_OPEN_TAG, T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], TRUE)) {
+					break;
+				}
+			}
+			if (!preg_match('#\bstrict_types\s*=\s*1\b#', $declarations)) {
+				$this->error('Missing declare(strict_types=1)');
+			}
 		}
 	};
 }

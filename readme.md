@@ -26,4 +26,5 @@ Options:
 	-f | --fix            fixes files
 	-l | --eol            convert newline characters
 	--short-arrays        enforces PHP 5.4 short array syntax
+	--strict-types        checks whether PHP 7.0 directive strict_types is enabled
 ```
