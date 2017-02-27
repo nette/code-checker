@@ -358,6 +358,13 @@ $checker->tasks[] = function ($s) {
 	}
 };
 
+// YAML indentation checker
+$checker->tasks[] = function ($s) {
+	if ($this->is('yml') && preg_match('#^\t#m', $s, $m, PREG_OFFSET_CAPTURE)) {
+		$this->error('Used tabs to indent instead of spaces', $this->offsetToLine($s, $m[0][1]));
+	}
+};
+
 // white-space remover
 $checker->tasks[] = function ($s) {
 	$new = Strings::replace($s, '#[\t ]+(\r?\n)#', '$1'); // right trim
