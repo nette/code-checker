@@ -186,6 +186,12 @@ class CodeChecker extends Nette\Object
 		return in_array(pathinfo($this->file, PATHINFO_EXTENSION), explode(',', $extensions));
 	}
 
+
+	public static function offsetToLine($s, $offset)
+	{
+		return $offset ? substr_count($s, "\n", 0, $offset) + 1 : 1;
+	}
+
 }
 
 
@@ -383,20 +389,17 @@ $checker->tasks[] = function ($s) {
 		}
 		$offset = 0;
 		if (preg_match('#^(\t*+)\ (?!\*)\s*#m', $s, $m, PREG_OFFSET_CAPTURE)) {
-			$line = $m[0][1] ? substr_count($orig, "\n", 0, $m[0][1]) + 1 : 1;
 			$this->error(
 				$m[1][0] ? 'Mixed tabs and spaces to indent' : 'Used space to indent instead of tab',
-				$line
+				$this->offsetToLine($orig, $m[0][1])
 			);
 			$offset = $m[0][1] + strlen($m[0][0]) + 1;
 		}
 		if (preg_match('#(?<=[\S ])(?<!^//)\t#m', $s, $m, PREG_OFFSET_CAPTURE, $offset)) {
-			$line = substr_count($orig, "\n", 0, $m[0][1]) + 1;
-			$this->error('Found unexpected tabulator', $line);
+			$this->error('Found unexpected tabulator', $this->offsetToLine($orig, $m[0][1]));
 		}
 	} elseif ($this->is('yml') && ($pos = strpos($s, "\t")) !== FALSE) {
-		$line = substr_count($s, "\n", 0, $pos) + 1;
-		$this->error('Found unexpected tabulator', $line);
+		$this->error('Found unexpected tabulator', $this->offsetToLine($s, $pos));
 	}
 };
 
