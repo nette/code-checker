@@ -358,6 +358,17 @@ $checker->tasks[] = function ($s) {
 	}
 };
 
+// lint JSON
+$checker->tasks[] = function ($s) {
+	if ($this->is('json')) {
+		try {
+			Nette\Utils\Json::decode($s);
+		} catch (Nette\Utils\JsonException $e) {
+			$this->error($e->getMessage());
+		}
+	}
+};
+
 // YAML indentation checker
 $checker->tasks[] = function ($s) {
 	if ($this->is('yml') && preg_match('#^\t#m', $s, $m, PREG_OFFSET_CAPTURE)) {
