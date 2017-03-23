@@ -41,6 +41,7 @@ Options:
     -i | --ignore <mask>  Files to ignore
     -f | --fix            Fixes files
     -l | --eol            Convert newline characters
+    --no-progress         Do not show progress dots
     --short-arrays        Enforces PHP 5.4 short array syntax
     --strict-types        Checks whether PHP 7.0 directive strict_types is enabled
 
@@ -63,6 +64,8 @@ class CodeChecker extends Nette\Object
 	public $tasks = [];
 
 	public $readOnly = FALSE;
+
+	public $showProgress = FALSE;
 
 	public $useColors;
 
@@ -107,7 +110,9 @@ class CodeChecker extends Nette\Object
 
 		foreach ($files as $file)
 		{
-			echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
+			if ($this->showProgress) {
+				echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
+			}
 
 			$orig = $s = file_get_contents($file);
 			$this->file = ltrim(substr($file, strlen($path)), '/\\');
@@ -127,7 +132,11 @@ class CodeChecker extends Nette\Object
 			}
 		}
 
-		echo str_pad('', 40), "\x0DDone.\n";
+		if ($this->showProgress) {
+			echo str_pad('', 40), "\x0D";
+		}
+
+		echo "Done.\n";
 		return $success;
 	}
 
@@ -201,6 +210,7 @@ foreach ($options['--ignore'] as $ignore) {
 	$checker->ignore[] = $ignore;
 }
 $checker->readOnly = !isset($options['--fix']);
+$checker->showProgress = !isset($options['--no-progress']);
 
 // control characters checker
 $checker->tasks[] = function ($s) {

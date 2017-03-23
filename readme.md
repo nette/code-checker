@@ -25,6 +25,7 @@ Options:
 	-i | --ignore <mask>  files or directories to ignore (can be used multiple times)
 	-f | --fix            fixes files
 	-l | --eol            convert newline characters
+	--no-progress         do not show progress dots
 	--short-arrays        enforces PHP 5.4 short array syntax
 	--strict-types        checks whether PHP 7.0 directive strict_types is enabled
 ```
