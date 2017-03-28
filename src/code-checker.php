@@ -28,7 +28,7 @@ set_error_handler(function ($severity, $message, $file, $line) {
 
 
 echo '
-CodeChecker version 2.8
+CodeChecker version 2.9
 -----------------------
 ';
 
