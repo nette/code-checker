@@ -15,7 +15,7 @@ if (@!include __DIR__ . '/../vendor/autoload.php') {
 }
 
 set_exception_handler(function ($e) {
-	echo "Error: {$e->getMessage()}\n";
+	echo "Error: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}\n";
 	die(2);
 });
 
