@@ -18,5 +18,8 @@
 		"nette/neon": "~2.3",
 		"latte/latte": "~2.3"
 	},
+	"autoload": {
+		"classmap": ["src/"]
+	},
 	"bin": ["src/code-checker.php"]
 }
