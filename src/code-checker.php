@@ -92,9 +92,6 @@ class CodeChecker extends Nette\Object
 	/** @var string */
 	private $relativePath;
 
-	/** @var bool */
-	private $error;
-
 
 	public function run($path)
 	{
@@ -145,7 +142,7 @@ class CodeChecker extends Nette\Object
 	 */
 	private function processFile($file)
 	{
-		$this->error = FALSE;
+		$error = FALSE;
 		$origContents = $lastContents = file_get_contents($file);
 
 		foreach ($this->tasks as $task) {
@@ -153,9 +150,27 @@ class CodeChecker extends Nette\Object
 			if ($pattern && !$this->matchFileName($pattern, basename($file))) {
 				continue;
 			}
+
+			$result = new Result;
 			$contents = $lastContents;
-			$handler($contents, $this);
-			if (!$this->error) {
+			$handler($contents, $result);
+
+			foreach ($result->getMessages() as $result) {
+				list($type, $message, $line) = $result;
+				if ($type === Result::ERROR) {
+					$this->write('ERROR', $message, $line, 'red');
+					$error = TRUE;
+
+				} elseif ($type === Result::WARNING) {
+					$this->write('WARNING', $message, $line, 'yellow');
+
+				} elseif ($type === Result::FIX) {
+					$this->write($this->readOnly ? 'FOUND' : 'FIX', $message, $line, 'aqua');
+					$error = $error || $this->readOnly;
+				}
+			}
+
+			if (!$error) {
 				$lastContents = $contents;
 			}
 		}
@@ -163,7 +178,7 @@ class CodeChecker extends Nette\Object
 		if ($lastContents !== $origContents && !$this->readOnly) {
 			file_put_contents($file, $lastContents);
 		}
-		return !$this->error;
+		return !$error;
 	}
 
 
@@ -176,26 +191,6 @@ class CodeChecker extends Nette\Object
 			}
 		}
 		return $neg;
-	}
-
-
-	public function fix($message, $line = NULL)
-	{
-		$this->write($this->readOnly ? 'FOUND' : 'FIX', $message, $line, 'aqua');
-		$this->error = $this->error || $this->readOnly;
-	}
-
-
-	public function warning($message, $line = NULL)
-	{
-		$this->write('WARNING', $message, $line, 'yellow');
-	}
-
-
-	public function error($message, $line = NULL)
-	{
-		$this->write('ERROR', $message, $line, 'red');
-		$this->error = TRUE;
 	}
 
 
