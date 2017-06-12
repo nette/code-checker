@@ -144,7 +144,7 @@ class CodeChecker extends Nette\Object
 	public function fix($message, $line = NULL)
 	{
 		$this->write($this->readOnly ? 'FOUND' : 'FIX', $message, $line, 'aqua');
-		$this->error = $this->readOnly;
+		$this->error = $this->error || $this->readOnly;
 	}
 
 
