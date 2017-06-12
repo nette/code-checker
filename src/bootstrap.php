@@ -31,8 +31,8 @@ set_time_limit(0);
 
 
 echo '
-CodeChecker version 2.9
------------------------
+CodeChecker version 2.10
+------------------------
 ';
 
 $cmd = new Parser(<<<XX
