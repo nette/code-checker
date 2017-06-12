@@ -6,6 +6,10 @@
  * This file is part of the Nette Framework (https://nette.org)
  */
 
+namespace Nette\CodeChecker;
+
+use Latte;
+use Nette;
 use Nette\Utils\Strings;
 use Nette\CommandLine\Parser;
 
@@ -21,7 +25,7 @@ set_exception_handler(function ($e) {
 
 set_error_handler(function ($severity, $message, $file, $line) {
 	if (($severity & error_reporting()) === $severity) {
-		throw new ErrorException($message, 0, $severity, $file, $line);
+		throw new \ErrorException($message, 0, $severity, $file, $line);
 	}
 	return FALSE;
 });
