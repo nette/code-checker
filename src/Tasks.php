@@ -161,6 +161,9 @@ class Tasks
 	{
 		try {
 			Nette\Utils\Json::decode($contents);
+			if (trim($contents) === '') {
+				$result->error('Syntax error');
+			}
 		} catch (Nette\Utils\JsonException $e) {
 			$result->error($e->getMessage());
 		}
