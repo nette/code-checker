@@ -18,6 +18,10 @@
 		"nette/neon": "~2.3",
 		"latte/latte": "~2.3"
 	},
+	"require-dev": {
+		"nette/tester": "^1.7",
+		"tracy/tracy": "^2.4"
+	},
 	"autoload": {
 		"classmap": ["src/"]
 	},

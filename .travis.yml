@@ -1,11 +1,19 @@
 language: php
 php:
     - 5.4
+    - 7.1
 
 script:
-    - php code-checker/src/code-checker.php --short-arrays
+    - vendor/bin/tester tests -s
+    - php code-checker/src/code-checker.php --short-arrays --ignore tests/fixtures
+
+after_failure:
+    # Print *.actual content
+    - for i in $(find tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
 
 before_script:
+    # Install Nette Tester
+    - travis_retry composer install --no-interaction --prefer-dist
     - travis_retry composer create-project nette/code-checker code-checker ~2.7 --no-interaction --prefer-dist
 
 sudo: false
