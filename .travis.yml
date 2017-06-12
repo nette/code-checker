@@ -5,7 +5,7 @@ php:
 
 script:
     - vendor/bin/tester tests -s
-    - php code-checker/src/code-checker.php --short-arrays --ignore tests/fixtures
+    - php temp/code-checker --short-arrays --ignore tests/fixtures
 
 after_failure:
     # Print *.actual content
@@ -14,7 +14,7 @@ after_failure:
 before_script:
     # Install Nette Tester
     - travis_retry composer install --no-interaction --prefer-dist
-    - travis_retry composer create-project nette/code-checker code-checker ~2.7 --no-interaction --prefer-dist
+    - travis_retry composer create-project nette/code-checker temp --no-interaction --prefer-dist
 
 sudo: false
 

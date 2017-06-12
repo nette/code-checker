@@ -25,5 +25,5 @@
 	"autoload": {
 		"classmap": ["src/"]
 	},
-	"bin": ["src/code-checker.php"]
+	"bin": ["code-checker"]
 }
