@@ -81,7 +81,7 @@ class CodeChecker extends Nette\Object
 
 	public $ignore = [
 		'.git', '.svn', '.idea', '*.tmp', 'tmp', 'temp', 'log', 'vendor', 'node_modules', 'bower_components',
-		'*.min.js', 'package.json',
+		'*.min.js', 'package.json', 'package-lock.json',
 	];
 
 	private $file;
