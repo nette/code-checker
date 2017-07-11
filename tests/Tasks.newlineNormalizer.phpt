@@ -11,7 +11,7 @@ test(function () {
 	$result = new Result;
 	$content = "a\r\nb\nc";
 	Tasks::newlineNormalizer($content, $result);
-	Assert::same([[Result::FIX, 'contains non-system line-endings', NULL]], $result->getMessages());
+	Assert::same([[Result::FIX, 'contains non-system line-endings', null]], $result->getMessages());
 	Assert::same('a' . PHP_EOL . 'b' . PHP_EOL . 'c', $content);
 });
 

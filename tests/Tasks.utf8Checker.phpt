@@ -16,5 +16,5 @@ test(function () {
 test(function () {
 	$result = new Result;
 	Tasks::utf8Checker("\xFF", $result);
-	Assert::same([[Result::ERROR, 'Is not valid UTF-8 file', NULL]], $result->getMessages());
+	Assert::same([[Result::ERROR, 'Is not valid UTF-8 file', null]], $result->getMessages());
 });

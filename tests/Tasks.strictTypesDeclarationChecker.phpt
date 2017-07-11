@@ -19,5 +19,5 @@ foreach (['ko1.php', 'ko2.php', 'ko3.php'] as $file) {
 	$contents = file_get_contents(__DIR__ . '/fixtures/strict-types/' . $file);
 	$result = new Result;
 	Tasks::strictTypesDeclarationChecker($contents, $result);
-	Assert::same([[Result::ERROR, 'Missing declare(strict_types=1)', NULL]], $result->getMessages());
+	Assert::same([[Result::ERROR, 'Missing declare(strict_types=1)', null]], $result->getMessages());
 }

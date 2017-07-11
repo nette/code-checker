@@ -24,7 +24,7 @@ set_error_handler(function ($severity, $message, $file, $line) {
 	if (($severity & error_reporting()) === $severity) {
 		throw new \ErrorException($message, 0, $severity, $file, $line);
 	}
-	return FALSE;
+	return false;
 });
 
 set_time_limit(0);
@@ -51,8 +51,8 @@ Options:
 
 XX
 , [
-	'-d' => [Parser::REALPATH => TRUE, Parser::VALUE => getcwd()],
-	'--ignore' => [Parser::REPEATABLE => TRUE],
+	'-d' => [Parser::REALPATH => true, Parser::VALUE => getcwd()],
+	'--ignore' => [Parser::REPEATABLE => true],
 ]);
 
 $options = $cmd->parse();

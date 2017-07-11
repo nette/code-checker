@@ -18,7 +18,7 @@ class Result
 	 * @param  int
 	 * @return void
 	 */
-	public function fix($message, $line = NULL)
+	public function fix($message, $line = null)
 	{
 		$this->messages[] = [self::FIX, $message, $line];
 	}
@@ -29,7 +29,7 @@ class Result
 	 * @param  int
 	 * @return void
 	 */
-	public function warning($message, $line = NULL)
+	public function warning($message, $line = null)
 	{
 		$this->messages[] = [self::WARNING, $message, $line];
 	}
@@ -40,7 +40,7 @@ class Result
 	 * @param  int
 	 * @return void
 	 */
-	public function error($message, $line = NULL)
+	public function error($message, $line = null)
 	{
 		$this->messages[] = [self::ERROR, $message, $line];
 	}

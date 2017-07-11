@@ -53,7 +53,7 @@ class Tasks
 		for ($i = 0; $i < count($tokens); $i++) {
 			$token = $tokens[$i];
 			if ($token === '(') {
-				$brackets[] = FALSE;
+				$brackets[] = false;
 
 			} elseif ($token === ')') {
 				$token = array_pop($brackets) ? ']' : ')';
@@ -66,7 +66,7 @@ class Tasks
 				if (isset($tokens[$a]) && $tokens[$a] === '(') {
 					$result->fix('uses old array() syntax', $token[2]);
 					$i = $a;
-					$brackets[] = TRUE;
+					$brackets[] = true;
 					$token = '[';
 				}
 			}
@@ -85,7 +85,7 @@ class Tasks
 				while (isset($tokens[++$i]) && $tokens[$i] !== ';') {
 					$declarations .= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
 				}
-			} elseif (!in_array($tokens[$i][0], [T_OPEN_TAG, T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], TRUE)) {
+			} elseif (!in_array($tokens[$i][0], [T_OPEN_TAG, T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
 				break;
 			}
 		}
@@ -97,7 +97,7 @@ class Tasks
 
 	public static function invalidDoubleQuotedStringChecker($contents, Result $result)
 	{
-		$prev = NULL;
+		$prev = null;
 		foreach (token_get_all($contents) as $token) {
 			if (($token[0] === T_ENCAPSED_AND_WHITESPACE && ($prev[0] !== T_START_HEREDOC || !strpos($prev[1], "'")))
 				|| ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')
@@ -193,7 +193,7 @@ class Tasks
 	}
 
 
-	public static function tabIndentationChecker($contents, Result $result, $origContents = NULL)
+	public static function tabIndentationChecker($contents, Result $result, $origContents = null)
 	{
 		$origContents = $origContents ?: $contents;
 		$offset = 0;
@@ -225,7 +225,7 @@ class Tasks
 
 	public static function unexpectedTabsChecker($contents, Result $result)
 	{
-		if (($pos = strpos($contents, "\t")) !== FALSE) {
+		if (($pos = strpos($contents, "\t")) !== false) {
 			$result->error('Found unexpected tabulator', self::offsetToLine($contents, $pos));
 		}
 	}

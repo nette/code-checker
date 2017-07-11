@@ -11,7 +11,7 @@ test(function () {
 	$result = new Result;
 	$content = '<?php echo 1 ?>';
 	Tasks::trailingPhpTagRemover($content, $result);
-	Assert::same([[Result::FIX, 'contains closing PHP tag ?>', NULL]], $result->getMessages());
+	Assert::same([[Result::FIX, 'contains closing PHP tag ?>', null]], $result->getMessages());
 	Assert::same('<?php echo 1 ', $content);
 });
 
@@ -19,7 +19,7 @@ test(function () {
 	$result = new Result;
 	$content = "<?php echo 1 ?>\r\n ";
 	Tasks::trailingPhpTagRemover($content, $result);
-	Assert::same([[Result::FIX, 'contains closing PHP tag ?>', NULL]], $result->getMessages());
+	Assert::same([[Result::FIX, 'contains closing PHP tag ?>', null]], $result->getMessages());
 	Assert::same('<?php echo 1 ', $content);
 });
 

@@ -16,5 +16,5 @@ test(function () {
 test(function () {
 	$result = new Result;
 	Tasks::controlCharactersChecker("\x00", $result);
-	Assert::same([[Result::ERROR, 'Contains control characters', NULL]], $result->getMessages());
+	Assert::same([[Result::ERROR, 'Contains control characters', null]], $result->getMessages());
 });
