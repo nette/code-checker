@@ -53,5 +53,4 @@ class Result
 	{
 		return $this->messages;
 	}
-
 }

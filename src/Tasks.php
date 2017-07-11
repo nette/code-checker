@@ -9,7 +9,6 @@ use Nette\Utils\Strings;
 
 class Tasks
 {
-
 	public static function controlCharactersChecker($contents, Result $result)
 	{
 		if (!Strings::match($contents, '#^[^\x00-\x08\x0B\x0C\x0E-\x1F]*+$#')) {
@@ -215,7 +214,7 @@ class Tasks
 	{
 		$s = '';  // remove strings from code
 		foreach (token_get_all($contents) as $token) {
-			if (is_array($token) && in_array($token[0], [T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING])) {
+			if (is_array($token) && in_array($token[0], [T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING], true)) {
 				$token[1] = preg_replace('#\s#', '.', $token[1]);
 			}
 			$s .= is_array($token) ? $token[1] : $token;
@@ -236,5 +235,4 @@ class Tasks
 	{
 		return $offset ? substr_count($s, "\n", 0, $offset) + 1 : 1;
 	}
-
 }

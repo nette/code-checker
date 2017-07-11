@@ -54,8 +54,7 @@ class Checker
 			? [$path]
 			: Finder::findFiles($this->accept)->exclude($this->ignore)->from($path)->exclude($this->ignore);
 
-		foreach ($files as $file)
-		{
+		foreach ($files as $file) {
 			if ($this->showProgress) {
 				echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
 			}
@@ -163,5 +162,4 @@ class Checker
 		}
 		return $s;
 	}
-
 }

@@ -11,7 +11,7 @@ namespace Nette\CodeChecker;
 use Nette\CommandLine\Parser;
 
 if (@!include __DIR__ . '/../vendor/autoload.php') {
-	echo('Install packages using `composer update`');
+	echo 'Install packages using `composer update`';
 	exit(1);
 }
 
@@ -35,7 +35,7 @@ CodeChecker version 2.10
 ------------------------
 ';
 
-$cmd = new Parser(<<<XX
+$cmd = new Parser(<<<'XX'
 Usage:
     php code-checker.php [options]
 
