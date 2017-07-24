@@ -4,6 +4,15 @@ php:
     - 7.1
     - 7.2
 
+before_install:
+    # turn off XDebug
+    - phpenv config-rm xdebug.ini || return 0
+
+install:
+    # Install Nette Tester
+    - travis_retry composer install --no-interaction --prefer-dist
+    - travis_retry composer create-project nette/code-checker temp --no-interaction --prefer-dist
+
 script:
     - vendor/bin/tester tests -s
     - php temp/code-checker --short-arrays --ignore tests/fixtures
@@ -12,13 +21,11 @@ after_failure:
     # Print *.actual content
     - for i in $(find tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
 
-before_script:
-    # Install Nette Tester
-    - travis_retry composer install --no-interaction --prefer-dist
-    - travis_retry composer create-project nette/code-checker temp --no-interaction --prefer-dist
-
 sudo: false
 
 cache:
     directories:
         - $HOME/.composer/cache
+
+notifications:
+    email: false
