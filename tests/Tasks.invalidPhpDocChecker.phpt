@@ -36,3 +36,9 @@ test(function () {
 	Tasks::invalidPhpDocChecker('<?php /* @var */ ?>', $result);
 	Assert::same([[Result::WARNING, 'Missing /** in phpDoc comment', 1]], $result->getMessages());
 });
+
+test(function () {
+	$result = new Result;
+	Tasks::invalidPhpDocChecker('<?php /* email@gmail.com */ ?>', $result);
+	Assert::same([], $result->getMessages());
+});
