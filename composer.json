@@ -11,12 +11,12 @@
 		}
 	],
 	"require": {
-		"php": ">= 5.4",
+		"php": ">= 5.6",
 		"nette/command-line": "~1.0",
-		"nette/utils": "~2.3",
-		"nette/finder": "~2.3",
-		"nette/neon": "~2.3",
-		"latte/latte": "~2.3"
+		"nette/utils": "~2.4",
+		"nette/finder": "~2.4",
+		"nette/neon": "~2.4",
+		"latte/latte": "~2.4"
 	},
 	"require-dev": {
 		"nette/tester": "^1.7",
