@@ -10,11 +10,6 @@ namespace Nette\CodeChecker;
 
 use Nette\CommandLine\Parser;
 
-if (@!include __DIR__ . '/../vendor/autoload.php') {
-	echo 'Install packages using `composer update`';
-	exit(1);
-}
-
 set_exception_handler(function ($e) {
 	echo "Error: {$e->getMessage()}\n";
 	die(2);
