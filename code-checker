@@ -1,4 +1,11 @@
 #!/usr/bin/env php
 <?php
 
+$autoloaderInWorkingDirectory = getcwd() . '/vendor/autoload.php';
+
+if (@!include $autoloaderInWorkingDirectory) {
+    echo 'Install packages using `composer update` - cannot find autoload.php'  ;
+    exit(1);
+}
+
 require __DIR__ . '/src/bootstrap.php';
