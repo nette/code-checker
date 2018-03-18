@@ -39,6 +39,9 @@ class Tasks
 		foreach (token_get_all($contents) as $token) {
 			if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*(?!\*).*(?<!\w)@[a-z]#isA')) {
 				$result->warning('Missing /** in phpDoc comment', $token[2]);
+
+			} elseif ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*\*(?!\s).*(?<!\w)@[a-z]#isA')) {
+				$result->warning('Missing space after /** in phpDoc comment', $token[2]);
 			}
 		}
 	}
