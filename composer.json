@@ -28,5 +28,10 @@
 	"autoload": {
 		"classmap": ["src/"]
 	},
-	"bin": ["code-checker"]
+	"bin": ["code-checker"],
+	"extra": {
+		"branch-alias": {
+			"dev-master": "3.0-dev"
+		}
+	}
 }
