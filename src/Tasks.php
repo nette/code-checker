@@ -172,6 +172,8 @@ class Tasks
 		} catch (Latte\CompileException $e) {
 			if (!preg_match('#Unknown (macro|attribute)#A', $e->getMessage())) {
 				$result->error($e->getMessage(), $e->sourceLine);
+			} else {
+				$result->warning($e->getMessage(), $e->sourceLine);
 			}
 		}
 	}
