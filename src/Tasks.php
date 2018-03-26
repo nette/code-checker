@@ -135,6 +135,30 @@ class Tasks
 	}
 
 
+	public static function phpSyntaxChecker($contents, Result $result)
+	{
+		$php = defined('PHP_BINARY') ? PHP_BINARY : 'php';
+		$stdin = tmpfile();
+		fwrite($stdin, $contents);
+		fseek($stdin, 0);
+		$process = proc_open(
+			$php . ' -l',
+			[$stdin, ['pipe', 'w'], ['pipe', 'w']],
+			$pipes,
+			null, null, ['bypass_shell' => true]
+		);
+		if (!is_resource($process)) {
+			$result->warning('Unable to lint generated template');
+			return;
+		}
+		$error = stream_get_contents($pipes[1]);
+		if (proc_close($process)) {
+			$error = strip_tags(explode("\n", $error)[1]);
+			$result->error('Invalid PHP code: ' . $error);
+		}
+	}
+
+
 	public static function latteSyntaxChecker($contents, Result $result)
 	{
 		try {
