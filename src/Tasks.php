@@ -168,7 +168,9 @@ class Tasks
 		Nette\Bridges\FormsLatte\FormMacros::install($latte->getCompiler());
 
 		try {
-			$latte->compile($contents);
+			$code = $latte->compile($contents);
+			static::phpSyntaxChecker($code, $result);
+
 		} catch (Latte\CompileException $e) {
 			if (!preg_match('#Unknown (macro|attribute)#A', $e->getMessage())) {
 				$result->error($e->getMessage(), $e->sourceLine);

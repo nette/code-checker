@@ -24,3 +24,11 @@ test(function () {
 	Tasks::latteSyntaxChecker('{hello', $result);
 	Assert::same([[Result::ERROR, 'Malformed macro', 1]], $result->getMessages());
 });
+
+test(function () {
+	$result = new Result;
+	Tasks::latteSyntaxChecker('{var $x = +}', $result); // invalid PHP code
+	Assert::count(1, $result->getMessages());
+	Assert::same(Result::ERROR, $result->getMessages()[0][0]);
+	Assert::contains('syntax error, unexpected', $result->getMessages()[0][1]);
+});
