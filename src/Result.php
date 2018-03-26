@@ -13,43 +13,25 @@ class Result
 	private $messages = [];
 
 
-	/**
-	 * @param  string
-	 * @param  int
-	 * @return void
-	 */
-	public function fix($message, $line = null)
+	public function fix(string $message, int $line = null): void
 	{
 		$this->messages[] = [self::FIX, $message, $line];
 	}
 
 
-	/**
-	 * @param  string
-	 * @param  int
-	 * @return void
-	 */
-	public function warning($message, $line = null)
+	public function warning(string $message, int $line = null): void
 	{
 		$this->messages[] = [self::WARNING, $message, $line];
 	}
 
 
-	/**
-	 * @param  string
-	 * @param  int
-	 * @return void
-	 */
-	public function error($message, $line = null)
+	public function error(string $message, int $line = null): void
 	{
 		$this->messages[] = [self::ERROR, $message, $line];
 	}
 
 
-	/**
-	 * @return array
-	 */
-	public function getMessages()
+	public function getMessages(): array
 	{
 		return $this->messages;
 	}

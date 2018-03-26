@@ -9,7 +9,7 @@ use Nette\Utils\Strings;
 
 class Tasks
 {
-	public static function controlCharactersChecker($contents, Result $result)
+	public static function controlCharactersChecker(string $contents, Result $result): void
 	{
 		if (!Strings::match($contents, '#^[^\x00-\x08\x0B\x0C\x0E-\x1F]*+$#')) {
 			$result->error('Contains control characters');
@@ -17,7 +17,7 @@ class Tasks
 	}
 
 
-	public static function bomFixer(&$contents, Result $result)
+	public static function bomFixer(string &$contents, Result $result): void
 	{
 		if (substr($contents, 0, 3) === "\xEF\xBB\xBF") {
 			$result->fix('contains BOM');
@@ -26,7 +26,7 @@ class Tasks
 	}
 
 
-	public static function utf8Checker($contents, Result $result)
+	public static function utf8Checker(string $contents, Result $result): void
 	{
 		if (!Strings::checkEncoding($contents)) {
 			$result->error('Is not valid UTF-8 file');
@@ -34,7 +34,7 @@ class Tasks
 	}
 
 
-	public static function invalidPhpDocChecker($contents, Result $result)
+	public static function invalidPhpDocChecker(string $contents, Result $result): void
 	{
 		foreach (token_get_all($contents) as $token) {
 			if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*(?!\*).*(?<!\w)@[a-z]#isA')) {
@@ -47,7 +47,7 @@ class Tasks
 	}
 
 
-	public static function shortArraySyntaxFixer(&$contents, Result $result)
+	public static function shortArraySyntaxFixer(string &$contents, Result $result): void
 	{
 		$out = '';
 		$brackets = [];
@@ -79,7 +79,7 @@ class Tasks
 	}
 
 
-	public static function strictTypesDeclarationChecker($contents, Result $result)
+	public static function strictTypesDeclarationChecker(string $contents, Result $result): void
 	{
 		$declarations = '';
 		$tokens = token_get_all($contents);
@@ -98,7 +98,7 @@ class Tasks
 	}
 
 
-	public static function invalidDoubleQuotedStringChecker($contents, Result $result)
+	public static function invalidDoubleQuotedStringChecker(string $contents, Result $result): void
 	{
 		$prev = null;
 		foreach (token_get_all($contents) as $token) {
@@ -115,7 +115,7 @@ class Tasks
 	}
 
 
-	public static function newlineNormalizer(&$contents, Result $result)
+	public static function newlineNormalizer(string &$contents, Result $result): void
 	{
 		$new = str_replace("\n", PHP_EOL, str_replace(["\r\n", "\r"], "\n", $contents));
 		if ($new !== $contents) {
@@ -125,7 +125,7 @@ class Tasks
 	}
 
 
-	public static function trailingPhpTagRemover(&$contents, Result $result)
+	public static function trailingPhpTagRemover(string &$contents, Result $result): void
 	{
 		$tmp = rtrim($contents);
 		if (substr($tmp, -2) === '?>') {
@@ -135,7 +135,7 @@ class Tasks
 	}
 
 
-	public static function phpSyntaxChecker($contents, Result $result)
+	public static function phpSyntaxChecker(string $contents, Result $result): void
 	{
 		$php = defined('PHP_BINARY') ? PHP_BINARY : 'php';
 		$stdin = tmpfile();
@@ -159,7 +159,7 @@ class Tasks
 	}
 
 
-	public static function latteSyntaxChecker($contents, Result $result)
+	public static function latteSyntaxChecker(string $contents, Result $result): void
 	{
 		$latte = new Latte\Engine;
 		$latte->setLoader(new Latte\Loaders\StringLoader);
@@ -181,7 +181,7 @@ class Tasks
 	}
 
 
-	public static function neonSyntaxChecker($contents, Result $result)
+	public static function neonSyntaxChecker(string $contents, Result $result): void
 	{
 		try {
 			Nette\Neon\Neon::decode($contents);
@@ -191,7 +191,7 @@ class Tasks
 	}
 
 
-	public static function jsonSyntaxChecker($contents, Result $result)
+	public static function jsonSyntaxChecker(string $contents, Result $result): void
 	{
 		try {
 			Nette\Utils\Json::decode($contents);
@@ -204,7 +204,7 @@ class Tasks
 	}
 
 
-	public static function yamlIndentationChecker($contents, Result $result)
+	public static function yamlIndentationChecker(string $contents, Result $result): void
 	{
 		if (preg_match('#^\t#m', $contents, $m, PREG_OFFSET_CAPTURE)) {
 			$result->error('Used tabs to indent instead of spaces', self::offsetToLine($contents, $m[0][1]));
@@ -212,7 +212,7 @@ class Tasks
 	}
 
 
-	public static function trailingWhiteSpaceFixer(&$contents, Result $result)
+	public static function trailingWhiteSpaceFixer(string &$contents, Result $result): void
 	{
 		$new = Strings::replace($contents, '#[\t ]+(\r?\n)#', '$1'); // right trim
 		$eol = preg_match('#\r?\n#', $new, $m) ? $m[0] : PHP_EOL;
@@ -228,7 +228,7 @@ class Tasks
 	}
 
 
-	public static function tabIndentationChecker($contents, Result $result, $origContents = null)
+	public static function tabIndentationChecker(string $contents, Result $result, string $origContents = null): void
 	{
 		$origContents = $origContents ?: $contents;
 		$offset = 0;
@@ -245,7 +245,7 @@ class Tasks
 	}
 
 
-	public static function tabIndentationPhpChecker($contents, Result $result)
+	public static function tabIndentationPhpChecker(string $contents, Result $result): void
 	{
 		$s = '';  // remove strings from code
 		foreach (token_get_all($contents) as $token) {
@@ -258,7 +258,7 @@ class Tasks
 	}
 
 
-	public static function unexpectedTabsChecker($contents, Result $result)
+	public static function unexpectedTabsChecker(string $contents, Result $result): void
 	{
 		if (($pos = strpos($contents, "\t")) !== false) {
 			$result->error('Found unexpected tabulator', self::offsetToLine($contents, $pos));
@@ -266,7 +266,7 @@ class Tasks
 	}
 
 
-	private static function offsetToLine($s, $offset)
+	private static function offsetToLine(string $s, int $offset): int
 	{
 		return $offset ? substr_count($s, "\n", 0, $offset) + 1 : 1;
 	}

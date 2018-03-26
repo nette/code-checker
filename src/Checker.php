@@ -37,7 +37,7 @@ class Checker
 	private $relativePath;
 
 
-	public function run($path)
+	public function run(string $path): bool
 	{
 		$this->useColors = PHP_SAPI === 'cli' && ((function_exists('posix_isatty') && posix_isatty(STDOUT))
 				|| getenv('ConEmuANSI') === 'ON' || getenv('ANSICON') !== false || getenv('term') === 'xterm-256color');
@@ -71,17 +71,13 @@ class Checker
 	}
 
 
-	public function addTask(callable $task, $pattern = null)
+	public function addTask(callable $task, string $pattern = null): void
 	{
 		$this->tasks[] = [$task, $pattern];
 	}
 
 
-	/**
-	 * @param  string
-	 * @return bool
-	 */
-	private function processFile($file)
+	private function processFile(string $file): bool
 	{
 		$error = false;
 		$origContents = $lastContents = file_get_contents($file);
@@ -123,7 +119,7 @@ class Checker
 	}
 
 
-	private function matchFileName($pattern, $name)
+	private function matchFileName(string $pattern, string $name): bool
 	{
 		$neg = substr($pattern, 0, 1) === '!';
 		foreach (explode(',', ltrim($pattern, '!')) as $part) {
@@ -135,7 +131,7 @@ class Checker
 	}
 
 
-	private function write($type, $message, $line, $color)
+	private function write(string $type, string $message, ?int $line, string $color): void
 	{
 		$base = basename($this->relativePath);
 		echo $this->color($color, str_pad("[$type]", 10)),
@@ -145,7 +141,7 @@ class Checker
 	}
 
 
-	private function color($color = null, $s = null)
+	private function color(string $color = null, string $s = null): string
 	{
 		static $colors = [
 			'black' => '0;30', 'gray' => '1;30', 'silver' => '0;37', 'white' => '1;37',

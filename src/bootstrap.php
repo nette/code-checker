@@ -18,12 +18,12 @@ if (@!include $autoload) {
 	exit(1);
 }
 
-set_exception_handler(function ($e) {
+set_exception_handler(function (\Throwable $e) {
 	echo "Error: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}\n";
 	die(2);
 });
 
-set_error_handler(function ($severity, $message, $file, $line) {
+set_error_handler(function (int $severity, string $message, string $file, int $line) {
 	if (($severity & error_reporting()) === $severity) {
 		throw new \ErrorException($message, 0, $severity, $file, $line);
 	}

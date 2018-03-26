@@ -9,7 +9,7 @@ if (@!include __DIR__ . '/../vendor/autoload.php') {
 Tester\Environment::setup();
 
 
-function test(\Closure $function)
+function test(\Closure $function): void
 {
 	$function();
 }
