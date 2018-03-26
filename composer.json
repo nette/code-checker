@@ -19,7 +19,7 @@
 		"latte/latte": "~2.4"
 	},
 	"require-dev": {
-		"nette/tester": "^1.7",
+		"nette/tester": "^2.0",
 		"tracy/tracy": "^2.4"
 	},
 	"autoload": {
