@@ -16,7 +16,10 @@
 		"nette/utils": "~2.4",
 		"nette/finder": "~2.4",
 		"nette/neon": "~2.4",
-		"latte/latte": "~2.4"
+		"latte/latte": "~2.4",
+		"nette/forms": "^2.4",
+		"nette/caching": "^2.5",
+		"nette/application": "^2.4"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",

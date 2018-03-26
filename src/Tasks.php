@@ -161,9 +161,13 @@ class Tasks
 
 	public static function latteSyntaxChecker($contents, Result $result)
 	{
+		$latte = new Latte\Engine;
+		$latte->setLoader(new Latte\Loaders\StringLoader);
+		$latte->getCompiler()->addMacro('cache', new Nette\Bridges\CacheLatte\CacheMacro);
+		Nette\Bridges\ApplicationLatte\UIMacros::install($latte->getCompiler());
+		Nette\Bridges\FormsLatte\FormMacros::install($latte->getCompiler());
+
 		try {
-			$latte = new Latte\Engine;
-			$latte->setLoader(new Latte\Loaders\StringLoader);
 			$latte->compile($contents);
 		} catch (Latte\CompileException $e) {
 			if (!preg_match('#Unknown (macro|attribute)#A', $e->getMessage())) {
