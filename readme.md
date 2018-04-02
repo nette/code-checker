@@ -15,20 +15,6 @@ A simple tool to check source code against a set of Nette coding standards.
 Documentation can be found on the [website](https://doc.nette.org/code-checker).
 
 
-Installation
-------------
-
-The recommended way to install is via Composer:
-
-```
-composer create-project nette/code-checker
-```
-
-Note that this is a tool and not a library, so it cannot be installed using the command `composer require`.
-
-It requires PHP version 5.6 and supports PHP up to 7.2.
-
-
 Usage
 -----
 
@@ -44,3 +30,23 @@ Options:
 	--short-arrays        enforces PHP 5.4 short array syntax
 	--strict-types        checks whether PHP 7.0 directive strict_types is enabled
 ```
+
+
+Installation
+------------
+
+It requires PHP version 5.6 and supports PHP up to 7.2.
+
+Install it via Composer. This project is not meant to be run as a dependency, so install it as standalone:
+
+```
+composer create-project nette/code-checker
+```
+
+Or install it globally via:
+
+```
+composer global require nette/code-checker
+```
+
+and make sure your global vendor binaries directory is in [your `$PATH` environment variable](https://getcomposer.org/doc/03-cli.md#global).

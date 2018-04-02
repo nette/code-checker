@@ -27,5 +27,6 @@
 	},
 	"autoload": {
 		"classmap": ["src/"]
-	}
+	},
+	"bin": ["code-checker"]
 }

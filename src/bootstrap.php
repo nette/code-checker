@@ -10,7 +10,10 @@ namespace Nette\CodeChecker;
 
 use Nette\CommandLine\Parser;
 
-if (@!include __DIR__ . '/../vendor/autoload.php') {
+$autoload = is_file(__DIR__ . '/../vendor/autoload.php')
+	? __DIR__ . '/../vendor/autoload.php'
+	: __DIR__ . '/../../../autoload.php';
+if (@!include $autoload) {
 	echo 'Install packages using `composer update`';
 	exit(1);
 }
@@ -37,7 +40,7 @@ CodeChecker version 2.13
 
 $cmd = new Parser(<<<'XX'
 Usage:
-    php code-checker.php [options]
+    php code-checker [options]
 
 Options:
     -d <path>             Folder or file to scan (default: current directory)
