@@ -50,7 +50,6 @@ Options:
     -f | --fix            Fixes files
     -l | --eol            Convert newline characters
     --no-progress         Do not show progress dots
-    --short-arrays        Enforces PHP 5.4 short array syntax
     --strict-types        Checks whether PHP 7.0 directive strict_types is enabled
 
 
@@ -58,6 +57,7 @@ XX
 , [
 	'-d' => [Parser::REALPATH => true, Parser::VALUE => getcwd()],
 	'--ignore' => [Parser::REPEATABLE => true],
+	'--short-arrays' => [], // ignored
 ]);
 
 $options = $cmd->parse();
@@ -79,10 +79,7 @@ $checker->addTask([$tasks, 'bomFixer']);
 $checker->addTask([$tasks, 'utf8Checker']);
 $checker->addTask([$tasks, 'phpSyntaxChecker'], '*.php,*.phpt');
 $checker->addTask([$tasks, 'invalidPhpDocChecker'], '*.php,*.phpt');
-
-if (isset($options['--short-arrays'])) {
-	$checker->addTask([$tasks, 'shortArraySyntaxFixer'], '*.php,*.phpt');
-}
+$checker->addTask([$tasks, 'shortArraySyntaxFixer'], '*.php,*.phpt');
 if (isset($options['--strict-types'])) {
 	$checker->addTask([$tasks, 'strictTypesDeclarationChecker'], '*.php,*.phpt');
 }
