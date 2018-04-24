@@ -5,7 +5,7 @@ namespace Nette\CodeChecker;
 
 class Result
 {
-	const
+	public const
 		ERROR = 'error',
 		FIX = 'fix',
 		WARNING = 'warning';

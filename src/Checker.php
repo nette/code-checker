@@ -87,7 +87,7 @@ class Checker
 		$origContents = $lastContents = file_get_contents($file);
 
 		foreach ($this->tasks as $task) {
-			list($handler, $pattern) = $task;
+			[$handler, $pattern] = $task;
 			if ($pattern && !$this->matchFileName($pattern, basename($file))) {
 				continue;
 			}
@@ -97,7 +97,7 @@ class Checker
 			$handler($contents, $result);
 
 			foreach ($result->getMessages() as $result) {
-				list($type, $message, $line) = $result;
+				[$type, $message, $line] = $result;
 				if ($type === Result::ERROR) {
 					$this->write('ERROR', $message, $line, 'red');
 					$error = true;
