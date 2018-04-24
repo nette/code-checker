@@ -6,6 +6,8 @@
  * This file is part of the Nette Framework (https://nette.org)
  */
 
+declare(strict_types=1);
+
 namespace Nette\CodeChecker;
 
 use Nette\CommandLine\Parser;
