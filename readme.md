@@ -14,6 +14,8 @@ A simple tool to check source code against a set of Nette coding standards.
 
 Documentation can be found on the [website](https://doc.nette.org/code-checker).
 
+If you like Nette, **[please make a donation now](https://nette.org/donate)**. Thank you!
+
 
 Usage
 -----
