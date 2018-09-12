@@ -25,11 +25,11 @@ jobs:
                 # Install Nette Code Checker
                 - travis_retry composer create-project nette/code-checker temp/code-checker ^3.0 --no-progress
                 # Install Nette Coding Standard
-                - travis_retry composer create-project nette/coding-standard temp/coding-standard --no-progress
+                - travis_retry composer create-project nette/coding-standard temp/coding-standard ^2 --no-progress
 
             script:
                 - php temp/code-checker/code-checker --strict-types --ignore tests/fixtures
-                - php temp/coding-standard/ecs check src tests --config temp/coding-standard/coding-standard-php71.neon
+                - php temp/coding-standard/ecs check src tests --config temp/coding-standard/coding-standard-php71.yml
 
 
         -   stage: Code Coverage
