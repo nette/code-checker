@@ -66,7 +66,7 @@ if ($cmd->isEmpty()) {
 }
 
 $checker = new Checker;
-$tasks = 'Nette\CodeChecker\Tasks';
+$tasks = Tasks::class;
 
 foreach ($options['--ignore'] as $ignore) {
 	$checker->ignore[] = $ignore;
