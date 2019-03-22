@@ -53,7 +53,11 @@ class Tasks
 	{
 		$out = '';
 		$brackets = [];
-		$tokens = token_get_all($contents, TOKEN_PARSE);
+		try {
+			$tokens = token_get_all($contents, TOKEN_PARSE);
+		} catch (\ParseError $e) {
+			return;
+		}
 
 		for ($i = 0; $i < count($tokens); $i++) {
 			$token = $tokens[$i];
