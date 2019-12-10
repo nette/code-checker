@@ -23,12 +23,17 @@
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
-		"tracy/tracy": "^2.6"
+		"tracy/tracy": "^2.6",
+		"phpstan/phpstan": "^0.12"
 	},
 	"autoload": {
 		"classmap": ["src/"]
 	},
 	"bin": ["code-checker"],
+	"scripts": {
+		"phpstan": "phpstan analyse --level 5 src",
+		"tester": "tester tests -s"
+	},
 	"extra": {
 		"branch-alias": {
 			"dev-master": "3.0-dev"
