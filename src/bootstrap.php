@@ -32,6 +32,17 @@ set_error_handler(function (int $severity, string $message, string $file, int $l
 	return false;
 });
 
+if (function_exists('pcntl_signal')) {
+	pcntl_signal(SIGINT, function (): void {
+		pcntl_signal(SIGINT, SIG_DFL);
+		throw new \Exception('Terminated');
+	});
+} elseif (function_exists('sapi_windows_set_ctrl_handler')) {
+	sapi_windows_set_ctrl_handler(function () {
+		throw new \Exception('Terminated');
+	});
+}
+
 set_time_limit(0);
 
 
