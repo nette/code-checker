@@ -154,7 +154,7 @@ class Tasks
 			null, null, ['bypass_shell' => true]
 		);
 		if (!is_resource($process)) {
-			$result->warning('Unable to lint generated template');
+			$result->warning('Unable to lint PHP code');
 			return;
 		}
 		$error = stream_get_contents($pipes[1]);
