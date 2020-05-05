@@ -11,7 +11,7 @@
 		}
 	],
 	"require": {
-		"php": ">= 7.1",
+		"php": ">= 7.2",
 		"nette/command-line": "^1.4",
 		"nette/utils": "^3.0",
 		"nette/finder": "^2.5",
