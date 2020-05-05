@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nette\CodeChecker;
 
+use Nette\CommandLine\Console;
 use Nette\Utils\Finder;
 
 
@@ -14,9 +15,6 @@ class Checker
 
 	/** @var bool */
 	public $showProgress = false;
-
-	/** @var bool */
-	public $useColors;
 
 	public $accept = [
 		'*.php', '*.phpt', '*.inc',
@@ -38,17 +36,19 @@ class Checker
 	/** @var string */
 	private $relativePath;
 
+	/** @var Console */
+	private $console;
+
 
 	public function run(string $path): bool
 	{
-		$this->useColors = PHP_SAPI === 'cli' && ((function_exists('posix_isatty') && posix_isatty(STDOUT))
-				|| getenv('ConEmuANSI') === 'ON' || getenv('ANSICON') !== false || getenv('term') === 'xterm-256color');
+		$this->console = new Console;
 
 		if ($this->readOnly) {
 			echo "Running in read-only mode\n";
 		}
 
-		echo "Scanning {$this->color('white', $path)}\n";
+		echo "Scanning {$this->console->color('white', $path)}\n";
 
 		$counter = 0;
 		$success = true;
@@ -137,28 +137,9 @@ class Checker
 	private function write(string $type, string $message, ?int $line, string $color): void
 	{
 		$base = basename($this->relativePath);
-		echo $this->color($color, str_pad("[$type]", 10)),
-			$base === $this->relativePath ? '' : $this->color('silver', dirname($this->relativePath) . DIRECTORY_SEPARATOR),
-			$this->color('white', $base . ($line ? ':' . $line : '')), '    ',
-			$this->color($color, $message), "\n";
-	}
-
-
-	private function color(string $color = null, string $s = null): string
-	{
-		static $colors = [
-			'black' => '0;30', 'gray' => '1;30', 'silver' => '0;37', 'white' => '1;37',
-			'navy' => '0;34', 'blue' => '1;34', 'green' => '0;32', 'lime' => '1;32',
-			'teal' => '0;36', 'aqua' => '1;36', 'maroon' => '0;31', 'red' => '1;31',
-			'purple' => '0;35', 'fuchsia' => '1;35', 'olive' => '0;33', 'yellow' => '1;33',
-			null => '0',
-		];
-		if ($this->useColors) {
-			$c = explode('/', $color);
-			$s = "\033[" . ($c[0] ? $colors[$c[0]] : '')
-				. (empty($c[1]) ? '' : ';4' . substr($colors[$c[1]], -1))
-				. 'm' . $s . ($s === null ? '' : "\033[0m");
-		}
-		return $s;
+		echo $this->console->color($color, str_pad("[$type]", 10)),
+			$base === $this->relativePath ? '' : $this->console->color('silver', dirname($this->relativePath) . DIRECTORY_SEPARATOR),
+			$this->console->color('white', $base . ($line ? ':' . $line : '')), '    ',
+			$this->console->color($color, $message), "\n";
 	}
 }
