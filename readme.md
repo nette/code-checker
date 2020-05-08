@@ -24,7 +24,7 @@ Usage
 code-checker [options]
 
 Options:
-	-d <path>             folder to scan (default: current directory)
+	-d <path>             folder to scan (default: current directory, can be used multiple times)
 	-i | --ignore <mask>  files or directories to ignore (can be used multiple times)
 	-f | --fix            fixes files
 	-l | --eol            convert newline characters

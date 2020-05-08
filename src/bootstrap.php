@@ -66,7 +66,7 @@ Options:
 
 XX
 , [
-	'-d' => [Parser::REALPATH => true, Parser::VALUE => getcwd()],
+	'-d' => [Parser::REALPATH => true, Parser::REPEATABLE => true, Parser::VALUE => getcwd()],
 	'--ignore' => [Parser::REPEATABLE => true],
 	'--short-arrays' => [], // ignored
 ]);

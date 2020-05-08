@@ -40,7 +40,7 @@ class Checker
 	private $console;
 
 
-	public function run(string $path): bool
+	public function run($paths): bool
 	{
 		$this->console = new Console;
 
@@ -48,21 +48,24 @@ class Checker
 			echo "Running in read-only mode\n";
 		}
 
-		echo "Scanning {$this->console->color('white', $path)}\n";
+		echo "Scanning {$this->console->color('white', implode(', ', $paths))}\n";
 
 		$counter = 0;
 		$success = true;
-		$files = is_file($path)
-			? [$path]
-			: Finder::findFiles($this->accept)->exclude($this->ignore)->from($path)->exclude($this->ignore);
+		$files = count($paths) === 1 && is_file($paths[0])
+			? $paths
+			: Finder::findFiles($this->accept)
+				->exclude($this->ignore)
+				->from($paths)
+				->exclude($this->ignore)
+				->getIterator();
 
 		foreach ($files as $file) {
 			if ($this->showProgress) {
 				echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
 			}
-			$file = (string) $file;
-			$this->relativePath = ltrim(substr($file, strlen($path)), '/\\');
-			$success = $this->processFile($file) && $success;
+			$this->relativePath = is_string($file) ? $file : $files->getSubPathName();
+			$success = $this->processFile((string) $file) && $success;
 		}
 
 		if ($this->showProgress) {
