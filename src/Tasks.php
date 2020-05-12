@@ -13,8 +13,8 @@ class Tasks
 {
 	public static function controlCharactersChecker(string $contents, Result $result): void
 	{
-		if (!Strings::match($contents, '#^[^\x00-\x08\x0B\x0C\x0E-\x1F]*+$#')) {
-			$result->error('Contains control characters');
+		if ($m = Strings::match($contents, '#[\x00-\x08\x0B\x0C\x0E-\x1F]#', PREG_OFFSET_CAPTURE)) {
+			$result->error('Contains control characters', self::offsetToLine($contents, $m[0][1]));
 		}
 	}
 
@@ -22,7 +22,7 @@ class Tasks
 	public static function bomFixer(string &$contents, Result $result): void
 	{
 		if (substr($contents, 0, 3) === "\xEF\xBB\xBF") {
-			$result->fix('contains BOM');
+			$result->fix('contains BOM', 1);
 			$contents = substr($contents, 3);
 		}
 	}
@@ -31,7 +31,8 @@ class Tasks
 	public static function utf8Checker(string $contents, Result $result): void
 	{
 		if (!Strings::checkEncoding($contents)) {
-			$result->error('Is not valid UTF-8 file');
+			preg_match('/^(?:[\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF][\x80-\xBF]|[\xC0-\xDF][\x80-\xBF]|[\x00-\x7f])*+/', $contents, $m);
+			$result->error('Is not valid UTF-8 file', self::offsetToLine($contents, strlen($m[0]) + 1));
 		}
 	}
 
@@ -125,7 +126,7 @@ class Tasks
 	{
 		$new = str_replace("\n", PHP_EOL, str_replace(["\r\n", "\r"], "\n", $contents));
 		if ($new !== $contents) {
-			$result->fix('contains non-system line-endings');
+			$result->fix('contains non-system line-endings', self::offsetToLine($contents, strlen(Strings::findPrefix([$contents, $new]))));
 			$contents = $new;
 		}
 	}
@@ -135,7 +136,7 @@ class Tasks
 	{
 		$tmp = rtrim($contents);
 		if (substr($tmp, -2) === '?>') {
-			$result->fix('contains closing PHP tag ?>');
+			$result->fix('contains closing PHP tag ?>', self::offsetToLine($contents, strlen($tmp) - 1));
 			$contents = substr($tmp, 0, -2);
 		}
 	}
@@ -160,7 +161,8 @@ class Tasks
 		$error = stream_get_contents($pipes[1]);
 		if (proc_close($process)) {
 			$error = strip_tags(explode("\n", $error)[1]);
-			$result->error('Invalid PHP code: ' . $error);
+			$line = preg_match('# on line (\d+)$#', $error, $m) ? (int) $m[1] : null;
+			$result->error('Invalid PHP code: ' . $error, $line);
 		}
 	}
 
@@ -192,7 +194,8 @@ class Tasks
 		try {
 			Nette\Neon\Neon::decode($contents);
 		} catch (Nette\Neon\Exception $e) {
-			$result->error($e->getMessage());
+			$line = preg_match('# on line (\d+)#', $e->getMessage(), $m) ? (int) $m[1] : null;
+			$result->error($e->getMessage(), $line);
 		}
 	}
 
@@ -228,7 +231,8 @@ class Tasks
 		}
 		if ($new !== $contents) {
 			$bytes = strlen($contents) - strlen($new);
-			$result->fix("$bytes bytes of whitespaces");
+			$len = min(strlen($contents), strlen(Strings::findPrefix([$contents, $new])) + 1);
+			$result->fix("$bytes bytes of whitespaces", self::offsetToLine($contents, $len));
 			$contents = $new;
 		}
 	}

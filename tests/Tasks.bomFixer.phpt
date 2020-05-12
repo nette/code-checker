@@ -21,6 +21,6 @@ test(function () {
 	$result = new Result;
 	$content = "\xEF\xBB\xBFhello";
 	Tasks::bomFixer($content, $result);
-	Assert::same([[Result::FIX, 'contains BOM', null]], $result->getMessages());
+	Assert::same([[Result::FIX, 'contains BOM', 1]], $result->getMessages());
 	Assert::same('hello', $content);
 });
