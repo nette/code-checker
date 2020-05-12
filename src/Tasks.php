@@ -38,7 +38,7 @@ class Tasks
 
 	public static function invalidPhpDocChecker(string $contents, Result $result): void
 	{
-		foreach (token_get_all($contents) as $token) {
+		foreach (@token_get_all($contents) as $token) { // @ can trigger error
 			if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*(?!\*).*(?<!\w)@[a-z]#isA')) {
 				$result->warning('Missing /** in phpDoc comment', $token[2]);
 
@@ -54,7 +54,7 @@ class Tasks
 		$out = '';
 		$brackets = [];
 		try {
-			$tokens = token_get_all($contents, TOKEN_PARSE);
+			$tokens = @token_get_all($contents, TOKEN_PARSE); // @ can trigger error
 		} catch (\ParseError $e) {
 			return;
 		}
@@ -88,7 +88,7 @@ class Tasks
 	public static function strictTypesDeclarationChecker(string $contents, Result $result): void
 	{
 		$declarations = '';
-		$tokens = token_get_all($contents);
+		$tokens = @token_get_all($contents); // @ can trigger error
 		for ($i = 0; $i < count($tokens); $i++) {
 			if ($tokens[$i][0] === T_DECLARE) {
 				while (isset($tokens[++$i]) && $tokens[$i] !== ';') {
@@ -107,7 +107,7 @@ class Tasks
 	public static function invalidDoubleQuotedStringChecker(string $contents, Result $result): void
 	{
 		$prev = null;
-		foreach (token_get_all($contents) as $token) {
+		foreach (@token_get_all($contents) as $token) { // @ can trigger error
 			if (($token[0] === T_ENCAPSED_AND_WHITESPACE && ($prev[0] !== T_START_HEREDOC || !strpos($prev[1], "'")))
 				|| ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')
 			) {
@@ -254,7 +254,7 @@ class Tasks
 	public static function tabIndentationPhpChecker(string $contents, Result $result): void
 	{
 		$s = '';  // remove strings from code
-		foreach (token_get_all($contents) as $token) {
+		foreach (@token_get_all($contents) as $token) { // @ can trigger error
 			if (is_array($token) && in_array($token[0], [T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING], true)) {
 				$token[1] = preg_replace('#\s#', '.', $token[1]);
 			}
