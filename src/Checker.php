@@ -50,21 +50,25 @@ class Checker
 
 		echo "Scanning {$this->console->color('white', implode(', ', $paths))}\n";
 
+		$iterator = new \AppendIterator();
+		foreach ($paths as $path) {
+			$iterator->append(is_file($path)
+				? new \ArrayIterator([$path])
+				: Finder::findFiles($this->accept)
+					->exclude($this->ignore)
+					->from($path)
+					->exclude($this->ignore)
+					->getIterator()
+			);
+		}
+
 		$counter = 0;
 		$success = true;
-		$files = count($paths) === 1 && is_file($paths[0])
-			? $paths
-			: Finder::findFiles($this->accept)
-				->exclude($this->ignore)
-				->from($paths)
-				->exclude($this->ignore)
-				->getIterator();
-
-		foreach ($files as $file) {
+		foreach ($iterator as $file) {
 			if ($this->showProgress) {
 				echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
 			}
-			$this->relativePath = is_string($file) ? $file : $files->getSubPathName();
+			$this->relativePath = is_string($file) ? $file : $iterator->getSubPathName();
 			$success = $this->processFile((string) $file) && $success;
 		}
 
