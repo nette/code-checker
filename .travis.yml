@@ -3,6 +3,7 @@ php:
     - 7.2
     - 7.3
     - 7.4
+    - nightly
 
 before_install:
     # turn off XDebug
@@ -52,7 +53,7 @@ jobs:
         -   stage: Code Coverage
 
 
-sudo: false
+dist: xenial
 
 cache:
     directories:
