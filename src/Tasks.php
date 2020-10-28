@@ -93,7 +93,9 @@ class Tasks
 		for ($i = 0; $i < count($tokens); $i++) {
 			if ($tokens[$i][0] === T_DECLARE) {
 				while (isset($tokens[++$i]) && $tokens[$i] !== ';') {
-					$declarations .= is_array($tokens[$i]) ? $tokens[$i][1] : $tokens[$i];
+					$declarations .= is_array($tokens[$i])
+						? $tokens[$i][1]
+						: $tokens[$i];
 				}
 			} elseif (!in_array($tokens[$i][0], [T_OPEN_TAG, T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
 				break;
@@ -168,7 +170,9 @@ class Tasks
 			$php . ' -l',
 			[$stdin, ['pipe', 'w'], ['pipe', 'w']],
 			$pipes,
-			null, null, ['bypass_shell' => true]
+			null,
+			null,
+			['bypass_shell' => true]
 		);
 		if (!is_resource($process)) {
 			$result->warning('Unable to lint PHP code');
@@ -275,7 +279,10 @@ class Tasks
 	{
 		$s = '';  // remove strings from code
 		foreach (@token_get_all($contents) as $token) { // @ can trigger error
-			if (is_array($token) && in_array($token[0], [T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING], true)) {
+			if (
+				is_array($token)
+				&& in_array($token[0], [T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING], true)
+			) {
 				$token[1] = preg_replace('#\s#', '.', $token[1]);
 			}
 			$s .= is_array($token) ? $token[1] : $token;
