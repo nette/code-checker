@@ -143,6 +143,12 @@ class Tasks
 
 	public static function phpSyntaxChecker(string $contents, Result $result): void
 	{
+		if (
+			preg_match('#@phpVersion\s+([0-9.]+)#i', $contents, $m)
+			&& version_compare(PHP_VERSION, $m[1], '<')
+		) {
+			return;
+		}
 		$php = defined('PHP_BINARY') ? PHP_BINARY : 'php';
 		$stdin = tmpfile();
 		fwrite($stdin, $contents);
