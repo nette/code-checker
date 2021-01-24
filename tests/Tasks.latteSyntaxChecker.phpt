@@ -18,13 +18,13 @@ test(function () {
 test(function () {
 	$result = new Result;
 	Tasks::latteSyntaxChecker('{hello}', $result); // ignores unknown macros
-	Assert::same([[Result::WARNING, 'Unknown macro {hello}', 1]], $result->getMessages());
+	Assert::same([[Result::WARNING, 'Unknown tag {hello}', 1]], $result->getMessages());
 });
 
 test(function () {
 	$result = new Result;
 	Tasks::latteSyntaxChecker('{hello', $result);
-	Assert::same([[Result::ERROR, 'Malformed macro', 1]], $result->getMessages());
+	Assert::same([[Result::ERROR, 'Malformed tag contents.', 1]], $result->getMessages());
 });
 
 test(function () {

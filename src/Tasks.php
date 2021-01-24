@@ -206,7 +206,7 @@ class Tasks
 			static::phpSyntaxChecker($code, $result);
 
 		} catch (Latte\CompileException $e) {
-			if (!preg_match('#Unknown (macro|attribute)#A', $e->getMessage())) {
+			if (!preg_match('#Unknown (tag|macro|attribute)#A', $e->getMessage())) {
 				$result->error($e->getMessage(), $e->sourceLine);
 			} else {
 				$result->warning($e->getMessage(), $e->sourceLine);
