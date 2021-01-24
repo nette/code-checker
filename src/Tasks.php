@@ -173,7 +173,7 @@ class Tasks
 		fwrite($stdin, $contents);
 		fseek($stdin, 0);
 		$process = proc_open(
-			$php . ' -l',
+			$php . ' -l -d display_errors=1',
 			[$stdin, ['pipe', 'w'], ['pipe', 'w']],
 			$pipes,
 			null,
