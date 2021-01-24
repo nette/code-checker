@@ -45,3 +45,10 @@ a
 ", $result);
 	Assert::same([[Result::ERROR, 'Used space to indent instead of tab', 6]], $result->getMessages());
 });
+
+
+test(function () {
+	$result = new Result;
+	Tasks::tabIndentationPhpChecker("<?php echo <<<'XX'\n\n\tXX;\n?>", $result);
+	Assert::same([], $result->getMessages());
+});

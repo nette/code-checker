@@ -289,7 +289,7 @@ class Tasks
 				is_array($token)
 				&& in_array($token[0], [T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING], true)
 			) {
-				$token[1] = preg_replace('#\s#', '.', $token[1]);
+				$token[1] = preg_replace('#[\t ]#', '.', $token[1]);
 			}
 			$s .= is_array($token) ? $token[1] : $token;
 		}
