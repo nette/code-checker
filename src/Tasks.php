@@ -82,6 +82,7 @@ class Tasks
 			}
 			$out .= is_array($token) ? $token[1] : $token;
 		}
+
 		$contents = $out;
 	}
 
@@ -101,6 +102,7 @@ class Tasks
 				break;
 			}
 		}
+
 		if (!preg_match('#\bstrict_types\s*=\s*1\b#', $declarations)) {
 			$result->error('Missing declare(strict_types=1)');
 		}
@@ -130,8 +132,8 @@ class Tasks
 		foreach (@token_get_all($contents) as $token) { // @ can trigger error
 			if (($token[0] === T_ENCAPSED_AND_WHITESPACE && $prev[0] !== T_START_HEREDOC
 					|| $token[0] === T_CONSTANT_ENCAPSED_STRING)
-				&& strpos($token[1], "\n") !== false
-				&& (strpos($token[1], "\\'") !== false || strpos($token[1], '\\"') !== false)
+				&& str_contains($token[1], "\n")
+				&& (str_contains($token[1], "\\'") || str_contains($token[1], '\\"'))
 			) {
 				$result->warning('Tip: use NOWDOC or HEREDOC', $token[2]);
 			}
@@ -178,7 +180,7 @@ class Tasks
 			$pipes,
 			null,
 			null,
-			['bypass_shell' => true]
+			['bypass_shell' => true],
 		);
 		if (!is_resource($process)) {
 			$result->warning('Unable to lint PHP code');
@@ -264,14 +266,14 @@ class Tasks
 	}
 
 
-	public static function tabIndentationChecker(string $contents, Result $result, string $origContents = null): void
+	public static function tabIndentationChecker(string $contents, Result $result, ?string $origContents = null): void
 	{
 		$origContents = $origContents ?: $contents;
 		$offset = 0;
 		if (preg_match('#^(\t*+)\ (?!\*)\s*#m', $contents, $m, PREG_OFFSET_CAPTURE)) {
 			$result->error(
 				$m[1][0] ? 'Mixed tabs and spaces to indent' : 'Used space to indent instead of tab',
-				self::offsetToLine($origContents, $m[0][1])
+				self::offsetToLine($origContents, $m[0][1]),
 			);
 			$offset = $m[0][1] + strlen($m[0][0]) + 1;
 		}
@@ -293,6 +295,7 @@ class Tasks
 			}
 			$s .= is_array($token) ? $token[1] : $token;
 		}
+
 		self::tabIndentationChecker($s, $result, $contents);
 	}
 

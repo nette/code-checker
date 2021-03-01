@@ -16,7 +16,6 @@ foreach (['ok1.php', 'ok2.php', 'ok3.php'] as $file) {
 	Assert::same([], $result->getMessages());
 }
 
-
 foreach (['ko1.php', 'ko2.php', 'ko3.php'] as $file) {
 	$contents = file_get_contents(__DIR__ . '/fixtures/strict-types/' . $file);
 	$result = new Result;

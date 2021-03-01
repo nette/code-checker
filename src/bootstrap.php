@@ -52,20 +52,19 @@ CodeChecker version 3.3
 ';
 
 $cmd = new Parser(<<<'XX'
-Usage:
-    php code-checker [options]
+	Usage:
+	    php code-checker [options]
 
-Options:
-    -d <path>             Folder or file to scan (default: current directory)
-    -i | --ignore <mask>  Files to ignore
-    -f | --fix            Fixes files
-    -l | --eol            Convert newline characters
-    --no-progress         Do not show progress dots
-    --strict-types        Checks whether PHP 7.0 directive strict_types is enabled
+	Options:
+	    -d <path>             Folder or file to scan (default: current directory)
+	    -i | --ignore <mask>  Files to ignore
+	    -f | --fix            Fixes files
+	    -l | --eol            Convert newline characters
+	    --no-progress         Do not show progress dots
+	    --strict-types        Checks whether PHP 7.0 directive strict_types is enabled
 
 
-XX
-, [
+	XX, [
 	'-d' => [Parser::REALPATH => true, Parser::REPEATABLE => true, Parser::VALUE => getcwd()],
 	'--ignore' => [Parser::REPEATABLE => true],
 	'--short-arrays' => [], // ignored
@@ -82,6 +81,7 @@ $tasks = Tasks::class;
 foreach ($options['--ignore'] as $ignore) {
 	$checker->ignore[] = $ignore;
 }
+
 $checker->readOnly = !isset($options['--fix']);
 $checker->showProgress = !isset($options['--no-progress']);
 

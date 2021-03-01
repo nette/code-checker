@@ -15,19 +15,19 @@ class Result
 	private $messages = [];
 
 
-	public function fix(string $message, int $line = null): void
+	public function fix(string $message, ?int $line = null): void
 	{
 		$this->messages[] = [self::FIX, $message, $line];
 	}
 
 
-	public function warning(string $message, int $line = null): void
+	public function warning(string $message, ?int $line = null): void
 	{
 		$this->messages[] = [self::WARNING, $message, $line];
 	}
 
 
-	public function error(string $message, int $line = null): void
+	public function error(string $message, ?int $line = null): void
 	{
 		$this->messages[] = [self::ERROR, $message, $line];
 	}
