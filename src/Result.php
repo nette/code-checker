@@ -12,7 +12,7 @@ class Result
 		FIX = 'fix',
 		WARNING = 'warning';
 
-	private $messages = [];
+	private array $messages = [];
 
 
 	public function fix(string $message, ?int $line = null): void
