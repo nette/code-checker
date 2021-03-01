@@ -72,4 +72,4 @@ composer global require nette/code-checker
 
 and make sure your global vendor binaries directory is in [your `$PATH` environment variable](https://getcomposer.org/doc/03-cli.md#global).
 
-It requires PHP version 7.2 and supports PHP up to 7.4. (Version 2.x works with PHP 5.6.)
+It requires PHP version 8.0.
