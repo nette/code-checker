@@ -199,19 +199,20 @@ class Tasks
 	{
 		$latte = new Latte\Engine;
 		$latte->setLoader(new Latte\Loaders\StringLoader);
-		$latte->getCompiler()->addMacro('cache', new Nette\Bridges\CacheLatte\CacheMacro);
-		Nette\Bridges\ApplicationLatte\UIMacros::install($latte->getCompiler());
-		Nette\Bridges\FormsLatte\FormMacros::install($latte->getCompiler());
+		$latte->addExtension(new Latte\Essential\TranslatorExtension(null));
+		$latte->addExtension(new Nette\Bridges\ApplicationLatte\UIExtension(null));
+		$latte->addExtension(new Nette\Bridges\CacheLatte\CacheExtension(new Nette\Caching\Storages\DevNullStorage));
+		$latte->addExtension(new Nette\Bridges\FormsLatte\FormsExtension);
 
 		try {
 			$code = $latte->compile($contents);
 			static::phpSyntaxChecker($code, $result);
 
 		} catch (Latte\CompileException $e) {
-			if (!preg_match('#Unknown (tag|macro|attribute)#A', $e->getMessage())) {
-				$result->error($e->getMessage(), $e->sourceLine);
+			if (!preg_match('#Unexpected (tag|attribute)#A', $e->getMessage())) {
+				$result->error($e->getMessage(), $e->position?->line);
 			} else {
-				$result->warning($e->getMessage(), $e->sourceLine);
+				$result->warning($e->getMessage(), $e->position?->line);
 			}
 		}
 	}
