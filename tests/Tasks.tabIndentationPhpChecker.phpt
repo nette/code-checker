@@ -43,7 +43,7 @@ b
 a
  \tb
 ", $result);
-	Assert::same([[Result::ERROR, 'Used space to indent instead of tab', 6]], $result->getMessages());
+	Assert::same([[Result::Error, 'Used space to indent instead of tab', 6]], $result->getMessages());
 });
 
 

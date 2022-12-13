@@ -27,12 +27,12 @@ a
  \tb
 \t\tc
 ", $result);
-	Assert::same([[Result::ERROR, 'Used space to indent instead of tab', 3]], $result->getMessages());
+	Assert::same([[Result::Error, 'Used space to indent instead of tab', 3]], $result->getMessages());
 });
 
 
 test(function () {
 	$result = new Result;
 	Tasks::tabIndentationChecker("a\tb", $result);
-	Assert::same([[Result::ERROR, 'Found unexpected tabulator', 1]], $result->getMessages());
+	Assert::same([[Result::Error, 'Found unexpected tabulator', 1]], $result->getMessages());
 });

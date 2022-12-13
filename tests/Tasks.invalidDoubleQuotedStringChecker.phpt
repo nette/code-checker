@@ -18,5 +18,5 @@ test(function () {
 test(function () {
 	$result = new Result;
 	Tasks::invalidDoubleQuotedStringChecker('<?php $a = "\X10"', $result);
-	Assert::same([[Result::WARNING, 'Invalid escape sequence \\X in double quoted string', 1]], $result->getMessages());
+	Assert::same([[Result::Warning, 'Invalid escape sequence \\X in double quoted string', 1]], $result->getMessages());
 });

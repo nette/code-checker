@@ -25,6 +25,6 @@ test(function () {
 	$result = new Result;
 	Tasks::phpSyntaxChecker('<?php if', $result);
 	Assert::count(1, $result->getMessages());
-	Assert::same(Result::ERROR, $result->getMessages()[0][0]);
+	Assert::same(Result::Error, $result->getMessages()[0][0]);
 	Assert::contains('syntax error, unexpected end of file', $result->getMessages()[0][1]);
 });

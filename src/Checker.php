@@ -103,14 +103,14 @@ class Checker
 
 			foreach ($result->getMessages() as $result) {
 				[$type, $message, $line] = $result;
-				if ($type === Result::ERROR) {
+				if ($type === Result::Error) {
 					$this->write('ERROR', $message, $line, 'red');
 					$error = true;
 
-				} elseif ($type === Result::WARNING) {
+				} elseif ($type === Result::Warning) {
 					$this->write('WARNING', $message, $line, 'yellow');
 
-				} elseif ($type === Result::FIX) {
+				} elseif ($type === Result::Fix) {
 					$this->write($this->readOnly ? 'FOUND' : 'FIX', $message, $line, 'aqua');
 					$error = $error || $this->readOnly;
 				}

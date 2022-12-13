@@ -18,5 +18,5 @@ test(function () {
 test(function () {
 	$result = new Result;
 	Tasks::yamlIndentationChecker("\thello", $result);
-	Assert::same([[Result::ERROR, 'Used tabs to indent instead of spaces', 1]], $result->getMessages());
+	Assert::same([[Result::Error, 'Used tabs to indent instead of spaces', 1]], $result->getMessages());
 });

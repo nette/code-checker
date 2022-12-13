@@ -18,5 +18,5 @@ test(function () {
 test(function () {
 	$result = new Result;
 	Tasks::unexpectedTabsChecker("\t", $result);
-	Assert::same([[Result::ERROR, 'Found unexpected tabulator', 1]], $result->getMessages());
+	Assert::same([[Result::Error, 'Found unexpected tabulator', 1]], $result->getMessages());
 });
