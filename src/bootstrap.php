@@ -65,8 +65,8 @@ $cmd = new Parser(<<<'XX'
 
 
 	XX, [
-	'-d' => [Parser::REALPATH => true, Parser::REPEATABLE => true, Parser::VALUE => getcwd()],
-	'--ignore' => [Parser::REPEATABLE => true],
+	'-d' => [Parser::Realpath => true, Parser::Repeatable => true, Parser::Default => getcwd()],
+	'--ignore' => [Parser::Repeatable => true],
 	'--short-arrays' => [], // ignored
 ]);
 
