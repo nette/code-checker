@@ -65,7 +65,7 @@ $cmd = new Parser(<<<'XX'
 
 
 	XX, [
-	'-d' => [Parser::Realpath => true, Parser::Repeatable => true, Parser::Default => getcwd()],
+	'-d' => [Parser::RealPath => true, Parser::Repeatable => true, Parser::Default => getcwd()],
 	'--ignore' => [Parser::Repeatable => true],
 	'--short-arrays' => [], // ignored
 ]);
@@ -105,7 +105,7 @@ $checker->addTask([$tasks, 'neonSyntaxChecker'], '*.neon');
 $checker->addTask([$tasks, 'jsonSyntaxChecker'], '*.json');
 $checker->addTask([$tasks, 'yamlIndentationChecker'], '*.yml');
 $checker->addTask([$tasks, 'trailingWhiteSpaceFixer']);
-$checker->addTask([$tasks, 'tabIndentationChecker'], '*.css,*.less,*.js,*.json,*.neon');
+$checker->addTask([$tasks, 'tabIndentationChecker'], '*.css,*.less,*.js,*.json');
 $checker->addTask([$tasks, 'tabIndentationPhpChecker'], '*.php,*.phpt');
 $checker->addTask([$tasks, 'unexpectedTabsChecker'], '*.yml');
 $checker->addTask([$tasks, 'docSyntaxtHinter'], '*.php,*.phpt');
