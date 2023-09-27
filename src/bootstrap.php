@@ -61,7 +61,7 @@ $cmd = new Parser(<<<'XX'
 	    -f | --fix            Fixes files
 	    -l | --eol            Convert newline characters
 	    --no-progress         Do not show progress dots
-	    --strict-types        Checks whether PHP 7.0 directive strict_types is enabled
+	    --strict-types        Checks whether directive strict_types is enabled
 
 
 	XX, [
