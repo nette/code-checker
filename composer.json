@@ -13,8 +13,7 @@
 	"require": {
 		"php": ">= 8.0",
 		"nette/command-line": "^2.0",
-		"nette/utils": "^3.0",
-		"nette/finder": "^2.5",
+		"nette/utils": "^4.0",
 		"nette/neon": "^3.0",
 		"latte/latte": "^3.0.1",
 		"nette/forms": "^3.0",

@@ -65,9 +65,7 @@ class Checker
 			if ($this->showProgress) {
 				echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
 			}
-			$this->relativePath = is_string($file)
-				? $file
-				: $iterator->getSubPathName();
+			$this->relativePath = $file->getRelativePathname();
 			$success = $this->processFile((string) $file) && $success;
 		}
 
