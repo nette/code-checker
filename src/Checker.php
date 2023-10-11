@@ -46,22 +46,22 @@ class Checker
 
 		echo "Scanning {$this->console->color('white', implode(', ', $paths))}\n";
 
-		$iterator = new \AppendIterator;
+		$finder = new Finder;
 		foreach ($paths as $path) {
-			$iterator->append(
-				is_file($path)
-				? new \ArrayIterator([$path])
-				: Finder::findFiles($this->accept)
+			if (is_file($path)) {
+				$finder->append($path);
+			} else {
+				$finder->append()
+					->files($this->accept)
 					->exclude($this->ignore)
 					->from($path)
-					->exclude($this->ignore)
-					->getIterator(),
-			);
+					->exclude($this->ignore);
+			}
 		}
 
 		$counter = 0;
 		$success = true;
-		foreach ($iterator as $file) {
+		foreach ($finder as $file) {
 			if ($this->showProgress) {
 				echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
 			}
