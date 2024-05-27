@@ -60,6 +60,7 @@ $cmd = new Parser(<<<'XX'
 	    -i | --ignore <mask>  Files to ignore
 	    -f | --fix            Fixes files
 	    -l | --eol            Convert newline characters
+	    --only-syntax         Check only syntax
 	    --no-progress         Do not show progress dots
 	    --strict-types        Checks whether directive strict_types is enabled
 
@@ -84,6 +85,15 @@ foreach ($options['--ignore'] as $ignore) {
 
 $checker->readOnly = !isset($options['--fix']);
 $checker->showProgress = !isset($options['--no-progress']);
+
+if (isset($options['--only-syntax'])) {
+	$checker->addTask([$tasks, 'phpSyntaxChecker'], '*.php,*.phpt');
+	$checker->addTask([$tasks, 'latteSyntaxChecker'], '*.latte');
+	$checker->addTask([$tasks, 'neonSyntaxChecker'], '*.neon');
+	$checker->addTask([$tasks, 'jsonSyntaxChecker'], '*.json');
+	$ok = $checker->run($options['-d']);
+	exit($ok ? 0 : 1);
+}
 
 $checker->addTask([$tasks, 'controlCharactersChecker']);
 $checker->addTask([$tasks, 'bomFixer']);
