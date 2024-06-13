@@ -17,7 +17,7 @@ class Checker
 	public array $accept = [
 		'*.php', '*.phpt', '*.inc',
 		'*.txt', '*.texy', '*.md',
-		'*.css', '*.less', '*.sass', '*.scss', '*.js', '*.json', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
+		'*.css', '*.less', '*.sass', '*.scss', '*.js', '*.mjs', '*.cjs', '*.ts', '*.json', '*.latte', '*.htm', '*.html', '*.phtml', '*.xml',
 		'*.ini', '*.neon', '*.yml',
 		'*.sh', '*.bat',
 		'*.sql',
