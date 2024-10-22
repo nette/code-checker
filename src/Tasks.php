@@ -199,6 +199,7 @@ class Tasks
 	{
 		$latte = new Latte\Engine;
 		$latte->setLoader(new Latte\Loaders\StringLoader);
+		$latte->enablePhpLinter(PHP_BINARY);
 		$latte->addExtension(new Latte\Essential\TranslatorExtension(null));
 		$latte->addExtension(new Nette\Bridges\ApplicationLatte\UIExtension(null));
 		$latte->addExtension(new Nette\Bridges\CacheLatte\CacheExtension(new Nette\Caching\Storages\DevNullStorage));

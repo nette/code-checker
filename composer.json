@@ -15,7 +15,7 @@
 		"nette/command-line": "^2.0",
 		"nette/utils": "^4.0",
 		"nette/neon": "^3.0",
-		"latte/latte": "^3.0.1",
+		"latte/latte": "^3.0.7",
 		"nette/forms": "^3.0",
 		"nette/caching": "^3.1",
 		"nette/application": "^3.1"
