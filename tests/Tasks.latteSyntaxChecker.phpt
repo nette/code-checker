@@ -18,13 +18,13 @@ test(function () {
 test(function () {
 	$result = new Result;
 	Tasks::latteSyntaxChecker('{hello}', $result); // ignores unknown macros
-	Assert::same([[Result::Warning, 'Unknown tag {hello}', 1]], $result->getMessages());
+	Assert::same([[Result::Warning, 'Unexpected tag {hello} (on line 1 at column 1)', 1]], $result->getMessages());
 });
 
 test(function () {
 	$result = new Result;
 	Tasks::latteSyntaxChecker('{hello', $result);
-	Assert::same([[Result::Error, 'Malformed tag contents.', 1]], $result->getMessages());
+	Assert::same([[Result::Error, 'Unexpected end, expecting end of Latte tag started on line 1 at column 1 (on line 1 at column 7)', 1]], $result->getMessages());
 });
 
 test(function () {
@@ -32,5 +32,5 @@ test(function () {
 	Tasks::latteSyntaxChecker('{var $x = +}', $result); // invalid PHP code
 	Assert::count(1, $result->getMessages());
 	Assert::same(Result::Error, $result->getMessages()[0][0]);
-	Assert::contains('syntax error, unexpected', $result->getMessages()[0][1]);
+	Assert::same('Unexpected end (on line 1 at column 12)', $result->getMessages()[0][1]);
 });

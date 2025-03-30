@@ -18,5 +18,5 @@ test(function () {
 test(function () {
 	$result = new Result;
 	Tasks::neonSyntaxChecker('a: b: c', $result);
-	Assert::same([[Result::Error, 'Unexpected \':\' on line 1, column 5.', 1]], $result->getMessages());
+	Assert::same([[Result::Error, 'Unexpected \':\' on line 1 at column 5', 1]], $result->getMessages());
 });
