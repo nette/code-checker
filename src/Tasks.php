@@ -204,6 +204,7 @@ class Tasks
 		$latte->addExtension(new Nette\Bridges\ApplicationLatte\UIExtension(null));
 		$latte->addExtension(new Nette\Bridges\CacheLatte\CacheExtension(new Nette\Caching\Storages\DevNullStorage));
 		$latte->addExtension(new Nette\Bridges\FormsLatte\FormsExtension);
+		$latte->addExtension(new Nette\Bridges\AssetsLatte\LatteExtension(new Nette\Assets\Registry));
 
 		try {
 			$code = $latte->compile($contents);
