@@ -25,7 +25,7 @@ class Checker
 	];
 
 	public array $ignore = [
-		'.git', '.svn', '.idea', '*.tmp', 'tmp', 'temp', 'log', 'vendor', 'node_modules', 'bower_components',
+		'.git', '.svn', '.idea', '.claude', '*.tmp', 'tmp', 'temp', 'log', 'vendor', 'node_modules', 'bower_components',
 		'*.min.js', 'package.json', 'package-lock.json',
 	];
 
