@@ -63,6 +63,7 @@ $cmd = new Parser(<<<'XX'
 	    --only-syntax         Check only syntax
 	    --no-progress         Do not show progress dots
 	    --strict-types        Checks whether directive strict_types is enabled
+	    --version             Show version
 
 
 	XX, [
@@ -74,6 +75,8 @@ $cmd = new Parser(<<<'XX'
 $options = $cmd->parse();
 if ($cmd->isEmpty()) {
 	$cmd->help();
+} elseif (isset($options['--version'])) {
+	exit(0);
 }
 
 $checker = new Checker;
