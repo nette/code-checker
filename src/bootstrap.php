@@ -1,12 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Source Codes Checker.
  *
  * This file is part of the Nette Framework (https://nette.org)
  */
-
-declare(strict_types=1);
 
 namespace Nette\CodeChecker;
 
