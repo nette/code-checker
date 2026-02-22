@@ -12,6 +12,7 @@ class Checker
 
 	public bool $showProgress = false;
 
+	/** @var list<string> */
 	public array $accept = [
 		'*.php', '*.phpt', '*.inc',
 		'*.txt', '*.texy', '*.md',
@@ -22,11 +23,13 @@ class Checker
 		'.htaccess', '.gitignore',
 	];
 
+	/** @var list<string> */
 	public array $ignore = [
 		'.git', '.svn', '.idea', '.claude', '*.tmp', 'tmp', 'temp', 'log', 'vendor', 'node_modules', 'bower_components',
 		'*.min.js', 'package.json', 'package-lock.json',
 	];
 
+	/** @var list<array{callable(string, Result): void, ?string}> */
 	private array $tasks = [];
 
 	private string $relativePath;
@@ -34,6 +37,7 @@ class Checker
 	private Console $console;
 
 
+	/** @param list<string> $paths */
 	public function run($paths): bool
 	{
 		$this->console = new Console;
@@ -76,6 +80,7 @@ class Checker
 	}
 
 
+	/** @param callable(string, Result): void $task */
 	public function addTask(callable $task, ?string $pattern = null): void
 	{
 		$this->tasks[] = [$task, $pattern];

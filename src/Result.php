@@ -10,6 +10,7 @@ class Result
 		Fix = 'fix',
 		Warning = 'warning';
 
+	/** @var list<array{string, string, ?int}> */
 	private array $messages = [];
 
 
@@ -31,6 +32,7 @@ class Result
 	}
 
 
+	/** @return list<array{string, string, ?int}> */
 	public function getMessages(): array
 	{
 		return $this->messages;
