@@ -12,7 +12,7 @@ class Tasks
 	public static function controlCharactersChecker(string $contents, Result $result): void
 	{
 		if ($m = Strings::match($contents, '#[\x00-\x08\x0B\x0C\x0E-\x1F]#', PREG_OFFSET_CAPTURE)) {
-			$result->error('Contains control characters', self::offsetToLine($contents, $m[0][1]));
+			$result->error('Contains control characters', self::offsetToLine($contents, (int) $m[0][1]));
 		}
 	}
 
@@ -30,6 +30,7 @@ class Tasks
 	{
 		if (!Strings::checkEncoding($contents)) {
 			preg_match('/^(?:[\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF][\x80-\xBF]|[\xC0-\xDF][\x80-\xBF]|[\x00-\x7f])*+/', $contents, $m);
+			/** @var array{string} $m */
 			$result->error('Is not valid UTF-8 file', self::offsetToLine($contents, strlen($m[0]) + 1));
 		}
 	}
@@ -109,12 +110,12 @@ class Tasks
 
 	public static function invalidDoubleQuotedStringChecker(string $contents, Result $result): void
 	{
-		$prev = null;
+		$prev = [0, '', 0];
 		foreach (@token_get_all($contents) as $token) { // @ can trigger error
 			if (($token[0] === T_ENCAPSED_AND_WHITESPACE && ($prev[0] !== T_START_HEREDOC || !strpos($prev[1], "'")))
 				|| ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')
 			) {
-				$m = Strings::match($token[1], '#^([^\\\]|\\\[\\\nrtvefxu0-7\W])*+#'); // more strict: '#^([^\\\\]|\\\\[\\\\nrtvefu$"x0-7])*+#'
+				$m = Strings::match($token[1], '#^([^\\\]|\\\[\\\nrtvefxu0-7\W])*+#') ?? ['']; // more strict: '#^([^\\\\]|\\\\[\\\\nrtvefu$"x0-7])*+#'
 				if ($token[1] !== $m[0]) {
 					$result->warning('Invalid escape sequence ' . substr($token[1], strlen($m[0]), 2) . ' in double quoted string', $token[2]);
 				}
@@ -126,7 +127,7 @@ class Tasks
 
 	public static function docSyntaxtHinter(string $contents, Result $result): void
 	{
-		$prev = null;
+		$prev = [0, '', 0];
 		foreach (@token_get_all($contents) as $token) { // @ can trigger error
 			if (($token[0] === T_ENCAPSED_AND_WHITESPACE && $prev[0] !== T_START_HEREDOC
 					|| $token[0] === T_CONSTANT_ENCAPSED_STRING)

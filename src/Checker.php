@@ -38,7 +38,7 @@ class Checker
 
 
 	/** @param list<string> $paths */
-	public function run($paths): bool
+	public function run(array $paths): bool
 	{
 		$this->console = new Console;
 
@@ -90,7 +90,7 @@ class Checker
 	private function processFile(string $file): bool
 	{
 		$error = false;
-		$origContents = $lastContents = file_get_contents($file);
+		$origContents = $lastContents = (string) file_get_contents($file);
 
 		foreach ($this->tasks as $task) {
 			[$handler, $pattern] = $task;
