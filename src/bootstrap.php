@@ -8,6 +8,7 @@
 
 namespace Nette\CodeChecker;
 
+use Nette\CommandLine\Console;
 use Nette\CommandLine\Parser;
 
 $autoload = is_file(__DIR__ . '/../vendor/autoload.php')
@@ -85,7 +86,7 @@ foreach ($options['--ignore'] as $ignore) {
 }
 
 $checker->readOnly = !isset($options['--fix']);
-$checker->showProgress = !isset($options['--no-progress']);
+$checker->showProgress = !isset($options['--no-progress']) && Console::detectTerminal();
 
 if (isset($options['--only-syntax'])) {
 	$checker->addTask([$tasks, 'phpSyntaxChecker'], '*.php,*.phpt');
