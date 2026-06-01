@@ -126,7 +126,7 @@ class Checker
 
 	private function matchFileName(string $pattern, string $name): bool
 	{
-		$neg = substr($pattern, 0, 1) === '!';
+		$neg = str_starts_with($pattern, '!');
 		foreach (explode(',', ltrim($pattern, '!')) as $part) {
 			if (fnmatch($part, $name, FNM_CASEFOLD)) {
 				return !$neg;

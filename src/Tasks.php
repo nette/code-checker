@@ -19,7 +19,7 @@ class Tasks
 
 	public static function bomFixer(string &$contents, Result $result): void
 	{
-		if (substr($contents, 0, 3) === "\xEF\xBB\xBF") {
+		if (str_starts_with($contents, "\xEF\xBB\xBF")) {
 			$result->fix('contains BOM', 1);
 			$contents = substr($contents, 3);
 		}
@@ -54,7 +54,7 @@ class Tasks
 		$brackets = [];
 		try {
 			$tokens = @token_get_all($contents, TOKEN_PARSE); // @ can trigger error
-		} catch (\ParseError $e) {
+		} catch (\ParseError) {
 			return;
 		}
 
@@ -153,7 +153,7 @@ class Tasks
 	public static function trailingPhpTagRemover(string &$contents, Result $result): void
 	{
 		$tmp = rtrim($contents);
-		if (substr($tmp, -2) === '?>') {
+		if (str_ends_with($tmp, '?>')) {
 			$result->fix('contains closing PHP tag ?>', self::offsetToLine($contents, strlen($tmp) - 1));
 			$contents = substr($tmp, 0, -2);
 		}
