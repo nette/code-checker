@@ -49,43 +49,6 @@ class Tasks
 	}
 
 
-	public static function shortArraySyntaxFixer(string &$contents, Result $result): void
-	{
-		$out = '';
-		$brackets = [];
-		try {
-			$tokens = @token_get_all($contents, TOKEN_PARSE); // @ can trigger error
-		} catch (\ParseError) {
-			return;
-		}
-
-		for ($i = 0; $i < count($tokens); $i++) {
-			$token = $tokens[$i];
-			if ($token === '(') {
-				$brackets[] = false;
-
-			} elseif ($token === ')') {
-				$token = array_pop($brackets) ? ']' : ')';
-
-			} elseif (is_array($token) && $token[0] === T_ARRAY) {
-				$a = $i + 1;
-				if (isset($tokens[$a]) && $tokens[$a][0] === T_WHITESPACE) {
-					$a++;
-				}
-				if (isset($tokens[$a]) && $tokens[$a] === '(') {
-					$result->fix('uses old array() syntax', $token[2]);
-					$i = $a;
-					$brackets[] = true;
-					$token = '[';
-				}
-			}
-			$out .= is_array($token) ? $token[1] : $token;
-		}
-
-		$contents = $out;
-	}
-
-
 	public static function strictTypesDeclarationChecker(string $contents, Result $result): void
 	{
 		$declarations = '';
@@ -104,23 +67,6 @@ class Tasks
 
 		if (!preg_match('#\bstrict_types\s*=\s*1\b#', $declarations)) {
 			$result->error('Missing declare(strict_types=1)');
-		}
-	}
-
-
-	public static function invalidDoubleQuotedStringChecker(string $contents, Result $result): void
-	{
-		$prev = [0, '', 0];
-		foreach (@token_get_all($contents) as $token) { // @ can trigger error
-			if (($token[0] === T_ENCAPSED_AND_WHITESPACE && ($prev[0] !== T_START_HEREDOC || !strpos($prev[1], "'")))
-				|| ($token[0] === T_CONSTANT_ENCAPSED_STRING && $token[1][0] === '"')
-			) {
-				$m = Strings::match($token[1], '#^([^\\\]|\\\[\\\nrtvefxu0-7\W])*+#') ?? ['']; // more strict: '#^([^\\\\]|\\\\[\\\\nrtvefu$"x0-7])*+#'
-				if ($token[1] !== $m[0]) {
-					$result->warning('Invalid escape sequence ' . substr($token[1], strlen($m[0]), 2) . ' in double quoted string', $token[2]);
-				}
-			}
-			$prev = $token;
 		}
 	}
 
@@ -147,16 +93,6 @@ class Tasks
 		if ($new !== $contents) {
 			$result->fix('contains non-system line-endings', self::offsetToLine($contents, strlen(Strings::findPrefix([$contents, $new]))));
 			$contents = $new;
-		}
-	}
-
-
-	public static function trailingPhpTagRemover(string &$contents, Result $result): void
-	{
-		$tmp = rtrim($contents);
-		if (str_ends_with($tmp, '?>')) {
-			$result->fix('contains closing PHP tag ?>', self::offsetToLine($contents, strlen($tmp) - 1));
-			$contents = substr($tmp, 0, -2);
 		}
 	}
 

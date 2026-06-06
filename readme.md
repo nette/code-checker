@@ -50,7 +50,6 @@ What Code-Checker Does?
 - checks whether the file is encoded in UTF-8
 - controls misspelled `/* @annotations */` (second asterisk missing)
 - checks whether PHP files declare `strict_types=1`
-- removes PHP ending tags `?>` in PHP files
 - removes trailing whitespace and unnecessary blank lines from the end of a file
 - normalizes line endings to system-default (with the `-l` parameter)
 
