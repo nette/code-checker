@@ -46,7 +46,7 @@ set_time_limit(0);
 
 
 echo '
-CodeChecker version 3.3.5
+CodeChecker version 3.4.0
 -------------------------
 ';
 
