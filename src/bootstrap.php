@@ -61,7 +61,6 @@ $cmd = new Parser(<<<'XX'
 	    -l | --eol            Convert newline characters
 	    --only-syntax         Check only syntax
 	    --no-progress         Do not show progress dots
-	    --strict-types        Checks whether directive strict_types is enabled
 	    --version             Show version
 
 
@@ -69,6 +68,7 @@ $cmd = new Parser(<<<'XX'
 	'-d' => [Parser::RealPath => true, Parser::Repeatable => true, Parser::Default => getcwd()],
 	'--ignore' => [Parser::Repeatable => true],
 	'--short-arrays' => [Parser::Argument => false], // ignored
+	'--strict-types' => [Parser::Argument => false], // ignored
 ]);
 
 $options = $cmd->parse();
@@ -103,9 +103,7 @@ $checker->addTask([$tasks, 'utf8Checker']);
 $checker->addTask([$tasks, 'phpSyntaxChecker'], '*.php,*.phpt');
 $checker->addTask([$tasks, 'invalidPhpDocChecker'], '*.php,*.phpt');
 $checker->addTask([$tasks, 'shortArraySyntaxFixer'], '*.php,*.phpt');
-if (isset($options['--strict-types'])) {
-	$checker->addTask([$tasks, 'strictTypesDeclarationChecker'], '*.php,*.phpt');
-}
+$checker->addTask([$tasks, 'strictTypesDeclarationChecker'], '*.php,*.phpt');
 if (isset($options['--eol'])) {
 	$checker->addTask([$tasks, 'newlineNormalizer'], '!*.sh');
 }

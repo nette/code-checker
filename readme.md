@@ -27,7 +27,6 @@ Options:
     -f | --fix            Fixes files
     -l | --eol            Convert newline characters
     --no-progress         Do not show progress dots
-    --strict-types        Checks whether PHP 7.0 directive strict_types is enabled
 ```
 
 Without parameters, it checks the current working directory in a read-only mode, with `-f` parameter it fixes files.
@@ -50,6 +49,7 @@ What Code-Checker Does?
 - checks for [control characters](https://doc.nette.org/glossary#toc-control-characters)
 - checks whether the file is encoded in UTF-8
 - controls misspelled `/* @annotations */` (second asterisk missing)
+- checks whether PHP files declare `strict_types=1`
 - removes PHP ending tags `?>` in PHP files
 - removes trailing whitespace and unnecessary blank lines from the end of a file
 - normalizes line endings to system-default (with the `-l` parameter)
