@@ -10,65 +10,83 @@ Code Checker
 Introduction
 ------------
 
-The tool called that checks and possibly repairs some of the formal errors in your source code.
+Code Checker is a command-line tool that scans your source code for common formal errors – and can fix many of them automatically. It works with PHP, Latte, NEON, JSON and YAML files, checking encoding, line endings, indentation, trailing whitespace and more.
 
-Documentation can be found on the [website](https://doc.nette.org/code-checker). If you like it, **[please make a donation now](https://github.com/sponsors/dg)**. Thank you!
+It runs as a standalone application, not as a project dependency.
 
-
-Usage
------
-
-```
-Usage: php code-checker [options]
-
-Options:
-    -d <path>             Folder or file to scan (default: current directory)
-    -i | --ignore <mask>  Files to ignore
-    -f | --fix            Fixes files
-    -l | --eol            Convert newline characters
-    --no-progress         Do not show progress dots
-```
-
-Without parameters, it checks the current working directory in a read-only mode, with `-f` parameter it fixes files.
-
-Before you get to know the tool, be sure to backup your files first.
-
-You can create a batch file, e.g. `code.bat`, for easier execution of Code-Checker under Windows:
-
-```shell
-php path_to\Nette_tools\Code-Checker\code-checker %*
-```
-
-
-What Code-Checker Does?
------------------------
-
-- removes [BOM](https://doc.nette.org/glossary#toc-bom)
-- checks validity of [Latte](https://latte.nette.org) templates
-- checks validity of  `.neon`, `.php` and `.json` files
-- checks for [control characters](https://doc.nette.org/glossary#toc-control-characters)
-- checks whether the file is encoded in UTF-8
-- controls misspelled `/* @annotations */` (second asterisk missing)
-- checks whether PHP files declare `strict_types=1`
-- removes trailing whitespace and unnecessary blank lines from the end of a file
-- normalizes line endings to system-default (with the `-l` parameter)
+Documentation can be found on the [website](https://doc.nette.org/tools/code-checker). If you like it, **[please make a donation now](https://github.com/sponsors/dg)**. Thank you!
 
 
 Installation
 ------------
 
-Install it via Composer. This project is not meant to be run as a dependency, so install it as standalone:
+Install it globally via Composer:
 
-```
-composer create-project nette/code-checker
-```
-
-Or install it globally via:
-
-```
+```shell
 composer global require nette/code-checker
 ```
 
-and make sure your global vendor binaries directory is in [your `$PATH` environment variable](https://getcomposer.org/doc/03-cli.md#global).
+Make sure your global Composer `bin` directory is in your [`PATH`](https://getcomposer.org/doc/03-cli.md#global).
+The `code-checker` command is then available from anywhere, on any operating system.
 
-It requires PHP version 8.0.
+Alternatively, install it as a standalone project:
+
+```shell
+composer create-project nette/code-checker
+```
+
+It requires PHP 8.0 or higher.
+
+
+Usage
+-----
+
+By default, Code Checker runs in **read-only mode** and only reports the problems it finds:
+
+```shell
+code-checker
+```
+
+To actually repair the files, add `--fix`. **Back up your files first**, or run it on a clean working tree so you can review the changes afterwards with `git diff`:
+
+```shell
+code-checker --fix
+```
+
+You can limit the scan to a specific path, skip files, or run faster syntax-only checks:
+
+```shell
+code-checker -d src --ignore "temp/*"
+code-checker --only-syntax
+```
+
+In read-only mode the tool exits with code `0` when everything is fine and `1` when any problem is found, so it fits nicely into CI pipelines.
+
+Full list of options:
+
+```
+Usage: code-checker [options]
+
+Options:
+    -d <path>             Folder or file to scan (default: current directory)
+    -i | --ignore <mask>  Files to ignore
+    -f | --fix            Fix the files
+    -l | --eol            Normalize line endings to the system default
+    --only-syntax         Check syntax only (faster)
+    --no-progress         Do not show progress dots
+    --version             Show version
+```
+
+
+What Code Checker Does
+----------------------
+
+- checks the syntax of **PHP**, **Latte**, **NEON** and **JSON** files
+- removes the [BOM](https://doc.nette.org/glossary#toc-bom)
+- verifies that files are valid **UTF-8**
+- checks for [control characters](https://doc.nette.org/glossary#toc-control-characters)
+- detects malformed phpDoc comments around annotations (e.g. `/* @var` instead of `/** @var`)
+- checks that PHP files declare `strict_types=1`
+- enforces tabs for indentation in PHP, CSS, JS and TS files, and spaces in YAML
+- removes trailing whitespace and blank lines at the end of files
+- normalizes line endings to the system default (with the `-l` parameter)
