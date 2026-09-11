@@ -110,7 +110,7 @@ $checker->addTask([$tasks, 'neonSyntaxChecker'], '*.neon');
 $checker->addTask([$tasks, 'jsonSyntaxChecker'], '*.json');
 $checker->addTask([$tasks, 'yamlIndentationChecker'], '*.yml');
 $checker->addTask([$tasks, 'trailingWhiteSpaceFixer']);
-$checker->addTask([$tasks, 'tabIndentationChecker'], '*.css,*.less,*.js,*.mjs,*.cjs,*.ts,*.json');
+$checker->addTask([$tasks, 'tabIndentationFixer'], '*.css,*.less,*.js,*.mjs,*.cjs,*.ts,*.json');
 $checker->addTask([$tasks, 'unexpectedTabsChecker'], '*.yml');
 
 $ok = $checker->run($options['-d']);

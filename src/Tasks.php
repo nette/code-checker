@@ -153,19 +153,110 @@ class Tasks
 	}
 
 
-	public static function tabIndentationChecker(string $contents, Result $result): void
+	public static function tabIndentationFixer(string &$contents, Result $result): void
 	{
-		$offset = 0;
-		if (preg_match('#^(\t*+)\ (?!\*)\s*#m', $contents, $m, PREG_OFFSET_CAPTURE)) {
-			$result->error(
-				$m[1][0] ? 'Mixed tabs and spaces to indent' : 'Used space to indent instead of tab',
-				self::offsetToLine($contents, $m[0][1]),
-			);
-			$offset = $m[0][1] + strlen($m[0][0]) + 1;
+		$width = self::detectIndentWidth($contents);
+		$lines = explode("\n", $contents);
+		$indentFix = $tabFix = null;
+		$indentMessage = '';
+
+		foreach ($lines as $i => $line) {
+			$length = strspn($line, "\t ");
+			$old = substr($line, 0, $length);
+			$firstChar = $line[$length] ?? '';
+
+			// tabulators after the indentation, replaced first because it keeps the offsets
+			$start = str_starts_with($line, '//') ? 2 + strspn($line, "\t", 2) : $length;
+			$rest = substr($line, $start);
+			if (str_contains($rest, "\t")) {
+				$line = substr($line, 0, $start) . strtr($rest, "\t", ' ');
+				$tabFix ??= $i + 1;
+			}
+
+			// lines indented with tabs only and lines holding no code need no conversion
+			if (str_contains($old, ' ') && $firstChar !== '' && $firstChar !== "\r") {
+				$docBlock = $firstChar === '*'; // its asterisk is aligned by one extra space
+				$column = self::indentColumn($old, $width) - ($docBlock ? 1 : 0);
+
+				// such a line would end up as tabs followed by spaces, so report it and convert
+				// nothing, Checker would throw the fixed contents away anyway
+				if ($column % $width) {
+					$result->error("Indentation is not a multiple of $width spaces", $i + 1);
+					return;
+				}
+
+				$indent = str_repeat("\t", intdiv($column, $width)) . ($docBlock ? ' ' : '');
+				if ($indent !== $old) {
+					$line = $indent . substr($line, $length);
+					if ($indentFix === null) {
+						$indentFix = $i + 1;
+						$indentMessage = $old[0] === "\t" ? 'mixed tabs and spaces to indent' : 'used spaces to indent instead of tabs';
+					}
+				}
+			}
+
+			$lines[$i] = $line;
 		}
-		if (preg_match('#(?<=[\S ])(?<!^//)\t#m', $contents, $m, PREG_OFFSET_CAPTURE, $offset)) {
-			$result->error('Found unexpected tabulator', self::offsetToLine($contents, $m[0][1]));
+
+		if ($indentFix) {
+			$result->fix($indentMessage, $indentFix);
 		}
+		if ($tabFix) {
+			$result->fix('unexpected tabulator', $tabFix);
+		}
+		if ($indentFix || $tabFix) {
+			$contents = implode("\n", $lines);
+		}
+	}
+
+
+	/**
+	 * Guesses how many spaces make one indentation level. Only widths that occur in the wild are
+	 * considered and the largest matching one wins, i.e. depths 4, 8, 12 mean a width of 4, not 2.
+	 * Rare depths are ignored, so that a mistyped line does not shrink the width for the whole file.
+	 */
+	private static function detectIndentWidth(string $contents): int
+	{
+		preg_match_all('#^ ++(?=[^\s*])#m', $contents, $m); // lines indented with spaces only
+		$counts = array_count_values(array_map('strlen', $m[0]));
+		$limit = max(2, count($m[0]) / 10);
+		$frequent = array_filter($counts, fn($count) => $count >= $limit) ?: $counts;
+
+		$gcd = 0;
+		foreach (array_keys($frequent) as $depth) {
+			$gcd = self::gcd($gcd, $depth);
+		}
+
+		// lines pasted into a file indented with tabs, eight spaces there are two levels rather than one
+		$candidates = preg_match('#^\t#m', $contents) ? [4, 3, 2] : [8, 4, 3, 2];
+		foreach ($candidates as $width) {
+			if ($gcd && $gcd % $width === 0) {
+				return $width;
+			}
+		}
+
+		// a genuine one-space file has both levels, unlike a file with a few stray one-space lines
+		return isset($frequent[1], $frequent[2]) ? 1 : 4;
+	}
+
+
+	private static function gcd(int $a, int $b): int
+	{
+		return $b ? self::gcd($b, $a % $b) : $a;
+	}
+
+
+	/** Returns the column where the given indentation ends */
+	private static function indentColumn(string $indent, int $width): int
+	{
+		$column = 0;
+		for ($i = 0; $i < strlen($indent); $i++) {
+			$column = $indent[$i] === "\t"
+				? (intdiv($column, $width) + 1) * $width
+				: $column + 1;
+		}
+
+		return $column;
 	}
 
 
