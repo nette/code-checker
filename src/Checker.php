@@ -2,7 +2,7 @@
 
 namespace Nette\CodeChecker;
 
-use Nette\CommandLine\Console;
+use Nette\CommandLine\{Ansi, Console};
 use Nette\Utils\Finder;
 
 
@@ -34,19 +34,21 @@ class Checker
 
 	private string $relativePath;
 
-	private Console $console;
+
+	public function __construct(
+		private Console $console,
+	) {
+	}
 
 
 	/** @param list<string> $paths */
 	public function run(array $paths): bool
 	{
-		$this->console = new Console;
-
 		if ($this->readOnly) {
-			echo "Running in read-only mode\n";
+			$this->console->writeLine('Running in read-only mode');
 		}
 
-		echo "Scanning {$this->console->color('white', implode(', ', $paths))}\n";
+		$this->console->writeLine('Scanning ' . $this->console->color('white', implode(', ', $paths)));
 
 		$finder = new Finder;
 		foreach ($paths as $path) {
@@ -65,17 +67,13 @@ class Checker
 		$success = true;
 		foreach ($finder as $file) {
 			if ($this->showProgress) {
-				echo str_pad(str_repeat('.', $counter++ % 40), 40), "\x0D";
+				$this->console->setStatus(str_repeat('.', $counter++ % 40 + 1));
 			}
 			$this->relativePath = $file->getRelativePathname();
 			$success = $this->processFile((string) $file) && $success;
 		}
 
-		if ($this->showProgress) {
-			echo str_pad('', 40), "\x0D";
-		}
-
-		echo "Done.\n";
+		$this->console->writeLine('Done.'); // erases the progress by itself
 		return $success;
 	}
 
@@ -145,9 +143,12 @@ class Checker
 	private function write(string $type, string $message, ?int $line, string $color): void
 	{
 		$base = basename($this->relativePath);
-		echo $this->console->color($color, str_pad("[$type]", 10)),
-			$base === $this->relativePath ? '' : $this->console->color('silver', dirname($this->relativePath) . DIRECTORY_SEPARATOR),
-			$this->console->color('white', $base . ($line ? ':' . $line : '')), '    ',
-			$this->console->color($color, $message), "\n";
+		$this->console->writeLine(
+			$this->console->color($color, str_pad("[$type]", 10))
+			. ($base === $this->relativePath ? '' : $this->console->color('silver', dirname($this->relativePath) . DIRECTORY_SEPARATOR))
+			. $this->console->color('white', $base . ($line ? ':' . $line : '')) . '    '
+			// a message quoting the checked file may carry escape sequences of its own
+			. $this->console->color($color, Ansi::strip($message)),
+		);
 	}
 }

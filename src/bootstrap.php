@@ -8,7 +8,7 @@
 
 namespace Nette\CodeChecker;
 
-use Nette\CommandLine\{Console, Parser};
+use Nette\CommandLine\{Command, Console, HelpRenderer, Normalizers, Parser, UsageException};
 use function function_exists;
 
 $autoload = is_file(__DIR__ . '/../vendor/autoload.php')
@@ -19,8 +19,10 @@ if (@!include $autoload) { // @ dependencies may not be installed
 	exit(1);
 }
 
-set_exception_handler(function (\Throwable $e) {
-	echo "Error: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}\n";
+$console = new Console;
+
+set_exception_handler(function (\Throwable $e) use ($console) {
+	$console->writeLine("Error: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'red');
 	die(2);
 });
 
@@ -45,40 +47,41 @@ if (function_exists('pcntl_signal')) {
 set_time_limit(0);
 
 
-echo '
-CodeChecker version 3.4.0
--------------------------
-';
+$console->writeLine("\nCodeChecker version 3.4.0\n-------------------------");
 
-$cmd = new Parser(<<<'XX'
-	Usage:
-	    php code-checker [options]
+$command = new Command(usage: 'php code-checker [options]');
+$command->addOption(
+	'-d',
+	'Folder or file to scan',
+	valueName: 'path',
+	normalizer: Normalizers::realPath(...),
+	default: getcwd(),
+	defaultDescription: 'current directory',
+	repeatable: true,
+);
+$command->addOption('--ignore', 'Files to ignore', alias: '-i', valueName: 'mask', repeatable: true);
+$command->addFlag('--fix', 'Fixes files', alias: '-f');
+$command->addFlag('--eol', 'Convert newline characters', alias: '-l');
+$command->addFlag('--only-syntax', 'Check only syntax');
+$command->addFlag('--no-progress', 'Do not show progress dots');
+$command->addFlag('--version', 'Show version');
+$command->addFlag('--short-arrays', hidden: true); // ignored
+$command->addFlag('--strict-types', hidden: true); // ignored
 
-	Options:
-	    -d <path>             Folder or file to scan (default: current directory)
-	    -i | --ignore <mask>  Files to ignore
-	    -f | --fix            Fixes files
-	    -l | --eol            Convert newline characters
-	    --only-syntax         Check only syntax
-	    --no-progress         Do not show progress dots
-	    --version             Show version
+try {
+	$options = (new Parser)->parse($command);
+} catch (UsageException $e) {
+	(new HelpRenderer)->renderError($e);
+	exit(2);
+}
 
-
-	XX, [
-	'-d' => [Parser::RealPath => true, Parser::Repeatable => true, Parser::Default => getcwd()],
-	'--ignore' => [Parser::Repeatable => true],
-	'--short-arrays' => [Parser::Argument => false], // ignored
-	'--strict-types' => [Parser::Argument => false], // ignored
-]);
-
-$options = $cmd->parse();
-if ($cmd->isEmpty()) {
-	$cmd->help();
+if ($options->isEmpty()) {
+	(new HelpRenderer($console))->render($command);
 } elseif (isset($options['--version'])) {
 	exit(0);
 }
 
-$checker = new Checker;
+$checker = new Checker($console);
 $tasks = Tasks::class;
 
 foreach ($options['--ignore'] as $ignore) {
@@ -86,7 +89,7 @@ foreach ($options['--ignore'] as $ignore) {
 }
 
 $checker->readOnly = !isset($options['--fix']);
-$checker->showProgress = !isset($options['--no-progress']) && Console::detectTerminal();
+$checker->showProgress = !isset($options['--no-progress']); // off a terminal the status draws nothing anyway
 
 if (isset($options['--only-syntax'])) {
 	$checker->addTask([$tasks, 'phpSyntaxChecker'], '*.php,*.phpt');
