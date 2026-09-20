@@ -49,28 +49,6 @@ class Tasks
 	}
 
 
-	public static function strictTypesDeclarationChecker(string $contents, Result $result): void
-	{
-		$declarations = '';
-		$tokens = @token_get_all($contents); // @ can trigger error
-		for ($i = 0; $i < count($tokens); $i++) {
-			if ($tokens[$i][0] === T_DECLARE) {
-				while (isset($tokens[++$i]) && $tokens[$i] !== ';') {
-					$declarations .= is_array($tokens[$i])
-						? $tokens[$i][1]
-						: $tokens[$i];
-				}
-			} elseif (!in_array($tokens[$i][0], [T_OPEN_TAG, T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
-				break;
-			}
-		}
-
-		if (!preg_match('#\bstrict_types\s*=\s*1\b#', $declarations)) {
-			$result->error('Missing declare(strict_types=1)');
-		}
-	}
-
-
 	public static function docSyntaxtHinter(string $contents, Result $result): void
 	{
 		$prev = [0, '', 0];
