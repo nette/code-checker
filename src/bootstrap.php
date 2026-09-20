@@ -10,11 +10,12 @@ namespace Nette\CodeChecker;
 
 use Nette\CommandLine\Console;
 use Nette\CommandLine\Parser;
+use function function_exists;
 
 $autoload = is_file(__DIR__ . '/../vendor/autoload.php')
 	? __DIR__ . '/../vendor/autoload.php'
 	: __DIR__ . '/../../../autoload.php';
-if (@!include $autoload) {
+if (@!include $autoload) { // @ dependencies may not be installed
 	echo 'Install packages using `composer update`';
 	exit(1);
 }

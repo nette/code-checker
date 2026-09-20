@@ -22,7 +22,10 @@ test(function () {
 test(function () {
 	$result = new Result;
 	Tasks::latteSyntaxChecker('{hello', $result);
-	Assert::same([[Result::Error, 'Unexpected end, expecting end of Latte tag started on line 1 at column 1 (on line 1 at column 7)', 1]], $result->getMessages());
+	Assert::same(
+		[[Result::Error, 'Unexpected end, expecting end of Latte tag started on line 1 at column 1 (on line 1 at column 7)', 1]],
+		$result->getMessages(),
+	);
 });
 
 test(function () {

@@ -5,6 +5,8 @@ namespace Nette\CodeChecker;
 use Latte;
 use Nette;
 use Nette\Utils\Strings;
+use Nette\Utils\Validators;
+use function count, defined, is_resource, strlen;
 
 
 class Tasks
@@ -28,8 +30,12 @@ class Tasks
 
 	public static function utf8Checker(string $contents, Result $result): void
 	{
-		if (!Strings::checkEncoding($contents)) {
-			preg_match('/^(?:[\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF][\x80-\xBF]|[\xC0-\xDF][\x80-\xBF]|[\x00-\x7f])*+/', $contents, $m);
+		if (!Validators::isUnicode($contents)) {
+			preg_match(
+				'/^(?:[\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF][\x80-\xBF]|[\xC0-\xDF][\x80-\xBF]|[\x00-\x7f])*+/',
+				$contents,
+				$m,
+			);
 			/** @var array{string} $m */
 			$result->error('Is not valid UTF-8 file', self::offsetToLine($contents, strlen($m[0]) + 1));
 		}
