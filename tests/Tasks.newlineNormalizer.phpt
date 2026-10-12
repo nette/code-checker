@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
-use Nette\CodeChecker\Result;
-use Nette\CodeChecker\Tasks;
+use Nette\CodeChecker\{Result, Tasks};
 use Tester\Assert;
 
 require __DIR__ . '/bootstrap.php';

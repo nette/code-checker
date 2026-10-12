@@ -8,8 +8,7 @@
 
 namespace Nette\CodeChecker;
 
-use Nette\CommandLine\Console;
-use Nette\CommandLine\Parser;
+use Nette\CommandLine\{Console, Parser};
 use function function_exists;
 
 $autoload = is_file(__DIR__ . '/../vendor/autoload.php')

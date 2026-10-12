@@ -4,8 +4,7 @@ namespace Nette\CodeChecker;
 
 use Latte;
 use Nette;
-use Nette\Utils\Strings;
-use Nette\Utils\Validators;
+use Nette\Utils\{Strings, Validators};
 use function count, defined, is_resource, strlen;
 
 
