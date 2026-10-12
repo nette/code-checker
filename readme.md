@@ -35,7 +35,7 @@ Alternatively, install it as a standalone project:
 composer create-project nette/code-checker
 ```
 
-It requires PHP 8.0 or higher.
+It requires PHP 8.2 or higher.
 
 
 Usage
