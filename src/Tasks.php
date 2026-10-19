@@ -49,8 +49,8 @@ class Tasks
 	public static function phpSyntaxChecker(string $contents, Result $result): void
 	{
 		if (
-			preg_match('#@phpVersion\s+([0-9.]+)#i', $contents, $m)
-			&& version_compare(PHP_VERSION, $m[1], '<')
+			preg_match('#@phpVersion\s+(<=|>=|==|!=|<>|<|>|=)?\s*(\d[\w.-]*)#i', $contents, $m)
+			&& !version_compare(PHP_VERSION, $m[2], $m[1] ?: '>=')
 		) {
 			return;
 		}
