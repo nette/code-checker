@@ -8,7 +8,7 @@
 
 namespace Nette\CodeChecker;
 
-use Nette\CommandLine\{Command, Console, HelpRenderer, Parser, UsageException};
+use Nette\CommandLine\{Command, Console, Runner};
 use function function_exists;
 
 $autoload = is_file(__DIR__ . '/../vendor/autoload.php')
@@ -49,13 +49,4 @@ set_time_limit(0);
 
 $console->writeLine("\nCodeChecker version 3.5.0\n-------------------------");
 
-$command = Command::from((new Application($console))->run(...));
-
-try {
-	$args = (new Parser)->parse($command);
-} catch (UsageException $e) {
-	(new HelpRenderer)->renderError($e);
-	exit(2);
-}
-
-exit($args->run());
+exit((new Runner(Command::from((new Application($console))->run(...)), out: $console))->run());
