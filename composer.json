@@ -1,7 +1,8 @@
 {
 	"name": "nette/code-checker",
-	"description": "✅ Nette CodeChecker: A simple tool to check source code against a set of Nette coding standards.",
-	"keywords": ["nette", "analyse", "code"],
+	"description": "✅ Nette Code Checker: finds and fixes formal errors in PHP, Latte, NEON, JSON and YAML files, such as encoding, line endings, indentation and trailing whitespace.",
+	"keywords": ["nette", "code checker", "linter", "lint", "code quality", "latte", "neon"],
+	"homepage": "https://doc.nette.org/tools/code-checker",
 	"type": "project",
 	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
 	"authors": [
