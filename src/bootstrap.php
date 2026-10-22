@@ -113,7 +113,6 @@ $checker->addTask([$tasks, 'trailingWhiteSpaceFixer']);
 $checker->addTask([$tasks, 'tabIndentationChecker'], '*.css,*.less,*.js,*.mjs,*.cjs,*.ts,*.json');
 $checker->addTask([$tasks, 'tabIndentationPhpChecker'], '*.php,*.phpt');
 $checker->addTask([$tasks, 'unexpectedTabsChecker'], '*.yml');
-$checker->addTask([$tasks, 'docSyntaxtHinter'], '*.php,*.phpt');
 
 $ok = $checker->run($options['-d']);
 

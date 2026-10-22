@@ -36,22 +36,6 @@ class Tasks
 	}
 
 
-	public static function docSyntaxtHinter(string $contents, Result $result): void
-	{
-		$prev = [0, '', 0];
-		foreach (@token_get_all($contents) as $token) { // @ can trigger error
-			if (($token[0] === T_ENCAPSED_AND_WHITESPACE && $prev[0] !== T_START_HEREDOC
-					|| $token[0] === T_CONSTANT_ENCAPSED_STRING)
-				&& str_contains($token[1], "\n")
-				&& (str_contains($token[1], "\\'") || str_contains($token[1], '\"'))
-			) {
-				$result->warning('Tip: use NOWDOC or HEREDOC', $token[2]);
-			}
-			$prev = $token;
-		}
-	}
-
-
 	public static function newlineNormalizer(string &$contents, Result $result): void
 	{
 		$new = str_replace("\n", PHP_EOL, str_replace(["\r\n", "\r"], "\n", $contents));
