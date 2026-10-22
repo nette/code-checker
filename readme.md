@@ -86,6 +86,6 @@ What Code Checker Does
 - verifies that files are valid **UTF-8**
 - checks for [control characters](https://doc.nette.org/glossary#toc-control-characters)
 - checks that PHP files declare `strict_types=1`
-- enforces tabs for indentation in PHP, CSS, JS and TS files, and spaces in YAML
+- enforces tabs for indentation in CSS, JS and TS files, and spaces in YAML
 - removes trailing whitespace and blank lines at the end of files
 - normalizes line endings to the system default (with the `-l` parameter)

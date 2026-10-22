@@ -111,7 +111,6 @@ $checker->addTask([$tasks, 'jsonSyntaxChecker'], '*.json');
 $checker->addTask([$tasks, 'yamlIndentationChecker'], '*.yml');
 $checker->addTask([$tasks, 'trailingWhiteSpaceFixer']);
 $checker->addTask([$tasks, 'tabIndentationChecker'], '*.css,*.less,*.js,*.mjs,*.cjs,*.ts,*.json');
-$checker->addTask([$tasks, 'tabIndentationPhpChecker'], '*.php,*.phpt');
 $checker->addTask([$tasks, 'unexpectedTabsChecker'], '*.yml');
 
 $ok = $checker->run($options['-d']);

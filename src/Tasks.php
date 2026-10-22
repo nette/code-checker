@@ -153,37 +153,19 @@ class Tasks
 	}
 
 
-	public static function tabIndentationChecker(string $contents, Result $result, ?string $origContents = null): void
+	public static function tabIndentationChecker(string $contents, Result $result): void
 	{
-		$origContents = $origContents ?: $contents;
 		$offset = 0;
 		if (preg_match('#^(\t*+)\ (?!\*)\s*#m', $contents, $m, PREG_OFFSET_CAPTURE)) {
 			$result->error(
 				$m[1][0] ? 'Mixed tabs and spaces to indent' : 'Used space to indent instead of tab',
-				self::offsetToLine($origContents, $m[0][1]),
+				self::offsetToLine($contents, $m[0][1]),
 			);
 			$offset = $m[0][1] + strlen($m[0][0]) + 1;
 		}
 		if (preg_match('#(?<=[\S ])(?<!^//)\t#m', $contents, $m, PREG_OFFSET_CAPTURE, $offset)) {
-			$result->error('Found unexpected tabulator', self::offsetToLine($origContents, $m[0][1]));
+			$result->error('Found unexpected tabulator', self::offsetToLine($contents, $m[0][1]));
 		}
-	}
-
-
-	public static function tabIndentationPhpChecker(string $contents, Result $result): void
-	{
-		$s = '';  // remove strings from code
-		foreach (@token_get_all($contents) as $token) { // @ can trigger error
-			if (
-				is_array($token)
-				&& in_array($token[0], [T_ENCAPSED_AND_WHITESPACE, T_CONSTANT_ENCAPSED_STRING], true)
-			) {
-				$token[1] = preg_replace('#[\t ]#', '.', $token[1]);
-			}
-			$s .= is_array($token) ? $token[1] : $token;
-		}
-
-		self::tabIndentationChecker($s, $result, $contents);
 	}
 
 
