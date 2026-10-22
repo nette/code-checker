@@ -47,7 +47,7 @@ if (function_exists('pcntl_signal')) {
 set_time_limit(0);
 
 
-$console->writeLine("\nCodeChecker version 3.4.0\n-------------------------");
+$console->writeLine("\nCodeChecker version 3.5.0\n-------------------------");
 
 $command = Command::from((new Application($console))->run(...));
 
