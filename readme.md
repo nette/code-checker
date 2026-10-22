@@ -85,7 +85,6 @@ What Code Checker Does
 - removes the [BOM](https://doc.nette.org/glossary#toc-bom)
 - verifies that files are valid **UTF-8**
 - checks for [control characters](https://doc.nette.org/glossary#toc-control-characters)
-- detects malformed phpDoc comments around annotations (e.g. `/* @var` instead of `/** @var`)
 - checks that PHP files declare `strict_types=1`
 - enforces tabs for indentation in PHP, CSS, JS and TS files, and spaces in YAML
 - removes trailing whitespace and blank lines at the end of files

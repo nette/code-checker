@@ -36,19 +36,6 @@ class Tasks
 	}
 
 
-	public static function invalidPhpDocChecker(string $contents, Result $result): void
-	{
-		foreach (@token_get_all($contents) as $token) { // @ can trigger error
-			if ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*(?!\*).*(?<!\w)@[a-z]#isA')) {
-				$result->warning('Missing /** in phpDoc comment', $token[2]);
-
-			} elseif ($token[0] === T_COMMENT && Strings::match($token[1], '#/\*\*(?!\s).*(?<!\w)@[a-z]#isA')) {
-				$result->warning('Missing space after /** in phpDoc comment', $token[2]);
-			}
-		}
-	}
-
-
 	public static function docSyntaxtHinter(string $contents, Result $result): void
 	{
 		$prev = [0, '', 0];

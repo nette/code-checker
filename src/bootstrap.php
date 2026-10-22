@@ -101,7 +101,6 @@ $checker->addTask([$tasks, 'controlCharactersChecker']);
 $checker->addTask([$tasks, 'bomFixer']);
 $checker->addTask([$tasks, 'utf8Checker']);
 $checker->addTask([$tasks, 'phpSyntaxChecker'], '*.php,*.phpt');
-$checker->addTask([$tasks, 'invalidPhpDocChecker'], '*.php,*.phpt');
 if (isset($options['--eol'])) {
 	$checker->addTask([$tasks, 'newlineNormalizer'], '!*.sh');
 }
