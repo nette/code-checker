@@ -17,3 +17,15 @@ test(function () {
 	Tasks::utf8Checker("\xFF", $result);
 	Assert::same([[Result::Error, 'Is not valid UTF-8 file', 1]], $result->getMessages());
 });
+
+test(function () {
+	$result = new Result;
+	Tasks::utf8Checker("a\n'\xED\xA0\x80'", $result); // surrogate
+	Assert::same([[Result::Error, 'Is not valid UTF-8 file', 2]], $result->getMessages());
+});
+
+test(function () {
+	$result = new Result;
+	Tasks::utf8Checker("a\n\xC0\x80", $result); // overlong
+	Assert::same([[Result::Error, 'Is not valid UTF-8 file', 2]], $result->getMessages());
+});
