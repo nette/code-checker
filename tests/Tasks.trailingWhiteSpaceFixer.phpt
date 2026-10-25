@@ -34,8 +34,17 @@ test(function () { // missing spaces
 	$result = new Result;
 	$content = 'hello';
 	Tasks::trailingWhiteSpaceFixer($content, $result);
-	Assert::count(1, $result->getMessages());
+	Assert::same([[Result::Fix, 'missing newline at end of file', 1]], $result->getMessages());
 	Assert::same('hello' . PHP_EOL, $content);
+});
+
+
+test(function () { // trailing spaces without newline
+	$result = new Result;
+	$content = "hello\nworld  ";
+	Tasks::trailingWhiteSpaceFixer($content, $result);
+	Assert::same([[Result::Fix, '2 bytes of whitespaces', 2]], $result->getMessages());
+	Assert::same("hello\nworld\n", $content);
 });
 
 

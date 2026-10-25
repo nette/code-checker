@@ -150,9 +150,10 @@ class Tasks
 			$new .= $eol;
 		}
 		if ($new !== $contents) {
-			$bytes = strlen($contents) - strlen($new);
+			$missingEol = $new !== '' && !str_ends_with(rtrim($contents, " \t\r"), "\n");
+			$bytes = strlen($contents) - strlen($new) + ($missingEol ? strlen($eol) : 0);
 			$len = min(strlen($contents), strlen(Strings::findPrefix([$contents, $new])) + 1);
-			$result->fix("$bytes bytes of whitespaces", self::offsetToLine($contents, $len));
+			$result->fix($bytes ? "$bytes bytes of whitespaces" : 'missing newline at end of file', self::offsetToLine($contents, $len));
 			$contents = $new;
 		}
 	}
